@@ -1,8 +1,20 @@
 import { createStore } from "vuex";
 
-export default createStore({
-  state: {},
+// Store modules
+import scheduleModule from "./modules/schedule/index.js";
+
+import authModule from "./modules/auth/index.js";
+
+const store = createStore({
+  modules: {
+    schedule: scheduleModule,
+    auth: authModule,
+  },
+  state() {
+    return { activeUser: "1" };
+  },
   mutations: {},
   actions: {},
-  modules: {},
 });
+
+export default store;
