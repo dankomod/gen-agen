@@ -1,4 +1,5 @@
 <template>
+  <h1>ScheduleDay</h1>
   <div class="container flex flex-col items-center justify-center">
     <h1>Horários Disponíveis</h1>
     <nav class="flex items-center">
@@ -49,11 +50,12 @@
 import { DateTime } from "luxon";
 export default {
   // Props received from NewAppointment
-  props: ["takenHours", "date"],
+  props: ["takenHours"],
   // Emits the selected hour to NewAppointment
   emits: ["newAppointment"],
   data() {
     return {
+      // TODO: change the name of the 'result' array
       result: [],
       start: "",
       end: "",
@@ -62,28 +64,20 @@ export default {
       timeSelected: "",
     };
   },
-  computed: {},
   created() {
-    this.getStart();
-    this.getEnd();
+    // Gets the start time from the store
+    this.start = this.$store.getters["schedule/start"];
+    // Gets the end time from the store
+    this.end = this.$store.getters["schedule/end"];
     this.intervalCalc();
   },
   methods: {
-    // Gets the start time from the store
-    getStart() {
-      this.start = this.$store.getters["schedule/start"];
-    },
-    // Gets the end time from the store
-    getEnd() {
-      this.end = this.$store.getters["schedule/end"];
-    },
     // Calculates all the 30 minutes intervals in the working hour interval and send them to be pushed
     intervalCalc() {
       let startHour = DateTime.fromISO(this.start);
       const endHour = DateTime.fromISO(this.end).minus(1); // Minus 1ms to avoid rendering the endHour as a valid booking time
-      this.pushDate(startHour);
+      this.pushDate(startHour); // Pushes the starting hour before the results of the iteration
       while (startHour < endHour) {
-        // ? maybe change increment to 15 minutes or less
         startHour = startHour.plus({ minutes: 30 });
         // Avoids rendering the endHour as a valid booking time
         if (startHour < endHour) {
@@ -91,11 +85,11 @@ export default {
         }
       }
     },
-    // Receives the calculated intervals, changes 0 minutes into '00', and pushes hour:date strings
+    // Receives the calculated intervals, changes 0 minutes into '00', and pushes hour:date strings into the results array
     pushDate(date) {
+      // TODO: use DateTime to change this
       date.minute === 0 ? (this.minutes = "00") : (this.minutes = date.minute);
       const timeString = `${date.hour}:${this.minutes}`;
-      // ? only render non-taken time?
       this.result.push({ timeString: timeString, timeISO: date });
     },
     // Emits a call for a new appointment that will be treated by NewAppointment
@@ -106,7 +100,7 @@ export default {
           obs: this.obs,
         };
         this.$emit("newAppointment", payloadAppointment);
-        this.obs = "";
+        this.obs = ""; // Clears the observations textarea
       }
     },
     // Checks if hour to be rendered is contained in the takenHours array
@@ -115,6 +109,7 @@ export default {
     },
   },
 };
+// TODO: Create custom rules on Tailwind with the CSS within <style>
 </script>
 
 <style scoped>
@@ -122,7 +117,6 @@ input[type="radio"]:checked + label,
 .Checked + label {
   background: rgb(252, 211, 77);
 }
-
 input[type="radio"]:disabled + label,
 .Checked + label {
   color: gray;

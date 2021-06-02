@@ -45,4 +45,7 @@ export default {
   setEnd(context, payload) {
     context.commit("setEnd", payload);
   },
+  setBaseDate(context, payload) {
+    context.commit("setBaseDate", payload);
+  },
 };

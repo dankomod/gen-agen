@@ -8,6 +8,9 @@ export default {
     return {
       start: "",
       end: "",
+      baseDate: "",
+      openingHour: 8,
+      closingHour: 17,
     };
   },
   actions,
