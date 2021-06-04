@@ -3,13 +3,13 @@ import getters from "./getters.js";
 import mutations from "./mutations.js";
 
 export default {
-  namespaced: true, // "schedule/...""
+  namespaced: true, // "agenda/...""
   state() {
     return {
       start: "",
       end: "",
       baseDate: "",
-      openingHour: 8,
+      openingHour: 7,
       closingHour: 17,
     };
   },

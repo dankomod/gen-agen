@@ -8,4 +8,10 @@ export default {
   baseDate(state) {
     return state.baseDate;
   },
+  openingHour(state) {
+    return state.openingHour;
+  },
+  closingHour(state) {
+    return state.closingHour;
+  },
 };

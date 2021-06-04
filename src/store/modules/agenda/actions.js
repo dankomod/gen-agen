@@ -1,9 +1,9 @@
+import { DateTime } from "luxon";
 export default {
   async newAppointment(context, payload) {
     const newAppointment = {
-      timeString: `${payload.date.hour}:${payload.date.minute}`,
+      timeString: payload.date.toFormat("HH:mm"),
       user: payload.user,
-      obs: payload.obs,
     };
     const response = await fetch(
       `https://gen-agen-default-rtdb.firebaseio.com/schedule/${payload.date.year}/${payload.date.month}/${payload.date.day}.json`,
@@ -13,12 +13,7 @@ export default {
       }
     );
     const responseData = await response.json();
-    if (!response.ok) {
-      const error = new Error(
-        responseData.message || "Failed to send request."
-      );
-      throw error;
-    }
+    // TODO: add error catching
     // * Must await for the fetch, for the const that has the fetch and must return a value. Must be called from an async function and be awaited to give a response
     return responseData;
   },
@@ -27,12 +22,7 @@ export default {
       `https://gen-agen-default-rtdb.firebaseio.com/schedule/${payload.year}/${payload.month}/${payload.day}.json`
     );
     const responseData = await response.json();
-    if (!response.ok) {
-      const error = new Error(
-        responseData.message || "Failed to send request."
-      );
-      throw error;
-    }
+    // TODO: add error catching
     const appointments = [];
     for (const res in responseData) {
       appointments.push(responseData[res].timeString);
@@ -47,5 +37,9 @@ export default {
   },
   setBaseDate(context, payload) {
     context.commit("setBaseDate", payload);
+  },
+  // TODO: find a way to avoid having to use DateTime like this
+  nothing() {
+    DateTime.now();
   },
 };
