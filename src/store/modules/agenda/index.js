@@ -9,7 +9,7 @@ export default {
       start: "",
       end: "",
       baseDate: "",
-      openingHour: 7,
+      openingHour: 8,
       closingHour: 17,
     };
   },
