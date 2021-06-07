@@ -6,11 +6,12 @@ export default {
   namespaced: true, // "agenda/...""
   state() {
     return {
-      start: "",
-      end: "",
       baseDate: "",
       openingHour: 8,
       closingHour: 17,
+      agendaHours: {},
+      selectedHours: [],
+      appointmentInfo: {},
     };
   },
   actions,

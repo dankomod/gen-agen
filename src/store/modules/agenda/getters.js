@@ -1,10 +1,4 @@
 export default {
-  start(state) {
-    return state.start;
-  },
-  end(state) {
-    return state.end;
-  },
   baseDate(state) {
     return state.baseDate;
   },
@@ -13,5 +7,14 @@ export default {
   },
   closingHour(state) {
     return state.closingHour;
+  },
+  agendaHours(state) {
+    return state.agendaHours;
+  },
+  selectedHours(state) {
+    return state.selectedHours;
+  },
+  appointmentInfo(state) {
+    return state.appointmentInfo;
   },
 };

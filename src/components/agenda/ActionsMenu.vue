@@ -2,25 +2,23 @@
   <div class="flex flex-wrap justify-center text-lg text-white">
     <button
       class="w-32 py-3 m-1 font-medium tracking-wide bg-green-700"
-      @click="agendaAction('add')"
+      @click="addAppointment"
     >
       Adicionar
-    </button>
-    <button
-      class="w-32 py-3 m-1 font-medium tracking-wide bg-red-600"
-      @click="agendaAction('delete')"
-    >
-      Remover
     </button>
   </div>
 </template>
 
 <script>
 export default {
-  emits: ["agendaAction"], // emitted values: 'add', 'remove'
   methods: {
-    agendaAction(action) {
-      this.$emit("agendaAction", action);
+    // Adds a new appointment, reloads all data and refreshes the rendering
+    async addAppointment() {
+      let payload = {
+        user: "h1",
+      };
+      await this.$store.dispatch("agenda/newAppointment", payload);
+      // TODO: Refresh
     },
   },
 };
