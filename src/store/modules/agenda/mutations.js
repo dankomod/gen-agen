@@ -11,4 +11,8 @@ export default {
   setAppointmentInfo(state, appointmentInfo) {
     state.appointmentInfo = appointmentInfo;
   },
+  setAgendaDetails(state, agendaDetails) {
+    console.log(agendaDetails);
+    state.agendaDetails = agendaDetails;
+  },
 };

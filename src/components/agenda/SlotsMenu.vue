@@ -15,16 +15,7 @@
         class="absolute top-0 left-0 w-24 h-24 opacity-0 cursor-pointer"
       />
       <div
-        class="
-          flex
-          items-center
-          justify-center
-          w-full
-          h-full
-          transition
-          duration-100
-          ease-linear
-        "
+        class="flex items-center justify-center w-full h-full transition duration-100 ease-linear "
       >
         <span class="text-2xl">{{ agendaSlot.displayTime }}</span>
       </div>

@@ -17,4 +17,7 @@ export default {
   appointmentInfo(state) {
     return state.appointmentInfo;
   },
+  agendaDetails(state) {
+    return state.agendaDetails;
+  },
 };

@@ -57,6 +57,7 @@ export default {
       },
       (newValue) => {
         this.showInfoMenu = newValue.length ? true : false;
+        this.showActionsMenu = true;
       }
     );
     // Checks the appointmentInfo deeply and show the actions and enables the actions menu

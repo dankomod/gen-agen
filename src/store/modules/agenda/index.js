@@ -7,11 +7,12 @@ export default {
   state() {
     return {
       baseDate: "",
-      openingHour: 8,
-      closingHour: 17,
+      openingHour: 9,
+      closingHour: 16,
       agendaHours: {},
       selectedHours: [],
       appointmentInfo: {},
+      agendaDetails: {},
     };
   },
   actions,
