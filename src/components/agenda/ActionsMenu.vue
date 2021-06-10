@@ -1,20 +1,24 @@
 <template>
   <base-dialog @close="close" v-if="showInfoDialog">
     <div
-      v-for="detail in selectedHourDetails"
-      :key="detail.name"
-      class="p-2 hover:bg-indigo-200"
+      v-for="(detail, index) in selectedHourDetails"
+      :key="detail.name + index"
+      class=""
     >
       <!-- TODO: computed property -->
       <div
+        class="w-96"
         v-if="visibleAppointment === null || visibleAppointment === detail.name"
       >
-        <form class="cursor-pointer">
+        <!-- TODO: remove hover styling when details are shown  -->
+        <form class="p-2 hover:bg-blue-50">
           <div @click="toggleDetails(detail.name)">
             <div class="flex flex-row items-center p-1">
               <p class="w-24">Nome</p>
+              <p v-if="editingEnabled">{{ detail.name }}</p>
               <input
-                disabled
+                v-else
+                @change="appointmentInfo.name = $event.target.value"
                 class="px-3 py-1 bg-gray-200"
                 type="text"
                 :value="detail.name"
@@ -22,8 +26,10 @@
             </div>
             <div class="flex flex-row items-center p-1">
               <label class="w-24">Telefone</label>
+              <p v-if="editingEnabled">{{ detail.phone }}</p>
               <input
-                disabled
+                v-else
+                @change="appointmentInfo.phone = $event.target.value"
                 class="px-3 py-1 bg-gray-200"
                 type="number"
                 :value="detail.phone"
@@ -31,8 +37,10 @@
             </div>
             <div class="flex flex-row items-center p-1">
               <label class="w-24">Valor</label>
+              <p v-if="editingEnabled">{{ detail.price }}</p>
               <input
-                disabled
+                v-else
+                @change="appointmentInfo.price = $event.target.value"
                 class="px-3 py-1 bg-gray-200"
                 type="number"
                 :value="detail.price"
@@ -42,8 +50,10 @@
           <div v-if="showDetails">
             <div class="flex flex-row items-center p-1">
               <label class="w-24">Pagamento</label>
+              <p v-if="editingEnabled">{{ detail.paymentMethod }}</p>
               <input
-                disabled
+                v-else
+                @change="appointmentInfo.paymentMethod = $event.target.value"
                 class="px-3 py-1 bg-gray-200"
                 type="text"
                 :value="detail.paymentMethod"
@@ -51,8 +61,10 @@
             </div>
             <div class="flex flex-row items-center p-1">
               <label class="w-24">Endereço</label>
+              <p v-if="editingEnabled">{{ detail.address }}</p>
               <input
-                disabled
+                v-else
+                @change="appointmentInfo.address = $event.target.value"
                 class="px-3 py-1 bg-gray-200"
                 type="text"
                 :value="detail.address"
@@ -60,8 +72,10 @@
             </div>
             <div class="flex flex-row items-center p-1">
               <label class="w-24">Número</label>
+              <p v-if="editingEnabled">{{ detail.number }}</p>
               <input
-                disabled
+                v-else
+                @change="appointmentInfo.number = $event.target.value"
                 class="px-3 py-1 bg-gray-200"
                 type="number"
                 :value="detail.number"
@@ -69,8 +83,10 @@
             </div>
             <div class="flex flex-row items-center p-1">
               <label class="w-24">Bairro</label>
+              <p v-if="editingEnabled">{{ detail.district }}</p>
               <input
-                disabled
+                v-else
+                @change="appointmentInfo.district = $event.target.value"
                 class="px-3 py-1 bg-gray-200"
                 type="text"
                 :value="detail.district"
@@ -78,8 +94,10 @@
             </div>
             <div class="flex flex-row items-center p-1">
               <label class="w-24">Cidade</label>
+              <p v-if="editingEnabled">{{ detail.city }}</p>
               <input
-                disabled
+                v-else
+                @change="appointmentInfo.city = $event.target.value"
                 class="px-3 py-1 bg-gray-200"
                 type="text"
                 :value="detail.city"
@@ -87,8 +105,10 @@
             </div>
             <div class="flex flex-row items-center p-1">
               <label class="w-24">Observações</label>
+              <p v-if="editingEnabled">{{ detail.observations }}</p>
               <textarea
-                disabled
+                v-else
+                @change="appointmentInfo.observations = $event.target.value"
                 class="px-3 py-1 bg-gray-200"
                 type="text"
                 :value="detail.observations"
@@ -96,16 +116,43 @@
             </div>
           </div>
         </form>
+        <div v-if="showDetails && editingEnabled">
+          <!-- TODO: computed property -->
+          <button
+            v-if="visibleAppointment !== null && selectedHourDetails.length > 0"
+            @click="clear"
+            class="w-32 px-4 py-1 mt-5 -mb-8 text-lg text-white bg-green-700 border border-green-300 "
+          >
+            Ver todos
+          </button>
+          <button
+            @click="toggleEditing()"
+            class="w-32 px-4 py-1 mt-5 -mb-8 text-lg bg-yellow-500 border border-yellow-300 "
+          >
+            Alterar</button
+          ><button
+            @click="removeAppointment(detail.name)"
+            class="w-32 px-4 py-1 mt-5 -mb-8 text-lg text-white bg-red-700 border border-red-300 "
+          >
+            Remover
+          </button>
+        </div>
+        <div v-if="showDetails && !editingEnabled">
+          <button
+            @click="editAppointment() + toggleEditing()"
+            class="w-32 px-4 py-1 mt-5 -mb-8 text-lg text-white bg-green-700 border border-green-300 "
+          >
+            Confirmar
+          </button>
+          <button
+            @click="toggleEditing()"
+            class="w-32 px-4 py-1 mt-5 -mb-8 text-lg text-white bg-red-700 border border-red-300 "
+          >
+            Cancelar
+          </button>
+        </div>
       </div>
     </div>
-    <!-- TODO: computed property -->
-    <button
-      v-if="visibleAppointment !== null && selectedHourDetails.length > 0"
-      @click="clear"
-      class="px-4 py-1 mt-5 -mb-8 text-lg text-indigo-200 bg-indigo-700 border border-indigo-300  w-min"
-    >
-      Ver todos os agendamentos
-    </button>
   </base-dialog>
   <div class="flex flex-wrap justify-center text-lg text-white">
     <button
@@ -125,26 +172,54 @@
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
 import { DateTime } from "luxon";
 export default {
   methods: {
+    editAppointment() {
+      const payload = {};
+      for (let info of Object.entries(this.appointmentInfo)) {
+        if (info[1] !== "") {
+          payload[info[0]] = info[1];
+        }
+      }
+      console.log(payload);
+    },
+    async removeAppointment(value) {
+      const payload = {
+        name: value,
+        dateTime: this.selectedHours,
+      };
+      await this.$store.dispatch("agenda/removeAppointment", payload);
+      this.close();
+      this.updateRendering();
+    },
     toggleDetails(value) {
       this.showDetails = true;
       this.visibleAppointment = value;
+    },
+    // Needs to be called as toggleEditing() in the template because a boolean argument is possible
+    toggleEditing(value = null) {
+      if (value !== null) {
+        this.editingAllowed = value;
+      } else {
+        this.editingAllowed = !this.editingAllowed;
+      }
     },
     clear() {
       this.showDetails = false;
       this.visibleAppointment = null;
     },
     close() {
+      this.toggleEditing(false);
       this.showInfoDialog = false;
       this.clear();
     },
     showInfo() {
       this.showInfoDialog = true;
       const agendaDetails = this.$store.getters["agenda/agendaDetails"];
-      const selectedHours = this.$store.getters["agenda/selectedHours"][0]; //[0] gets the first (and only because the info button is only shown when there is only one slot selected) array inside the object
-      const selectedHourString = selectedHours.toFormat("HH:mm");
+      this.selectedHours = this.$store.getters["agenda/selectedHours"][0]; //[0] gets the first (and only because the info button is only shown when there is only one slot selected) array inside the object
+      const selectedHourString = this.selectedHours.toFormat("HH:mm");
       this.selectedHourDetails = [];
       for (let detail of Object.values(agendaDetails)) {
         if (detail.timeString === selectedHourString) {
@@ -154,15 +229,20 @@ export default {
     },
     // Adds a new appointment, reloads all data and refreshes the rendering
     async addAppointment() {
-      DateTime.now(); //TODO: change this
       let payload = {
         user: "h1",
       };
       await this.$store.dispatch("agenda/newAppointment", payload);
-      // TODO: Re-render?
+      this.updateRendering();
+    },
+    updateRendering() {
+      this.$emit("updateRendering");
     },
   },
   computed: {
+    editingEnabled() {
+      return this.editingAllowed ? false : true;
+    },
     showInfoButton() {
       return this.$store.getters["agenda/selectedHours"].length === 1
         ? true
@@ -175,8 +255,22 @@ export default {
       selectedHourDetails: [],
       showDetails: false,
       visibleAppointment: null,
+      selectedHours: [],
+      editingAllowed: false,
+      appointmentInfo: {
+        name: "",
+        phone: "",
+        price: "",
+        paymentMethod: "",
+        observations: "",
+        address: "",
+        number: "",
+        district: "",
+        city: "",
+      },
     };
   },
+  emits: ["updateRendering"],
 };
 // TODO: Show add button if no selection of taken time, hide others
 // TODO: Show edit and remove button if selection of taken time, hide add

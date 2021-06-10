@@ -15,7 +15,16 @@
         class="absolute top-0 left-0 w-24 h-24 opacity-0 cursor-pointer"
       />
       <div
-        class="flex items-center justify-center w-full h-full transition duration-100 ease-linear "
+        class="
+          flex
+          items-center
+          justify-center
+          w-full
+          h-full
+          transition
+          duration-100
+          ease-linear
+        "
       >
         <span class="text-2xl">{{ agendaSlot.displayTime }}</span>
       </div>
@@ -26,20 +35,6 @@
 <script>
 export default {
   methods: {
-    async addAppointment() {
-      let payload = {
-        user: "h1",
-        date: "",
-      };
-      for (const selectedHour of this.selectedHours) {
-        payload.date = selectedHour;
-        await this.$store.dispatch("agenda/newAppointment", payload);
-      }
-      this.selectedHours = []; // Removes the user selection
-      this.intervalCalculator();
-      this.loadAppointments();
-      this.updateHourSelector();
-    },
     // Defines the conditional formatting based on the ammount of appointments per slot
     takenFormat(takenCount) {
       if (takenCount === 0 || takenCount === undefined) {
@@ -61,13 +56,14 @@ export default {
       (newValue, oldValue) => {
         if (newValue !== oldValue) {
           this.agendaSlots = this.$store.getters["agenda/agendaHours"];
+          this.selectedHours = [];
         }
       }
     );
   },
   watch: {
     selectedHours(newVal) {
-      this.$store.dispatch("agenda/setSelectecHours", newVal);
+      this.$store.dispatch("agenda/setSelectedHours", newVal);
     },
   },
   data() {

@@ -1,18 +1,17 @@
 export default {
-  setBaseDate(state, payload) {
-    state.baseDate = payload;
+  setAgendaDetails(state, agendaDetails) {
+    state.agendaDetails = agendaDetails;
   },
   setAgendaHours(state, payload) {
     state.agendaHours = payload;
   },
-  setSelectecHours(state, selectedHours) {
-    state.selectedHours = selectedHours;
-  },
   setAppointmentInfo(state, appointmentInfo) {
     state.appointmentInfo = appointmentInfo;
   },
-  setAgendaDetails(state, agendaDetails) {
-    console.log(agendaDetails);
-    state.agendaDetails = agendaDetails;
+  setBaseDate(state, payload) {
+    state.baseDate = payload;
+  },
+  setSelectedHours(state, selectedHours) {
+    state.selectedHours = selectedHours;
   },
 };

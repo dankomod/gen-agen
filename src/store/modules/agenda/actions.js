@@ -1,31 +1,27 @@
+// eslint-disable-next-line no-unused-vars
 import { DateTime } from "luxon";
 export default {
-  async deleteAppointment() {
-    // const baseDate = this.getters["agenda/baseDate"];
-    for (let selectedHour of this.getters["agenda/selectedHours"]) {
-      console.log(selectedHour);
-    }
-  },
-
   async newAppointment(getters, payload) {
     const appointmentInfo = this.getters["agenda/appointmentInfo"];
-    appointmentInfo.addedBy = payload;
-    const baseDate = this.getters["agenda/baseDate"];
-    for (let selectedHour of this.getters["agenda/selectedHours"]) {
-      appointmentInfo.timeString = selectedHour.toFormat("HH:mm");
-      const response = await fetch(
-        `https://gen-agen-default-rtdb.firebaseio.com/schedule/${baseDate.year}/${baseDate.month}/${baseDate.day}.json`,
-        {
-          method: "POST",
-          body: JSON.stringify(appointmentInfo),
-        }
-      );
-      const responseData = await response.json();
-      responseData; // TODO: fix this, create error handling procedures
-    }
+    if (
+      appointmentInfo.name ||
+      appointmentInfo.phone ||
+      appointmentInfo.price
+    ) {
+      appointmentInfo.addedBy = payload;
+      const baseDate = this.getters["agenda/baseDate"];
+      for (let selectedHour of this.getters["agenda/selectedHours"]) {
+        appointmentInfo.timeString = selectedHour.toFormat("HH:mm");
+        await fetch(
+          `https://gen-agen-default-rtdb.firebaseio.com/schedule/${baseDate.year}/${baseDate.month}/${baseDate.day}.json`,
+          {
+            method: "POST",
+            body: JSON.stringify(appointmentInfo),
+          }
+        );
+      }
+    } // TODO: else (no data) raise error
     // TODO: add error catching
-    // // * Must await for the fetch for the const that has the fetch and must return a value. Must be called from an async function and be awaited to give a response
-    // // return responseData;
     // * Must await for the fetch and for the const that has the fetch. Must be called from an async function and be awaited to give a response
   },
 
@@ -36,9 +32,9 @@ export default {
     const responseData = await response.json();
     // Sets all the response in the State
     context.commit("setAgendaDetails", responseData);
+    // TODO: add error catching
     // TODO: do this on AgendaMenu
     // Preps the counts of appointments
-    // TODO: add error catching
     const takenSlots = [];
     for (const res in responseData) {
       takenSlots.push(responseData[res].timeString);
@@ -46,21 +42,35 @@ export default {
     return takenSlots;
   },
 
-  setBaseDate(context, payload) {
-    context.commit("setBaseDate", payload);
+  async removeAppointment(context, payload) {
+    let entryId = "";
+    // For entry in entries of the agendaDetails State value
+    for (let entry of Object.entries(this.getters["agenda/agendaDetails"])) {
+      // If there is a entry with a name value equals to the payload name value (and times)
+      if (
+        entry[1].name === payload.name &&
+        entry[1].timeString === payload.dateTime.toFormat("HH:mm")
+      ) {
+        // The entry's id is the one to be deleted
+        entryId = entry[0];
+      } // TODO: else return error
+    }
+    await fetch(
+      `https://gen-agen-default-rtdb.firebaseio.com/schedule/${payload.dateTime.year}/${payload.dateTime.month}/${payload.dateTime.day}/${entryId}.json`,
+      { method: "DELETE" }
+    );
   },
 
-  // TODO: find a way to avoid having to use DateTime like this
-  nothing() {
-    DateTime.now();
+  setBaseDate(context, payload) {
+    context.commit("setBaseDate", payload);
   },
 
   setAgendaHours(context, agendaHours) {
     context.commit("setAgendaHours", agendaHours);
   },
 
-  setSelectecHours(context, selectedHours) {
-    context.commit("setSelectecHours", selectedHours);
+  setSelectedHours(context, selectedHours) {
+    context.commit("setSelectedHours", selectedHours);
   },
 
   setAppointmentInfo(context, appointmentInfo) {

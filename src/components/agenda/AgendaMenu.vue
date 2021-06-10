@@ -1,24 +1,32 @@
 <template>
   <div class="container flex flex-col items-center py-10">
     <h1 class="pb-10 text-2xl">Agenda</h1>
-    <!-- DATE SELECTOR -->
-    <div class="flex items-center pb-5">
-      <label for="dateselector" class="pr-2 text-lg">Data (mês/dia/ano):</label>
-      <input
-        class="p-1 text-xl bg-blue-100 border border-blue-400"
-        type="date"
-        name="dateselector"
-        id="dateselector"
-        v-model="selectedDate"
-        @change="dateSelected"
-      />
+    <div>
+      <!-- DATE SELECTOR -->
+      <div class="flex items-center pb-5">
+        <label for="dateselector" class="pr-2 text-lg"
+          >Data (mês/dia/ano):</label
+        >
+        <input
+          :key="id"
+          class="p-1 text-xl bg-blue-100 border border-blue-400"
+          type="date"
+          name="dateselector"
+          id="dateselector"
+          v-model="selectedDate"
+          @change="dateSelected"
+        />
+      </div>
+      <!-- APPOINTMENT SLOTS MENU -->
+      <slots-menu v-if="showSlotsMenu"></slots-menu>
+      <!-- INFO MENU -->
+      <info-menu v-if="showInfoMenu"></info-menu>
+      <!-- ACTIONS MENU -->
+      <actions-menu
+        @updateRendering="updateRendering"
+        v-if="showActionsMenu"
+      ></actions-menu>
     </div>
-    <!-- APPOINTMENT SLOTS MENU -->
-    <slots-menu v-if="showSlotsMenu"></slots-menu>
-    <!-- INFO MENU -->
-    <info-menu v-if="showInfoMenu"></info-menu>
-    <!-- ACTIONS MENU -->
-    <actions-menu v-if="showActionsMenu"></actions-menu>
   </div>
 </template>
 
@@ -44,6 +52,7 @@ export default {
       selectedDate: false,
       // A DateTime object of selected date
       baseDate: null,
+      id: 0,
     };
   },
   created() {
@@ -72,6 +81,11 @@ export default {
     );
   },
   methods: {
+    updateRendering() {
+      this.$store.dispatch("agenda/setSelectedHours", []);
+      this.intervalCalculator();
+      this.id++;
+    },
     // Turns the date input value into a DateTime object and calls the intervalCalculator and the loadAppointments functions
     dateSelected() {
       this.baseDate = DateTime.fromISO(this.selectedDate);
@@ -111,7 +125,7 @@ export default {
           agendaHours.push({
             dateTime: opening, // DateTime object of each appointment slot
             displayTime: displayTime,
-            takenCount: takenSlots.filter((v) => v === displayTime).length, // checks if and calculates how many times displayTime is in the takenSlots array
+            takenCount: takenSlots.filter((v) => v === displayTime).length, // Checks if and calculates how many times displayTime is in the takenSlots array
           });
         }
       }
@@ -127,8 +141,10 @@ export default {
 // TODO: Specific opening and closing hours (weekends and holydays)
 // TODO: Incorporate the style tag's CSS onto Tailwind
 // TODO: change the HTML date input format to dd/mm/yyyy
-// TODO: Disabled Hours
-// TODO: Disabled Days
-// TODO: Reusable popup: may be used to show the bookings of the day and show possible actions to the user
-// TODO: Appointment removal: Will be best included when the bookings receive more information and when a popup system is implemented.
+// TODO: edit appointments
+// TODO: make a root page for root router
+
+// ? Admin Dashboard
+// ? disabled hours and days
+// ? custom closing and opening hours
 </script>

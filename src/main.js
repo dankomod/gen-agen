@@ -15,9 +15,6 @@ import "./assets/css/style.css";
 // Creation of the app
 const app = createApp(App);
 
-const { DateTime } = require("luxon");
-app.config.globalProperties.$luxonDateTime = DateTime;
-
 // Dialog popup
 import BaseDialog from "./components/ui/BaseDialog.vue";
 app.component("base-dialog", BaseDialog);

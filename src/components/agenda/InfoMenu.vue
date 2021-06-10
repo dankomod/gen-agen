@@ -98,11 +98,11 @@ export default {
   watch: {
     $data: {
       handler: function (data) {
-        // TODO: find a way not to pass empty values to the State
+        // TODO: refuse empty values
         if (
-          (data.appointmentInfo.name,
-          data.appointmentInfo.phone,
-          data.appointmentInfo.price !== "")
+          data.appointmentInfo.name !== "" ||
+          data.appointmentInfo.phone !== "" ||
+          data.appointmentInfo.price !== ""
         ) {
           this.$store.dispatch(
             "agenda/setAppointmentInfo",

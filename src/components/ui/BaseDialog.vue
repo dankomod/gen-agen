@@ -3,7 +3,7 @@
     @click="close"
     class="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-75"
   ></div>
-  <dialog open class="flex flex-col items-center justify-center">
+  <dialog open class="fixed flex flex-col items-center justify-center top-1/4">
     <slot></slot>
     <button
       @click="close"
@@ -26,4 +26,5 @@ export default {
   props: ["show"],
   emits: ["close"],
 };
+// TODO: Fix the positioning of the dialog
 </script>

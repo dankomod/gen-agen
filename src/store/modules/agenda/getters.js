@@ -1,23 +1,23 @@
 export default {
-  baseDate(state) {
-    return state.baseDate;
-  },
-  openingHour(state) {
-    return state.openingHour;
-  },
-  closingHour(state) {
-    return state.closingHour;
+  agendaDetails(state) {
+    return state.agendaDetails;
   },
   agendaHours(state) {
     return state.agendaHours;
   },
-  selectedHours(state) {
-    return state.selectedHours;
-  },
   appointmentInfo(state) {
     return state.appointmentInfo;
   },
-  agendaDetails(state) {
-    return state.agendaDetails;
+  baseDate(state) {
+    return state.baseDate;
+  },
+  closingHour(state) {
+    return state.closingHour;
+  },
+  openingHour(state) {
+    return state.openingHour;
+  },
+  selectedHours(state) {
+    return state.selectedHours;
   },
 };
