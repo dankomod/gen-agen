@@ -19,6 +19,9 @@ const app = createApp(App);
 import BaseDialog from "./components/ui/BaseDialog.vue";
 app.component("base-dialog", BaseDialog);
 
+import BaseButton from "./components/ui/BaseButton.vue";
+app.component("base-button", BaseButton);
+
 // Router addition
 app.use(router);
 

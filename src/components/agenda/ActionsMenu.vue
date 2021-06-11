@@ -117,58 +117,48 @@
         <!-- BASE BUTTONS -->
         <div v-if="showDetails && editingEnabled">
           <!-- TODO: computed property -->
-          <button
+          <base-button
+            buttonType="success"
             v-if="visibleAppointment !== null && selectedHourDetails.length > 0"
             @click="clear"
-            class="w-32 px-4 py-1 mt-5 -mb-8 text-lg text-white bg-green-700 border border-green-300 "
           >
             Ver todos
-          </button>
-          <button
-            @click="toggleEditing()"
-            class="w-32 px-4 py-1 mt-5 -mb-8 text-lg bg-yellow-500 border border-yellow-300 "
-          >
-            Alterar</button
-          ><button
+          </base-button>
+          <base-button buttonType="warning" @click="toggleEditing()">
+            Alterar</base-button
+          ><base-button
+            buttonType="danger"
             @click="removeAppointment(detail.id)"
-            class="w-32 px-4 py-1 mt-5 -mb-8 text-lg text-white bg-red-700 border border-red-300 "
           >
             Remover
-          </button>
+          </base-button>
         </div>
         <!-- EDIT BUTTONS -->
         <div v-if="showDetails && !editingEnabled">
-          <button
+          <base-button
+            buttonType="success"
             @click="editAppointment(detail.id) + toggleEditing()"
-            class="w-32 px-4 py-1 mt-5 -mb-8 text-lg text-white bg-green-700 border border-green-300 "
           >
             Confirmar
-          </button>
-          <button
-            @click="toggleEditing()"
-            class="w-32 px-4 py-1 mt-5 -mb-8 text-lg text-white bg-red-700 border border-red-300 "
-          >
+          </base-button>
+          <base-button buttonType="danger" @click="toggleEditing()">
             Cancelar
-          </button>
+          </base-button>
         </div>
       </div>
     </div>
   </base-dialog>
   <div class="flex flex-wrap justify-center text-lg text-white">
-    <button
+    <base-button
+      buttonType="success"
       v-if="showAddButton"
-      class="w-32 py-3 m-1 font-medium tracking-wide bg-green-700"
       @click="addAppointment"
     >
       Adicionar
-    </button>
-    <button
-      v-if="showInfoButton"
-      class="w-32 py-3 m-1 font-medium tracking-wide bg-blue-700"
-      @click="showInfo(true)"
-    >
+    </base-button>
+    <base-button v-if="showInfoButton" @click="showInfo(true)">
       Informações
-    </button>
+    </base-button>
   </div>
 </template>
 
@@ -275,7 +265,10 @@ export default {
         return this.$store.getters["agenda/selectedHours"];
       },
       (newValue) => {
+        console.log(newValue);
         if (newValue.length === 1) {
+          // TODO: showAddButton only when the three basic fields are filled
+          // ! TODO: maybe a watcher isn't the better approach because it will only show data in the second interaction with the getter
           this.showAddButton = true;
           this.showInfo();
         } else {
