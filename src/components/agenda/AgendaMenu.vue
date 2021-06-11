@@ -8,7 +8,6 @@
           >Data (mês/dia/ano):</label
         >
         <input
-          :key="id"
           class="p-1 text-xl bg-blue-100 border border-blue-400"
           type="date"
           name="dateselector"
@@ -17,15 +16,17 @@
           @change="dateSelected"
         />
       </div>
-      <!-- APPOINTMENT SLOTS MENU -->
-      <slots-menu v-if="showSlotsMenu"></slots-menu>
-      <!-- INFO MENU -->
-      <info-menu v-if="showInfoMenu"></info-menu>
-      <!-- ACTIONS MENU -->
-      <actions-menu
-        @updateRendering="updateRendering"
-        v-if="showActionsMenu"
-      ></actions-menu>
+      <div :key="id">
+        <!-- APPOINTMENT SLOTS MENU -->
+        <slots-menu v-if="showSlotsMenu"></slots-menu>
+        <!-- INFO MENU -->
+        <info-menu v-if="showInfoMenu"></info-menu>
+        <!-- ACTIONS MENU -->
+        <actions-menu
+          @updateRendering="updateRendering"
+          v-if="showActionsMenu"
+        ></actions-menu>
+      </div>
     </div>
   </div>
 </template>
@@ -53,6 +54,7 @@ export default {
       // A DateTime object of selected date
       baseDate: null,
       id: 0,
+      takenSlots: [],
     };
   },
   created() {
@@ -104,17 +106,22 @@ export default {
         day: this.baseDate.day,
       };
       // Creates an array and receives the appointments from the API
-      let takenSlots = await this.$store.dispatch(
-        "agenda/loadAppointments",
-        payload
-      );
+      try {
+        this.takenSlots = await this.$store.dispatch(
+          "agenda/loadAppointments",
+          payload
+        );
+      } catch (error) {
+        // TODO: Popup error? => this.error + computed
+        console.log(error || "Algo deu errado.");
+      }
       const agendaHours = [];
       // TODO: Include the push of the first slot in the loop
       // Push of the starting hour
       agendaHours.push({
         dateTime: opening,
         displayTime: opening.toFormat("HH:mm"),
-        takenCount: takenSlots.filter((v) => v === opening).length,
+        takenCount: this.takenSlots.filter((v) => v === opening).length,
       });
       // Push of hours until closing time
       while (opening < closing) {
@@ -125,7 +132,7 @@ export default {
           agendaHours.push({
             dateTime: opening, // DateTime object of each appointment slot
             displayTime: displayTime,
-            takenCount: takenSlots.filter((v) => v === displayTime).length, // Checks if and calculates how many times displayTime is in the takenSlots array
+            takenCount: this.takenSlots.filter((v) => v === displayTime).length, // Checks if and calculates how many times displayTime is in the takenSlots array
           });
         }
       }
@@ -136,12 +143,10 @@ export default {
   },
   components: { InfoMenu, SlotsMenu, ActionsMenu },
 };
-// TODO: Add information about when an appointment was added
 // TODO: Users
 // TODO: Specific opening and closing hours (weekends and holydays)
 // TODO: Incorporate the style tag's CSS onto Tailwind
 // TODO: change the HTML date input format to dd/mm/yyyy
-// TODO: edit appointments
 // TODO: make a root page for root router
 
 // ? Admin Dashboard

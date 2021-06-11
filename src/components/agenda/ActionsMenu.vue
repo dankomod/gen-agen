@@ -1,10 +1,6 @@
 <template>
   <base-dialog @close="close" v-if="showInfoDialog">
-    <div
-      v-for="(detail, index) in selectedHourDetails"
-      :key="detail.name + index"
-      class=""
-    >
+    <div v-for="detail in selectedHourDetails" :key="detail.id" class="">
       <!-- TODO: computed property -->
       <div
         class="w-96"
@@ -12,6 +8,7 @@
       >
         <!-- TODO: remove hover styling when details are shown  -->
         <form class="p-2 hover:bg-blue-50">
+          <!-- BASIC INFO -->
           <div @click="toggleDetails(detail.name)">
             <div class="flex flex-row items-center p-1">
               <p class="w-24">Nome</p>
@@ -47,6 +44,7 @@
               />
             </div>
           </div>
+          <!-- DETAILS -->
           <div v-if="showDetails">
             <div class="flex flex-row items-center p-1">
               <label class="w-24">Pagamento</label>
@@ -116,6 +114,7 @@
             </div>
           </div>
         </form>
+        <!-- BASE BUTTONS -->
         <div v-if="showDetails && editingEnabled">
           <!-- TODO: computed property -->
           <button
@@ -131,15 +130,16 @@
           >
             Alterar</button
           ><button
-            @click="removeAppointment(detail.name)"
+            @click="removeAppointment(detail.id)"
             class="w-32 px-4 py-1 mt-5 -mb-8 text-lg text-white bg-red-700 border border-red-300 "
           >
             Remover
           </button>
         </div>
+        <!-- EDIT BUTTONS -->
         <div v-if="showDetails && !editingEnabled">
           <button
-            @click="editAppointment() + toggleEditing()"
+            @click="editAppointment(detail.id) + toggleEditing()"
             class="w-32 px-4 py-1 mt-5 -mb-8 text-lg text-white bg-green-700 border border-green-300 "
           >
             Confirmar
@@ -156,6 +156,7 @@
   </base-dialog>
   <div class="flex flex-wrap justify-center text-lg text-white">
     <button
+      v-if="showAddButton"
       class="w-32 py-3 m-1 font-medium tracking-wide bg-green-700"
       @click="addAppointment"
     >
@@ -164,7 +165,7 @@
     <button
       v-if="showInfoButton"
       class="w-32 py-3 m-1 font-medium tracking-wide bg-blue-700"
-      @click="showInfo"
+      @click="showInfo(true)"
     >
       Informações
     </button>
@@ -176,21 +177,48 @@
 import { DateTime } from "luxon";
 export default {
   methods: {
-    editAppointment() {
-      const payload = {};
+    // Adds a new appointment, reloads all data and refreshes the rendering
+    async addAppointment() {
+      let payload = {
+        user: "h1",
+      };
+      try {
+        await this.$store.dispatch("agenda/newAppointment", payload);
+      } catch (error) {
+        // TODO: Popup error? => this.error + computed
+        console.log(error || "Algo deu errado.");
+      }
+      this.updateRendering();
+    },
+    async editAppointment(value) {
+      const payload = {
+        id: value,
+        dateTime: this.selectedHours,
+      };
       for (let info of Object.entries(this.appointmentInfo)) {
         if (info[1] !== "") {
           payload[info[0]] = info[1];
         }
       }
-      console.log(payload);
+      try {
+        await this.$store.dispatch("agenda/editAppointment", payload);
+      } catch (error) {
+        // TODO: Popup error? => this.error + computed
+        console.log(error || "Algo deu errado.");
+      }
+      this.updateRendering();
     },
     async removeAppointment(value) {
       const payload = {
-        name: value,
+        id: value,
         dateTime: this.selectedHours,
       };
-      await this.$store.dispatch("agenda/removeAppointment", payload);
+      try {
+        await this.$store.dispatch("agenda/removeAppointment", payload);
+      } catch (error) {
+        // TODO: Popup error? => this.error + computed
+        console.log(error || "Algo deu errado.");
+      }
       this.close();
       this.updateRendering();
     },
@@ -215,25 +243,22 @@ export default {
       this.showInfoDialog = false;
       this.clear();
     },
-    showInfo() {
-      this.showInfoDialog = true;
+    showInfo(showDialog = false) {
       const agendaDetails = this.$store.getters["agenda/agendaDetails"];
       this.selectedHours = this.$store.getters["agenda/selectedHours"][0]; //[0] gets the first (and only because the info button is only shown when there is only one slot selected) array inside the object
-      const selectedHourString = this.selectedHours.toFormat("HH:mm");
+      this.selectedHourString = this.selectedHours.toFormat("HH:mm");
       this.selectedHourDetails = [];
       for (let detail of Object.values(agendaDetails)) {
-        if (detail.timeString === selectedHourString) {
+        if (detail.timeString === this.selectedHourString) {
           this.selectedHourDetails.push(detail);
         }
       }
-    },
-    // Adds a new appointment, reloads all data and refreshes the rendering
-    async addAppointment() {
-      let payload = {
-        user: "h1",
-      };
-      await this.$store.dispatch("agenda/newAppointment", payload);
-      this.updateRendering();
+      if (this.selectedHourDetails.length > 0) {
+        this.showInfoButton = true;
+      }
+      if (showDialog === true) {
+        this.showInfoDialog = true;
+      }
     },
     updateRendering() {
       this.$emit("updateRendering");
@@ -243,11 +268,23 @@ export default {
     editingEnabled() {
       return this.editingAllowed ? false : true;
     },
-    showInfoButton() {
-      return this.$store.getters["agenda/selectedHours"].length === 1
-        ? true
-        : false;
-    },
+  },
+  created() {
+    this.$store.watch(
+      () => {
+        return this.$store.getters["agenda/selectedHours"];
+      },
+      (newValue) => {
+        if (newValue.length === 1) {
+          this.showAddButton = true;
+          this.showInfo();
+        } else {
+          this.showAddButton = false;
+          this.showInfoButton = false;
+          this.showInfoDialog = false;
+        }
+      }
+    );
   },
   data() {
     return {
@@ -268,6 +305,10 @@ export default {
         district: "",
         city: "",
       },
+      selectedHourString: "",
+      showInfoButton: false,
+      showAddButton: false,
+      id: 0,
     };
   },
   emits: ["updateRendering"],
