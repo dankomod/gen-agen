@@ -47,7 +47,7 @@
 </template>
 
 <script>
-// * I can't figure out a way to us v-model here. The v-model directive is sent to the div parent AND conflicts with :value when it is needed to have a value on the input. A good workaround is to use @change to get the data input and :value to show data. The element events can be bound using @change and retrieving the value of the event, as follows: '@change="appointmentInfo.observations = $event.target.value"'
+// * I can't figure out a way to use v-model here because it is sent to the div parent and conflicts with the :value prop. A good workaround is to use an event listener to get the data input and a prop to show data. The data can be accessed this way: '@event="appointmentInfo.observations = $event.target.value"'
 export default {
   props: [
     "elementEnabled",

@@ -140,12 +140,12 @@ export default {
   components: { InfoMenu, SlotsMenu, ActionsMenu },
 };
 // TODO: Users
-// TODO: Specific opening and closing hours (weekends and holydays)
 // TODO: Incorporate the style tag's CSS onto Tailwind
 // TODO: change the HTML date input format to dd/mm/yyyy
 // TODO: make a root page for root router
 
 // ? Admin Dashboard
 // ? disabled hours and days
+// ? Specific opening and closing hours (weekends and holydays)
 // ? custom closing and opening hours
 </script>

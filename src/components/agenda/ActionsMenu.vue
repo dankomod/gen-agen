@@ -238,40 +238,28 @@ export default {
     inputEnabled() {
       return this.editingAllowed ? false : true;
     },
-    // showAddButton() {
-    //   if (this.appointmentInfo.name !== "") {
-    //     return true;
-    //   } else {
-    //     return false;
-    //   }
-    // },
   },
   created() {
+    // Shows the info button if the selected hour already has an appointment
+    if (this.$store.getters["agenda/selectedHours"].length === 1) {
+      this.showInfoButton = true;
+    }
+    // Watches the store for valid values in the appointment object and shows the add button if needed
     this.$store.watch(
       () => {
         return this.$store.getters["agenda/appointmentInfo"];
       },
       () => {
         this.showAddButton = true;
-        // if (newValue.length === 1) {
-        //   // TODO: showAddButton only when the three basic fields are filled
-        //   // ! TODO: maybe a watcher isn't the better approach because it will only show data in the second interaction with the getter
-        //   this.showInfo();
-        // } else {
-        //   this.showInfoButton = false;
-        //   this.showInfoDialog = false;
-        // }
       }
     );
+    // Watches the store for changes in the selectedHours array and changes views accordingly
     this.$store.watch(
       () => {
         return this.$store.getters["agenda/selectedHours"];
       },
       (newValue) => {
-        console.log(newValue);
         if (newValue.length === 1) {
-          // TODO: showAddButton only when the three basic fields are filled
-          // ! TODO: maybe a watcher isn't the better approach because it will only show data in the second interaction with the getter
           this.showInfo();
         } else {
           this.showInfoButton = false;
@@ -307,7 +295,4 @@ export default {
   },
   emits: ["updateRendering"],
 };
-// TODO: Show add button if no selection of taken time, hide others
-// TODO: Show edit and remove button if selection of taken time, hide add
-// TODO: Block buttons if free and taken times are selected
 </script>

@@ -42,5 +42,4 @@ export default {
   },
   emits: ["close"],
 };
-// TODO: Fix the positioning of the dialog
 </script>
