@@ -5,8 +5,8 @@ module.exports = {
     extend: {},
   },
   variants: {
+    backgroundColor: ({ after }) => after(["disabled"]),
     extend: {
-      opacity: ["disabled"],
       backgroundColor: ["checked"],
     },
   },

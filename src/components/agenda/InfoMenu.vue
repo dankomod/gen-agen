@@ -1,94 +1,74 @@
 <template>
   <form>
     <div id="basic-data">
-      <div class="p-1">
-        <label for="name">Nome do Cliente</label
-        ><input
-          type="text"
-          id="name"
-          class="bg-blue-100 border border-blue-500"
-          v-model.trim="appointmentInfo.name"
-        />
-      </div>
-      <div class="p-1">
-        <label for="phone">Telefone</label>
-        <input
-          type="number"
-          id="phone"
-          class="bg-blue-100 border border-blue-500"
-          v-model.trim.number="appointmentInfo.phone"
-        />
-      </div>
-      <div class="p-1">
-        <label for="price">Valor</label>
-        <input
-          type="number"
-          id="price"
-          class="bg-blue-100 border border-blue-500"
-          v-model.trim.number="appointmentInfo.price"
-        />
-      </div>
+      <base-form-element
+        :elementType="'inputText'"
+        :elementEnabled="true"
+        :elementLabel="'Nome'"
+        @keyup="appointmentInfo.name = $event.target.value"
+      ></base-form-element>
+      <base-form-element
+        :elementType="'inputNumber'"
+        :elementEnabled="true"
+        :elementLabel="'Telefone'"
+        @keyup="appointmentInfo.phone = $event.target.value"
+      ></base-form-element>
+      <base-form-element
+        :elementType="'inputNumber'"
+        :elementEnabled="true"
+        :elementLabel="'Valor'"
+        @keyup="appointmentInfo.price = $event.target.value"
+      ></base-form-element>
     </div>
-    <a @click="toggleDetails" class="text-lg cursor-pointer"
-      >Mostrar detalhes</a
+    <base-button
+      v-if="!showDetails"
+      @click="toggleDetails"
+      class="text-lg cursor-pointer"
+      >Mostrar detalhes</base-button
     >
     <div id="details" v-if="showDetails">
-      <div class="p-1">
-        <label for="address">Endereço</label>
-        <input
-          type="text"
-          id="address"
-          class="bg-blue-100 border border-blue-500"
-          v-model.trim="appointmentInfo.address"
-        />
-      </div>
-      <div class="p-1">
-        <label for="number">Número</label>
-        <input
-          type="number"
-          id="number"
-          class="bg-blue-100 border border-blue-500"
-          v-model.trim.number="appointmentInfo.number"
-        />
-      </div>
-      <div class="p-1">
-        <label for="district">Bairro</label>
-        <input
-          type="text"
-          id="district"
-          class="bg-blue-100 border border-blue-500"
-          v-model.trim="appointmentInfo.district"
-        />
-      </div>
-      <div class="p-1">
-        <label for="city">Cidade</label>
-        <input
-          type="text"
-          id="city"
-          class="bg-blue-100 border border-blue-500"
-          v-model.trim="appointmentInfo.city"
-        />
-      </div>
-      <div class="p-1">
-        <label for="payment-method">Pagamento</label>
-        <input
-          type="text"
-          id="payment-method"
-          class="bg-blue-100 border border-blue-500"
-          v-model.trim="appointmentInfo.paymentMethod"
-        />
-      </div>
-      <div class="p-1">
-        <label for="observations">Observações</label>
-        <textarea
-          name=""
-          id="observations"
-          cols="20"
-          rows="3"
-          class="bg-blue-100 border border-blue-500"
-          v-model.trim="appointmentInfo.observations"
-        ></textarea>
-      </div>
+      <base-form-element
+        :elementType="'select'"
+        :optionValueArray="[
+          'Cartão de Crédito',
+          'Cartão de Débito',
+          'Dinheiro',
+          'Pix/Transferência',
+        ]"
+        :elementEnabled="true"
+        :elementLabel="'Método de Pagamento'"
+        @keyup="appointmentInfo.paymentMethod = $event.target.value"
+      ></base-form-element>
+      <base-form-element
+        :elementType="'inputText'"
+        :elementEnabled="true"
+        :elementLabel="'Endereço'"
+        @keyup="appointmentInfo.address = $event.target.value"
+      ></base-form-element>
+      <base-form-element
+        :elementType="'inputNumber'"
+        :elementEnabled="true"
+        :elementLabel="'Número'"
+        @keyup="appointmentInfo.number = $event.target.value"
+      ></base-form-element>
+      <base-form-element
+        :elementType="'inputText'"
+        :elementEnabled="true"
+        :elementLabel="'Bairro'"
+        @keyup="appointmentInfo.district = $event.target.value"
+      ></base-form-element>
+      <base-form-element
+        :elementType="'inputText'"
+        :elementEnabled="true"
+        :elementLabel="'Cidade'"
+        @keyup="appointmentInfo.city = $event.target.value"
+      ></base-form-element>
+      <base-form-element
+        :elementType="'textarea'"
+        :elementEnabled="true"
+        :elementLabel="'Observações'"
+        @keyup="appointmentInfo.observations = $event.target.value"
+      ></base-form-element>
     </div>
   </form>
 </template>
@@ -98,10 +78,9 @@ export default {
   watch: {
     $data: {
       handler: function (data) {
-        // TODO: refuse empty values
         if (
-          data.appointmentInfo.name !== "" ||
-          data.appointmentInfo.phone !== "" ||
+          data.appointmentInfo.name !== "" &&
+          data.appointmentInfo.phone !== "" &&
           data.appointmentInfo.price !== ""
         ) {
           this.$store.dispatch(

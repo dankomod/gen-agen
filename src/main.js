@@ -22,6 +22,9 @@ app.component("base-dialog", BaseDialog);
 import BaseButton from "./components/ui/BaseButton.vue";
 app.component("base-button", BaseButton);
 
+import BaseFormElement from "./components/ui/BaseFormElement.vue";
+app.component("base-form-element", BaseFormElement);
+
 // Router addition
 app.use(router);
 

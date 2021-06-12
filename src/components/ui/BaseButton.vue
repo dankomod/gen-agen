@@ -1,5 +1,8 @@
 <template>
-  <button :class="setButtonStyle" class="px-3 py-1 text-lg font-medium w-min">
+  <button
+    :class="setButtonStyle"
+    class="px-3 py-1 text-lg font-medium w-min whitespace-nowrap"
+  >
     <slot></slot>
   </button>
 </template>
@@ -7,6 +10,7 @@
 <script>
 export default {
   computed: {
+    // Returns specific styling acording to the buttonTrype or a default styling
     setButtonStyle() {
       switch (this.buttonType) {
         case "success":

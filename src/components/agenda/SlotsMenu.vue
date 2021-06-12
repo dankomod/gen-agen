@@ -1,9 +1,10 @@
 <template>
   <div class="flex flex-wrap items-center justify-center max-w-screen-md pb-10">
+    <!-- This is a solution to make checkbox HTML inputs behave as selectable boxes. The <article> holds the base style and colouring, the <input> makes the box selectable and stylable as a selectable box, the <div> is shown whether the input is selected or not, and the <span> holds the text -->
     <article
       v-for="agendaSlot in agendaSlots"
       :key="agendaSlot.dateTime"
-      class="relative float-left w-24 h-24 m-1 overflow-hidden border"
+      class="relative float-left w-24 h-24 m-1 overflow-hidden text-2xl border"
       :class="takenFormat(agendaSlot.takenCount)"
     >
       <input
@@ -24,7 +25,7 @@
           ease-linear
         "
       >
-        <span class="text-2xl">{{ agendaSlot.displayTime }}</span>
+        <span>{{ agendaSlot.displayTime }}</span>
       </div>
     </article>
   </div>
@@ -33,7 +34,7 @@
 <script>
 export default {
   methods: {
-    // Defines the conditional formatting based on the ammount of appointments per slot
+    // Defines conditional formatting based on the ammount of appointments per slot
     takenFormat(takenCount) {
       if (takenCount === 0 || takenCount === undefined) {
         return "text-green-600 border-green-400 bg-green-100";
@@ -46,6 +47,7 @@ export default {
   },
   created() {
     this.agendaSlots = this.$store.getters["agenda/agendaHours"];
+
     // Watches for changes of agendaHours in the store // https://stackoverflow.com/a/46097506 // https://vuejs.org/v2/api/#vm-watch
     this.$store.watch(
       () => {
@@ -56,7 +58,8 @@ export default {
           this.agendaSlots = this.$store.getters["agenda/agendaHours"];
           this.selectedHours = [];
         }
-      }
+      },
+      { deep: true }
     );
   },
   watch: {

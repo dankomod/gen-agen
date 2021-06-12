@@ -1,121 +1,92 @@
 <template>
   <base-dialog @close="close" v-if="showInfoDialog">
-    <div v-for="detail in selectedHourDetails" :key="detail.id" class="">
+    <div v-for="detail in selectedHourDetails" :key="detail.id" class="w-full">
       <!-- TODO: computed property -->
       <div
-        class="w-96"
+        class="w-full"
         v-if="visibleAppointment === null || visibleAppointment === detail.name"
       >
         <!-- TODO: remove hover styling when details are shown  -->
-        <form class="p-2 hover:bg-blue-50">
+        <form class="w-full p-2 space-y-1 hover:bg-blue-50">
           <!-- BASIC INFO -->
-          <div @click="toggleDetails(detail.name)">
-            <div class="flex flex-row items-center p-1">
-              <p class="w-24">Nome</p>
-              <p v-if="editingEnabled">{{ detail.name }}</p>
-              <input
-                v-else
-                @change="appointmentInfo.name = $event.target.value"
-                class="px-3 py-1 bg-gray-200"
-                type="text"
-                :value="detail.name"
-              />
-            </div>
-            <div class="flex flex-row items-center p-1">
-              <label class="w-24">Telefone</label>
-              <p v-if="editingEnabled">{{ detail.phone }}</p>
-              <input
-                v-else
-                @change="appointmentInfo.phone = $event.target.value"
-                class="px-3 py-1 bg-gray-200"
-                type="number"
-                :value="detail.phone"
-              />
-            </div>
-            <div class="flex flex-row items-center p-1">
-              <label class="w-24">Valor</label>
-              <p v-if="editingEnabled">{{ detail.price }}</p>
-              <input
-                v-else
-                @change="appointmentInfo.price = $event.target.value"
-                class="px-3 py-1 bg-gray-200"
-                type="number"
-                :value="detail.price"
-              />
-            </div>
+          <div @click="toggleDetails(detail.name)" class="space-y-1">
+            <base-form-element
+              :elementType="'inputText'"
+              :elementEnabled="!inputEnabled"
+              :elementLabel="'Nome'"
+              :elementValue="detail.name"
+              @keyup="appointmentInfo.name = $event.target.value"
+            ></base-form-element>
+            <base-form-element
+              :elementType="'inputNumber'"
+              :elementEnabled="!inputEnabled"
+              :elementLabel="'Telefone'"
+              :elementValue="detail.phone"
+              @keyup="appointmentInfo.phone = $event.target.value"
+            ></base-form-element>
+            <base-form-element
+              :elementType="'inputNumber'"
+              :elementEnabled="!inputEnabled"
+              :elementLabel="'Valor'"
+              :elementValue="detail.price"
+              @keyup="appointmentInfo.price = $event.target.value"
+            ></base-form-element>
           </div>
           <!-- DETAILS -->
-          <div v-if="showDetails">
-            <div class="flex flex-row items-center p-1">
-              <label class="w-24">Pagamento</label>
-              <p v-if="editingEnabled">{{ detail.paymentMethod }}</p>
-              <input
-                v-else
-                @change="appointmentInfo.paymentMethod = $event.target.value"
-                class="px-3 py-1 bg-gray-200"
-                type="text"
-                :value="detail.paymentMethod"
-              />
-            </div>
-            <div class="flex flex-row items-center p-1">
-              <label class="w-24">Endereço</label>
-              <p v-if="editingEnabled">{{ detail.address }}</p>
-              <input
-                v-else
-                @change="appointmentInfo.address = $event.target.value"
-                class="px-3 py-1 bg-gray-200"
-                type="text"
-                :value="detail.address"
-              />
-            </div>
-            <div class="flex flex-row items-center p-1">
-              <label class="w-24">Número</label>
-              <p v-if="editingEnabled">{{ detail.number }}</p>
-              <input
-                v-else
-                @change="appointmentInfo.number = $event.target.value"
-                class="px-3 py-1 bg-gray-200"
-                type="number"
-                :value="detail.number"
-              />
-            </div>
-            <div class="flex flex-row items-center p-1">
-              <label class="w-24">Bairro</label>
-              <p v-if="editingEnabled">{{ detail.district }}</p>
-              <input
-                v-else
-                @change="appointmentInfo.district = $event.target.value"
-                class="px-3 py-1 bg-gray-200"
-                type="text"
-                :value="detail.district"
-              />
-            </div>
-            <div class="flex flex-row items-center p-1">
-              <label class="w-24">Cidade</label>
-              <p v-if="editingEnabled">{{ detail.city }}</p>
-              <input
-                v-else
-                @change="appointmentInfo.city = $event.target.value"
-                class="px-3 py-1 bg-gray-200"
-                type="text"
-                :value="detail.city"
-              />
-            </div>
-            <div class="flex flex-row items-center p-1">
-              <label class="w-24">Observações</label>
-              <p v-if="editingEnabled">{{ detail.observations }}</p>
-              <textarea
-                v-else
-                @change="appointmentInfo.observations = $event.target.value"
-                class="px-3 py-1 bg-gray-200"
-                type="text"
-                :value="detail.observations"
-              ></textarea>
-            </div>
+          <div v-if="showDetails" class="space-y-1">
+            <!-- Make this a dropdown of possible payment methods -->
+            <base-form-element
+              :elementType="'select'"
+              :optionValueArray="[
+                'Cartão de Crédito',
+                'Cartão de Débito',
+                'Dinheiro',
+                'Pix/Transferência',
+              ]"
+              :elementEnabled="!inputEnabled"
+              :elementLabel="'Método de Pagamento'"
+              :elementValue="detail.paymentMethod"
+              @keyup="appointmentInfo.paymentMethod = $event.target.value"
+            ></base-form-element>
+            <base-form-element
+              :elementType="'inputText'"
+              :elementEnabled="!inputEnabled"
+              :elementLabel="'Endereço'"
+              :elementValue="detail.address"
+              @keyup="appointmentInfo.address = $event.target.value"
+            ></base-form-element>
+            <base-form-element
+              :elementType="'inputNumber'"
+              :elementEnabled="!inputEnabled"
+              :elementLabel="'Número'"
+              :elementValue="detail.number"
+              @keyup="appointmentInfo.number = $event.target.value"
+            ></base-form-element>
+            <base-form-element
+              :elementType="'inputText'"
+              :elementEnabled="!inputEnabled"
+              :elementLabel="'Bairro'"
+              :elementValue="detail.district"
+              @keyup="appointmentInfo.district = $event.target.value"
+            ></base-form-element>
+            <base-form-element
+              :elementType="'inputText'"
+              :elementEnabled="!inputEnabled"
+              :elementLabel="'Cidade'"
+              :elementValue="detail.city"
+              @keyup="appointmentInfo.city = $event.target.value"
+            ></base-form-element>
+            <base-form-element
+              :elementType="'textarea'"
+              :elementEnabled="!inputEnabled"
+              :elementLabel="'Observações'"
+              :elementValue="detail.observations"
+              @keyup="appointmentInfo.observations = $event.target.value"
+            ></base-form-element>
           </div>
         </form>
         <!-- BASE BUTTONS -->
-        <div v-if="showDetails && editingEnabled">
+        <div v-if="showDetails && inputEnabled">
           <!-- TODO: computed property -->
           <base-button
             buttonType="success"
@@ -134,7 +105,7 @@
           </base-button>
         </div>
         <!-- EDIT BUTTONS -->
-        <div v-if="showDetails && !editingEnabled">
+        <div v-if="showDetails && !inputEnabled">
           <base-button
             buttonType="success"
             @click="editAppointment(detail.id) + toggleEditing()"
@@ -254,12 +225,44 @@ export default {
       this.$emit("updateRendering");
     },
   },
-  computed: {
-    editingEnabled() {
-      return this.editingAllowed ? false : true;
+  watch: {
+    appointmentInfo() {
+      if (this.appointmentInfo.name !== "") {
+        this.showAddButton = true;
+      } else {
+        this.showAddButton = false;
+      }
     },
   },
+  computed: {
+    inputEnabled() {
+      return this.editingAllowed ? false : true;
+    },
+    // showAddButton() {
+    //   if (this.appointmentInfo.name !== "") {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // },
+  },
   created() {
+    this.$store.watch(
+      () => {
+        return this.$store.getters["agenda/appointmentInfo"];
+      },
+      () => {
+        this.showAddButton = true;
+        // if (newValue.length === 1) {
+        //   // TODO: showAddButton only when the three basic fields are filled
+        //   // ! TODO: maybe a watcher isn't the better approach because it will only show data in the second interaction with the getter
+        //   this.showInfo();
+        // } else {
+        //   this.showInfoButton = false;
+        //   this.showInfoDialog = false;
+        // }
+      }
+    );
     this.$store.watch(
       () => {
         return this.$store.getters["agenda/selectedHours"];
@@ -269,10 +272,8 @@ export default {
         if (newValue.length === 1) {
           // TODO: showAddButton only when the three basic fields are filled
           // ! TODO: maybe a watcher isn't the better approach because it will only show data in the second interaction with the getter
-          this.showAddButton = true;
           this.showInfo();
         } else {
-          this.showAddButton = false;
           this.showInfoButton = false;
           this.showInfoDialog = false;
         }

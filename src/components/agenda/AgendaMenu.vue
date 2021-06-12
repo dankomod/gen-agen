@@ -1,32 +1,28 @@
 <template>
   <div class="container flex flex-col items-center py-10">
     <h1 class="pb-10 text-2xl">Agenda</h1>
-    <div>
-      <!-- DATE SELECTOR -->
-      <div class="flex items-center pb-5">
-        <label for="dateselector" class="pr-2 text-lg"
-          >Data (mês/dia/ano):</label
-        >
-        <input
-          class="p-1 text-xl bg-blue-100 border border-blue-400"
-          type="date"
-          name="dateselector"
-          id="dateselector"
-          v-model="selectedDate"
-          @change="dateSelected"
-        />
-      </div>
-      <div :key="id">
-        <!-- APPOINTMENT SLOTS MENU -->
-        <slots-menu v-if="showSlotsMenu"></slots-menu>
-        <!-- INFO MENU -->
-        <info-menu v-if="showInfoMenu"></info-menu>
-        <!-- ACTIONS MENU -->
-        <actions-menu
-          @updateRendering="updateRendering"
-          v-if="showActionsMenu"
-        ></actions-menu>
-      </div>
+    <!-- DATE SELECTOR -->
+    <div class="flex items-center pb-5">
+      <label for="dateselector" class="pr-2 text-lg">Data (mês/dia/ano):</label>
+      <input
+        class="p-1 text-xl bg-blue-100 border border-blue-400"
+        type="date"
+        name="dateselector"
+        id="dateselector"
+        v-model="selectedDate"
+        @change="dateSelected"
+      />
+    </div>
+    <div :key="id">
+      <!-- APPOINTMENT SLOTS MENU -->
+      <slots-menu v-if="showSlotsMenu"></slots-menu>
+      <!-- INFO MENU -->
+      <info-menu v-if="showInfoMenu"></info-menu>
+      <!-- ACTIONS MENU -->
+      <actions-menu
+        @updateRendering="updateRendering"
+        v-if="showActionsMenu"
+      ></actions-menu>
     </div>
   </div>
 </template>

@@ -1,29 +1,45 @@
 <template>
+  <!-- Background -->
   <div
-    @click="close"
     class="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-75"
+    @click="close"
   ></div>
-  <dialog open class="fixed flex flex-col items-center justify-center top-1/4">
+  <!-- Dialog dox -->
+  <dialog
+    open
+    class="fixed w-5/6 max-w-screen-sm max-h-screen overflow-auto transform -translate-y-1/2  top-1/2"
+  >
     <slot></slot>
-    <button
+    <base-button @click="close" class="mt-10">Fechar</base-button>
+    <div
       @click="close"
-      class="px-4 py-1 mt-10 mb-3 text-lg text-indigo-200 bg-indigo-600 border border-indigo-300  w-min"
+      class="absolute top-0 right-0 flex items-center justify-center w-10 h-10 text-white bg-red-500  hover:bg-red-700"
     >
-      Fechar
-    </button>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-8 h-8"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </div>
   </dialog>
 </template>
 <script>
 export default {
   methods: {
+    // Emits a close event if the closing button or the background is clicked
     close() {
-      if (this.fixed) {
-        return;
-      }
       this.$emit("close");
     },
   },
-  props: ["show"],
   emits: ["close"],
 };
 // TODO: Fix the positioning of the dialog
