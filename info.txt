@@ -1,0 +1,8 @@
+clients fields
+- name
+- phone
+- address
+- number
+- district
+- city
+- cpf

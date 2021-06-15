@@ -1,4 +1,4 @@
-import { createApp } from "vue";
+import { createApp, defineAsyncComponent } from "vue";
 
 // Main app page
 import App from "./App.vue";
@@ -15,15 +15,19 @@ import "./assets/css/style.css";
 // Creation of the app
 const app = createApp(App);
 
-// Dialog popup
-import BaseDialog from "./components/ui/BaseDialog.vue";
-app.component("base-dialog", BaseDialog);
-
 import BaseButton from "./components/ui/BaseButton.vue";
 app.component("base-button", BaseButton);
 
-import BaseFormElement from "./components/ui/BaseFormElement.vue";
+const BaseFormElement = defineAsyncComponent(() =>
+  import("./components/ui/BaseFormElement.vue")
+);
 app.component("base-form-element", BaseFormElement);
+
+// Dinamic import
+const BaseDialog = defineAsyncComponent(() =>
+  import("./components/ui/BaseDialog.vue")
+);
+app.component("base-dialog", BaseDialog);
 
 // Router addition
 app.use(router);

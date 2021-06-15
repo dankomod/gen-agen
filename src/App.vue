@@ -1,15 +1,18 @@
 <template>
   <section class="flex flex-col px-5">
     <!-- <router-view></router-view> -->
-    <the-admin-agenda></the-admin-agenda>
+    <!-- <agenda></agenda> -->
+    <clients></clients>
   </section>
 </template>
 
 <script>
-import TheAdminAgenda from "./pages/adminagenda/TheAdminAgenda.vue";
+// import Agenda from "./pages/agenda/Agenda.vue";
+import Clients from "./pages/clients/Clients.vue";
 export default {
   components: {
-    TheAdminAgenda,
+    // Agenda,
+    Clients,
   },
 };
 </script>
