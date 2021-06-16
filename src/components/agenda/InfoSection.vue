@@ -1,6 +1,8 @@
 <template>
   <!-- //TODO: change text of this button if a user is being added or an appointment is being made -->
-  <base-button @click="toggleSearch">Novo Agendamento</base-button>
+  <base-button @click="showSearch = true">{{
+    appointmentButtonText
+  }}</base-button>
   <!-- //TODO: reset the forms if the button is clicked or the search returns a new value -->
   <client-search v-if="showSearch" @selection="selection"></client-search>
   <client-form
@@ -14,6 +16,7 @@
     </base-button>
   </div>
   <appointment-form
+    :key="appointmentFormKey"
     v-if="showAppointmentForm"
     :formEnabled="appointmentFormEnabled"
   ></appointment-form>
@@ -30,8 +33,10 @@ export default {
     async createAppointment() {
       try {
         await this.$store.dispatch("agenda/createAppointment");
-        this.toggleAppointmentForm(false);
-        // TODO: Clear the State
+        this.showAppointmentForm = false;
+        this.appointmentFormEnabled = false;
+        this.$store.dispatch("agenda/setSelectedSlots", null);
+        this.$emit("newAppointment");
       } catch (error) {
         console.log(error);
       }
@@ -41,38 +46,39 @@ export default {
       try {
         await this.$store.dispatch("clients/createClient");
         console.log(this.$store.getters["clients/selectedClient"]);
-        this.toggleClientForm(false);
-        this.toggleAppointmentForm(true);
+        this.showClientForm = false;
+        this.showAppointmentForm = true;
+        this.appointmentFormEnabled = true;
       } catch (error) {
         console.log(error);
       }
     },
-    toggleAppointmentForm(value = true) {
-      this.showAppointmentForm = value;
-      this.appointmentFormEnabled = value;
-    },
-    toggleClientForm(value = true) {
-      this.showClientForm = value;
-      this.clientFormEnabled = value;
-    },
-    toggleSearch(value = true) {
-      this.showSearch = value;
-      this.toggleClientForm(!value);
-    },
     selection(value, data) {
+      this.clientFormData = [null, { name: data }];
       if (!value) {
-        this.clientFormData = [null, { name: data }];
-        this.toggleClientForm(true);
+        this.showAppointmentForm = false;
+        this.showClientForm = true;
       } else {
-        this.toggleAppointmentForm(true);
+        this.showClientForm = false;
+        // Forced re-rendering to assure that the appointment form will hold the most recent client data
+        this.appointmentFormKey++;
+        this.showAppointmentForm = true;
       }
-      this.toggleSearch(false);
+      this.showSearch = false;
     },
     // Called on creation to be sure to reset all data when this component is re-rendered
     resetValues() {
-      this.clientFormData = [];
+      this.showSearch = false;
       this.showAppointmentForm = false;
       this.showClientForm = false;
+    },
+  },
+  computed: {
+    appointmentButtonText() {
+      // If any form is shown...
+      return this.showAppointmentForm || this.showClientForm
+        ? "Pesquisar Novamente"
+        : "Novo Agendamento";
     },
   },
   created() {
@@ -86,9 +92,11 @@ export default {
       appointmentFormEnabled: true,
       clientFormEnabled: true,
       showSearch: false,
+      appointmentFormKey: 0,
     };
   },
   components: { AppointmentForm, ClientForm, ClientSearch },
+  emits: ["newAppointment"],
 };
 import AppointmentForm from "./AppointmentForm.vue";
 import ClientForm from "./../clients/ClientForm.vue";
