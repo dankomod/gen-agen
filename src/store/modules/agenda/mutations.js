@@ -26,4 +26,7 @@ export default {
   setAppointmentNewData(state, appointmentNewData) {
     state.appointmentNewData = appointmentNewData;
   },
+  setTakenHours(state, takenHours) {
+    state.takenHours = takenHours;
+  },
 };

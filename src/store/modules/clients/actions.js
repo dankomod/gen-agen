@@ -3,7 +3,6 @@ export default {
   // * POST requests to the Firebase Rest API automatically creates an ID.
   async createClient({ dispatch }) {
     const formNewData = this.getters["clients/formNewData"];
-    console.log(formNewData);
     if (formNewData.name !== undefined && formNewData.phone !== undefined) {
       const response = await fetch(
         "https://gen-agen-default-rtdb.firebaseio.com/clients.json",

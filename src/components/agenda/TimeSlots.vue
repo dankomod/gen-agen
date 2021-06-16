@@ -15,7 +15,16 @@
         class="absolute top-0 left-0 w-24 h-24 opacity-0 cursor-pointer"
       />
       <div
-        class="flex items-center justify-center w-full h-full transition duration-100 ease-linear "
+        class="
+          flex
+          items-center
+          justify-center
+          w-full
+          h-full
+          transition
+          duration-100
+          ease-linear
+        "
       >
         <span>{{ timeSlot.dateTime.toFormat("HH:mm") }}</span>
       </div>
@@ -27,18 +36,7 @@
 export default {
   methods: {
     async intervalCalculator() {
-      // Gets all the appointments from the API if any
-      const appointments = await this.$store.dispatch(
-        "agenda/loadAppointments"
-      );
-      const takenSlots = [];
-      // Skips if no appointments found (will return an error if no appointments on date)
-      if (appointments) {
-        // Creates an array with all the existing appointments date strings
-        for (let appointment of Object.values(appointments)) {
-          takenSlots.push(appointment.dateTime);
-        }
-      }
+      const takenHours = this.$store.getters["agenda/takenHours"];
       // Retrieves the selected date by the user and the opening and closing hours from the State
       const selectedDate = this.$store.getters["agenda/selectedDate"];
       let opening = selectedDate.plus({
@@ -52,7 +50,7 @@ export default {
       this.timeSlots.push({
         dateTime: opening,
         // calculates how many times a slot has been taken
-        appointments: takenSlots.filter((v) => v == opening.toString()).length,
+        appointments: takenHours.filter((v) => v == opening.toString()).length,
       });
       while (opening < closing) {
         opening = opening.plus({ minutes: 30 }); // Time increment
@@ -60,7 +58,7 @@ export default {
         if (opening < closing) {
           this.timeSlots.push({
             dateTime: opening,
-            appointments: takenSlots.filter((v) => v == opening.toString())
+            appointments: takenHours.filter((v) => v == opening.toString())
               .length,
           });
         }
@@ -87,7 +85,8 @@ export default {
       this.$emit("slotSelected", value);
     },
   },
-  created() {
+  async created() {
+    await this.$store.dispatch("agenda/loadAppointments");
     this.intervalCalculator();
   },
   data() {

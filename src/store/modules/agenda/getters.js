@@ -30,4 +30,7 @@ export default {
   appointmentNewData(state) {
     return state.appointmentNewData;
   },
+  takenHours(state) {
+    return state.takenHours;
+  },
 };

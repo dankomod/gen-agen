@@ -16,6 +16,7 @@ export default {
       selectedDate: "",
       selectedSlots: [],
       appointmentNewData: "",
+      takenHours: [],
     };
   },
   actions,

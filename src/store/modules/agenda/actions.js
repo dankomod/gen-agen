@@ -105,7 +105,8 @@ export default {
       }
     }
   },
-  async loadAppointments() {
+  async loadAppointments(context) {
+    console.log("loadappointments");
     const selectedDate = this.getters["agenda/selectedDate"];
     const response = await fetch(
       `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}.json`
@@ -116,6 +117,15 @@ export default {
         responseData.message || "Erro ao enviar solicitação."
       );
       throw error;
+    }
+    // If any appointment, pushes an array to the state with all the selected hours. This will be used by TimeSlots and InfoSection
+    // * Having the array in the State allows fast data access
+    if (await responseData) {
+      const takenHours = [];
+      for (let appointment of Object.values(responseData)) {
+        takenHours.push(appointment.dateTime);
+      }
+      context.commit("setTakenHours", takenHours);
     }
     return responseData;
   },

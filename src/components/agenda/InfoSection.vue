@@ -3,6 +3,7 @@
   <base-button @click="showSearch = true">{{
     appointmentButtonText
   }}</base-button>
+  <base-button v-if="showInfoButton">Mostrar Informações</base-button>
   <!-- //TODO: reset the forms if the button is clicked or the search returns a new value -->
   <client-search v-if="showSearch" @selection="selection"></client-search>
   <client-form
@@ -81,8 +82,30 @@ export default {
         : "Novo Agendamento";
     },
   },
-  created() {
+  async created() {
     this.resetValues();
+    const selectedSlots = this.$store.getters["agenda/selectedSlots"];
+    const takenHours = this.$store.getters["agenda/takenHours"];
+
+    this.showInfoButton =
+      selectedSlots.length === 1 &&
+      takenHours.includes(selectedSlots[0].toString())
+        ? true
+        : false;
+
+    // console.log(selectedSlots, takenHours);
+    this.$store.watch(
+      () => {
+        return this.$store.getters["agenda/selectedSlots"];
+      },
+      (newValue) => {
+        if (newValue.length === 1) {
+          this.showInfoButton = true;
+        } else {
+          this.showInfoButton = false;
+        }
+      }
+    );
   },
   data() {
     return {
@@ -93,11 +116,14 @@ export default {
       clientFormEnabled: true,
       showSearch: false,
       appointmentFormKey: 0,
+      showInfoButton: false,
     };
   },
   components: { AppointmentForm, ClientForm, ClientSearch },
   emits: ["newAppointment"],
 };
+// eslint-disable-next-line
+import { DateTime } from "luxon";
 import AppointmentForm from "./AppointmentForm.vue";
 import ClientForm from "./../clients/ClientForm.vue";
 import ClientSearch from "./../clients/ClientSearch.vue";
