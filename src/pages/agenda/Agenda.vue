@@ -1,11 +1,11 @@
 <template>
   <date-selector @dateSelected="toggleTimeSlots"></date-selector>
   <time-slots
-    :key="timeSlotsKey"
+    :key="componentsKey"
     v-if="showTimeSlots"
     @slotSelected="toggleInfoSection"
   ></time-slots>
-  <info-section v-if="showInfoSection"></info-section>
+  <info-section :key="componentsKey" v-if="showInfoSection"></info-section>
 </template>
 
 <script>
@@ -15,12 +15,15 @@ export default {
       this.showInfoSection = value;
     },
     toggleTimeSlots(value = true) {
-      this.timeSlotsKey++;
+      // Forced re-rendering of the components when a new date is selected
+      this.componentsKey++;
       this.showTimeSlots = value;
+      // Makes sure that the InfoSection is hidden after a re-rendering
+      this.toggleInfoSection(false);
     },
   },
   data() {
-    return { showInfoSection: false, showTimeSlots: false, timeSlotsKey: 0 };
+    return { showInfoSection: false, showTimeSlots: false, componentsKey: 0 };
   },
   components: { DateSelector, InfoSection, TimeSlots },
 };

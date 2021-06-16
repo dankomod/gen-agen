@@ -57,6 +57,7 @@ export default {
     },
     toggleSearch(value = true) {
       this.showSearch = value;
+      this.toggleClientForm(!value);
     },
     selection(value, data) {
       if (!value) {
@@ -67,6 +68,15 @@ export default {
       }
       this.toggleSearch(false);
     },
+    // Called on creation to be sure to reset all data when this component is re-rendered
+    resetValues() {
+      this.clientFormData = [];
+      this.showAppointmentForm = false;
+      this.showClientForm = false;
+    },
+  },
+  created() {
+    this.resetValues();
   },
   data() {
     return {
