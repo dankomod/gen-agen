@@ -20,4 +20,14 @@ export default {
   selectedHours(state) {
     return state.selectedHours;
   },
+  ///////////////////////////////
+  selectedDate(state) {
+    return state.selectedDate;
+  },
+  selectedSlots(state) {
+    return state.selectedSlots;
+  },
+  appointmentNewData(state) {
+    return state.appointmentNewData;
+  },
 };

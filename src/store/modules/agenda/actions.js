@@ -26,65 +26,6 @@ export default {
     }
   },
 
-  async newAppointment(getters, payload) {
-    const appointmentInfo = this.getters["agenda/appointmentInfo"];
-    if (
-      appointmentInfo.name &&
-      appointmentInfo.phone &&
-      appointmentInfo.price
-    ) {
-      appointmentInfo.addedBy = payload;
-      appointmentInfo["id"] = DateTime.now();
-      const baseDate = this.getters["agenda/baseDate"];
-      for (let selectedHour of this.getters["agenda/selectedHours"]) {
-        appointmentInfo.timeString = selectedHour.toFormat("HH:mm");
-        const response = await fetch(
-          `https://gen-agen-default-rtdb.firebaseio.com/schedule/${baseDate.year}/${baseDate.month}/${baseDate.day}.json`,
-          {
-            method: "POST",
-            body: JSON.stringify(appointmentInfo),
-          }
-        );
-        const responseData = await response.json();
-        // * Must await for the fetch and for the const that has the fetch. Must be called from an async function and be awaited to give a response
-        if (!response.ok) {
-          const error = new Error(
-            responseData.message || "Erro ao enviar solicitação."
-          );
-          throw error;
-        }
-      }
-    } else {
-      const error = new Error(
-        "Preencha o nome e o telefone do cliente e o preço do serviço."
-      );
-      throw error;
-    }
-  },
-
-  async loadAppointments(context, payload) {
-    const response = await fetch(
-      `https://gen-agen-default-rtdb.firebaseio.com/schedule/${payload.year}/${payload.month}/${payload.day}.json`
-    );
-    const responseData = await response.json();
-    if (!response.ok) {
-      const error = new Error(
-        responseData.message || "Erro ao enviar solicitação."
-      );
-      throw error;
-    }
-    // Sets all the response in the State
-    context.commit("setAgendaDetails", responseData);
-    // TODO: add error catching
-    // TODO: do this on AgendaMenu
-    // Preps the counts of appointments
-    const takenSlots = [];
-    for (const res in responseData) {
-      takenSlots.push(responseData[res].timeString);
-    }
-    return takenSlots;
-  },
-
   async removeAppointment(context, payload) {
     let entryId = "";
     // For entry in entries of the agendaDetails State value
@@ -122,5 +63,60 @@ export default {
 
   setAppointmentInfo(context, appointmentInfo) {
     context.commit("setAppointmentInfo", appointmentInfo);
+  },
+
+  ///////////////////////////////////////////
+
+  // Sets the date selected by the user
+  setSelectedDate(context, selectedDate) {
+    context.commit("setSelectedDate", selectedDate);
+  },
+  setSelectedSlots(context, selectedSlots) {
+    context.commit("setSelectedSlots", selectedSlots);
+  },
+  setAppointmentNewData(context, appointmentNewData) {
+    context.commit("setAppointmentNewData", appointmentNewData);
+  },
+  async createAppointment() {
+    const appointmentNewData = this.getters["agenda/appointmentNewData"];
+    appointmentNewData.clientId = this.getters["clients/selectedClient"][0];
+    const selectedDate = this.getters["agenda/selectedDate"];
+    const selectedSlots = this.getters["agenda/selectedSlots"];
+    for (let selectedSlot of selectedSlots) {
+      appointmentNewData.dateTime = "";
+      appointmentNewData.dateTime = selectedSlot;
+      // TODO:better error handling
+      if (appointmentNewData.price !== undefined) {
+        const response = await fetch(
+          `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}.json`,
+          { method: "POST", body: JSON.stringify(appointmentNewData) }
+        );
+        const responseData = await response.json();
+        if (!response.ok) {
+          const error = new Error(responseData.message);
+          throw error;
+        }
+        // } else {
+        //   dispatch("setSelectedClient", [responseData.name, formNewData]); // [id, { data }]
+        // }
+      } else {
+        const error = "Data is lacking";
+        throw error;
+      }
+    }
+  },
+  async loadAppointments() {
+    const selectedDate = this.getters["agenda/selectedDate"];
+    const response = await fetch(
+      `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}.json`
+    );
+    const responseData = await response.json();
+    if (!response.ok) {
+      const error = new Error(
+        responseData.message || "Erro ao enviar solicitação."
+      );
+      throw error;
+    }
+    return responseData;
   },
 };

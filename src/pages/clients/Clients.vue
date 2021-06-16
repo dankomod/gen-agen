@@ -70,22 +70,39 @@ import ClientForm from "./../../components/clients/ClientForm.vue";
 import ClientSearch from "./../../components/clients/ClientSearch.vue";
 export default {
   methods: {
-    async createClient() {
-      // TODO: Better form validation
-      const createClientInfo = this.$store.getters["clients/formNewData"];
-      if (
-        createClientInfo.name !== undefined &&
-        createClientInfo.phone !== undefined
-      ) {
-        try {
-          await this.$store.dispatch("clients/createClient", createClientInfo);
-          this.toggleCreation(false);
-          // TODO: Popup message
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    },
+    //!
+    //!
+    //!
+    //!
+    //!
+    //!
+    //!
+    //!
+    //!
+    //!
+    //!
+    //!
+    //!
+    //!
+    //!
+    //!
+    //!
+    //!
+    //!
+    //!
+    //!
+    //!
+    //!
+    // async createClient() {
+    //   // TODO: Better form validation
+    //   try {
+    //     await this.$store.dispatch("clients/createClient", createClientInfo);
+    //     this.toggleCreation(false);
+    //     // TODO: Popup message
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // },
     async deleteClient() {
       try {
         // this.formData[0] is the id of the client, the array is formatted as [id,{data}]
@@ -109,7 +126,7 @@ export default {
         console.log(error);
       }
     },
-    // Called when a client is selected in ClientSearch
+    // Called when a client is selected in ClientSearch component
     selection() {
       this.formData = this.$store.getters["clients/selectedClient"];
       this.toggleForm();

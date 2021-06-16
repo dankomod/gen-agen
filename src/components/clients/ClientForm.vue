@@ -78,7 +78,13 @@ export default {
       deep: true,
     },
   },
-  methods: {},
+  created() {
+    // If the form is enabled and any data was provided
+    if (this.formEnabled && this.formData) {
+      // Spreads the formData prop [id,{values}]
+      this.clientInfo = { ...this.formData[1] };
+    }
+  },
   data() {
     return {
       // Holds all the inputs data

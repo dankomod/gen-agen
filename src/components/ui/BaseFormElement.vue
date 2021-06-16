@@ -4,51 +4,69 @@
     <label :for="elementLabel" class="w-36"> {{ elementLabel }} </label>
     <!-- Input type="text" -->
     <input
-      v-if="elementType === 'inputText' && elementEnabled"
+      v-if="elementType === 'inputText'"
       type="text"
       :id="elementLabel"
       :value="elementValue"
-      class="w-full py-2 pl-3 bg-indigo-100 border border-indigo-400"
+      :class="conditionalStyle"
+      :disabled="!elementEnabled"
     />
     <!-- Input type="number" -->
     <input
-      v-if="elementType === 'inputNumber' && elementEnabled"
+      v-if="elementType === 'inputNumber'"
       type="number"
       :id="elementLabel"
       :value="elementValue"
-      class="w-full py-2 pl-3 bg-indigo-100 border border-indigo-400"
+      :class="conditionalStyle"
+      :disabled="!elementEnabled"
+    />
+    <!-- Input type='checkbox' -->
+    <!-- //! requires a @change listener that gets the value from $event.target.checked -->
+    <input
+      v-if="elementType === 'checkbox'"
+      type="checkbox"
+      :id="elementLabel"
+      :value="elementValue"
+      :class="conditionalStyle"
+      :disabled="!elementEnabled"
+      class="w-6 h-6"
     />
     <!-- Textarea -->
     <textarea
-      v-if="elementType === 'textarea' && elementEnabled"
+      v-if="elementType === 'textarea'"
       :id="elementLabel"
       :value="elementValue"
-      class="w-full px-3 py-2 bg-indigo-100 border border-indigo-400"
+      :class="conditionalStyle"
+      :disabled="!elementEnabled"
     ></textarea>
     <!-- Select that takes and options array as prop -->
     <select
-      v-if="elementType === 'select' && elementEnabled"
+      v-if="elementType === 'select'"
       :id="elementLabel"
       :value="elementValue"
-      class="w-full px-3 py-2 bg-indigo-100 border border-indigo-400"
+      :class="conditionalStyle"
+      :disabled="!elementEnabled"
     >
       <option v-for="option of optionValueArray" :key="option" :value="option">
         {{ option }}
       </option>
     </select>
-    <p
-      v-if="!elementEnabled"
-      class="w-full py-2 pl-3 bg-indigo-100 border border-indigo-100"
-      :class="elementValue ? '' : 'h-10'"
-    >
-      {{ elementValue }}
-    </p>
   </div>
 </template>
 
 <script>
-// * I can't figure out a way to use v-model here because it is sent to the div parent and conflicts with the :value prop. A good workaround is to use an event listener to get the data input and a prop to show data. The data can be accessed this way: '@event="appointmentInfo.observations = $event.target.value"'
+// * I can't use v-model here because it is sent to the div parent and conflicts with the :value prop. A good workaround is to use an event listener to get the data input and a prop to show the data which can accessed this way: '@event="appointmentInfo.observations = $event.target.value"'
 export default {
+  computed: {
+    conditionalStyle() {
+      let baseElementStyle = "w-full px-3 py-2 border";
+      if (this.elementEnabled) {
+        return `${baseElementStyle} bg-indigo-100 border-indigo-400`;
+      } else {
+        return `${baseElementStyle} border-0 border-gray-300`;
+      }
+    },
+  },
   props: [
     "elementEnabled",
     "elementLabel",

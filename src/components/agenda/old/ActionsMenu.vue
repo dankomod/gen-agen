@@ -95,14 +95,14 @@
           >
             Ver todos
           </base-button>
-          <base-button buttonType="warning" @click="toggleEditing()">
+          <!-- <base-button buttonType="warning" @click="toggleEditing()">
             Alterar</base-button
           ><base-button
             buttonType="danger"
             @click="removeAppointment(detail.id)"
           >
             Remover
-          </base-button>
+          </base-button> -->
         </div>
         <!-- EDIT BUTTONS -->
         <div v-if="showDetails && !inputEnabled">

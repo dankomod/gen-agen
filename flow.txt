@@ -1,8 +1,0 @@
-O que o usuário faz.
-
-- Seleção da data
-(Horários são apresentados)
-- Seleção de Horários
-/ 
-/
-/

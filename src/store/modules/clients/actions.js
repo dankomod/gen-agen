@@ -1,14 +1,23 @@
 export default {
   // Posts a new client to the API.
   // * POST requests to the Firebase Rest API automatically creates an ID.
-  async createClient(getters, payload) {
-    const response = await fetch(
-      "https://gen-agen-default-rtdb.firebaseio.com/clients.json",
-      { method: "POST", body: JSON.stringify(payload) }
-    );
-    const responseData = await response.json();
-    if (!response.ok) {
-      const error = new Error(responseData.message);
+  async createClient({ dispatch }) {
+    const formNewData = this.getters["clients/formNewData"];
+    console.log(formNewData);
+    if (formNewData.name !== undefined && formNewData.phone !== undefined) {
+      const response = await fetch(
+        "https://gen-agen-default-rtdb.firebaseio.com/clients.json",
+        { method: "POST", body: JSON.stringify(formNewData) }
+      );
+      const responseData = await response.json();
+      if (!response.ok) {
+        const error = new Error(responseData.message);
+        throw error;
+      } else {
+        dispatch("setSelectedClient", [responseData.name, formNewData]); // [id, { data }]
+      }
+    } else {
+      const error = "Data is lacking";
       throw error;
     }
   },

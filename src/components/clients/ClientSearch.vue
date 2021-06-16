@@ -1,5 +1,5 @@
 <template>
-  <h1>Client Search</h1>
+  <h1>Pesquisar Cliente</h1>
   <div class="relative">
     <input
       type="text"
@@ -20,6 +20,15 @@
         >
           <a href="#" class="block px-3 py-2 hover:bg-gray-200">
             {{ client[1].name }} ({{ client[1].phone }})
+          </a>
+        </li>
+        <li>
+          <a
+            href="#"
+            class="block px-3 py-2 bg-gray-200"
+            @click="emitSelection(false)"
+          >
+            Adicionar Novo Cliente
           </a>
         </li>
       </ul>
@@ -71,9 +80,12 @@ export default {
       for (let client of this.filteredClients) {
         if (client[0] === clientId) {
           this.$store.dispatch("clients/setSelectedClient", client);
-          this.$emit("selection");
+          this.emitSelection(true);
         }
       }
+    },
+    emitSelection(value) {
+      this.$emit("selection", value, this.searchQuery);
       // Clearing this.searchQuery to hide the query and this.filteredClients to destroy the rendering
       this.searchQuery = "";
       this.filteredClients = [];

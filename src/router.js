@@ -7,7 +7,7 @@ import Clients from "./pages/clients/Clients.vue";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: "/", redirect: "/clients" },
+    { path: "/", redirect: "/agenda" },
     { path: "/agenda", component: Agenda },
     { path: "/clients", component: Clients },
   ],

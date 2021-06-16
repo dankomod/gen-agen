@@ -2,6 +2,7 @@
 .firebase
 node_modules
 /dist
+/src/assets/style.css
 
 # local env files
 .env.local

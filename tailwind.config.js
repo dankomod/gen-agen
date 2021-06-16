@@ -5,11 +5,9 @@ module.exports = {
     extend: {},
   },
   variants: {
-    backgroundColor: ({ after }) => after(["disabled"]),
     extend: {
       backgroundColor: ["checked"],
     },
   },
   plugins: [],
-  // plugins: [require("@tailwindcss/forms")],
 };

@@ -14,4 +14,16 @@ export default {
   setSelectedHours(state, selectedHours) {
     state.selectedHours = selectedHours;
   },
+
+  ///////////////////////////////////////////
+
+  setSelectedDate(state, selectedDate) {
+    state.selectedDate = selectedDate;
+  },
+  setSelectedSlots(state, selectedSlots) {
+    state.selectedSlots = selectedSlots;
+  },
+  setAppointmentNewData(state, appointmentNewData) {
+    state.appointmentNewData = appointmentNewData;
+  },
 };
