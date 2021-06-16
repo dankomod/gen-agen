@@ -12,6 +12,7 @@
           <div @click="toggleDetails(detail.name)" class="space-y-1">
             <base-form-element
               :elementType="'inputText'"
+              d
               :elementEnabled="!inputEnabled"
               :elementLabel="'Nome'"
               :elementValue="detail.name"

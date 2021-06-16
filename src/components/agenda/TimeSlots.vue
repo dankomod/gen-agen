@@ -31,10 +31,13 @@ export default {
       const appointments = await this.$store.dispatch(
         "agenda/loadAppointments"
       );
-      // Creates an array with all the existing appointments date strings
       const takenSlots = [];
-      for (let appointment of Object.values(appointments)) {
-        takenSlots.push(appointment.dateTime);
+      // Skips if no appointments found (will return an error if no appointments on date)
+      if (appointments) {
+        // Creates an array with all the existing appointments date strings
+        for (let appointment of Object.values(appointments)) {
+          takenSlots.push(appointment.dateTime);
+        }
       }
       // Retrieves the selected date by the user and the opening and closing hours from the State
       const selectedDate = this.$store.getters["agenda/selectedDate"];

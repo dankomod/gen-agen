@@ -2,7 +2,8 @@
 .firebase
 node_modules
 /dist
-/src/assets/style.css
+src/assets/css/style.css
+src/components/agenda/old/*
 
 # local env files
 .env.local
