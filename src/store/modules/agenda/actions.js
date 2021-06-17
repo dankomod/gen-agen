@@ -78,10 +78,13 @@ export default {
     context.commit("setAppointmentNewData", appointmentNewData);
   },
   async createAppointment() {
-    const appointmentNewData = this.getters["agenda/appointmentNewData"];
-    appointmentNewData.clientId = this.getters["clients/selectedClient"][0];
     const selectedDate = this.getters["agenda/selectedDate"];
     const selectedSlots = this.getters["agenda/selectedSlots"];
+    const appointmentNewData = this.getters["agenda/appointmentNewData"];
+    const selectedClient = this.getters["clients/selectedClient"];
+    // Adds the client's name and ID to the appointment information. The name is needed despite of the ID because it avoids requests to get the client name when an appointment is shown
+    appointmentNewData.clientId = selectedClient[0];
+    appointmentNewData.name = selectedClient[1].name;
     for (let selectedSlot of selectedSlots) {
       appointmentNewData.dateTime = "";
       appointmentNewData.dateTime = selectedSlot;
@@ -106,7 +109,6 @@ export default {
     }
   },
   async loadAppointments(context) {
-    console.log("loadappointments");
     const selectedDate = this.getters["agenda/selectedDate"];
     const response = await fetch(
       `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}.json`

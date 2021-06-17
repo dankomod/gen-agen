@@ -22,10 +22,12 @@
     />
     <!-- Input type='checkbox' -->
     <!-- //! requires a @change listener that gets the value from $event.target.checked -->
+    <!-- //! has a checked attribute instead of value -->
+    <!-- //! !! returns a truthy/falsey value -->
     <input
       v-if="elementType === 'checkbox'"
       :id="elementLabel"
-      :value="elementValue"
+      :checked="!!elementValue"
       :class="conditionalStyle"
       :disabled="!elementEnabled"
       type="checkbox"

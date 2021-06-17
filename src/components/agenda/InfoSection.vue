@@ -1,10 +1,14 @@
 <template>
-  <!-- //TODO: change text of this button if a user is being added or an appointment is being made -->
-  <base-button @click="showSearch = true">{{
-    appointmentButtonText
-  }}</base-button>
-  <base-button v-if="showInfoButton">Mostrar Informações</base-button>
-  <!-- //TODO: reset the forms if the button is clicked or the search returns a new value -->
+  <base-button v-if="showInfoButton" @click="showInfo">
+    Mostrar Informações
+  </base-button>
+  <slot-detail
+    v-if="showSlotDetail"
+    :slot-appointments="slotAppointments"
+  ></slot-detail>
+  <base-button @click="showSearch = true">
+    {{ appointmentButtonText }}
+  </base-button>
   <client-search v-if="showSearch" @selection="selection"></client-search>
   <client-form
     v-if="showClientForm"
@@ -22,15 +26,15 @@
     :form-enabled="appointmentFormEnabled"
   ></appointment-form>
   <div v-if="showAppointmentForm">
-    <base-button button-type="success" @click="createAppointment"
-      >Concluir Agendamento</base-button
-    >
+    <base-button button-type="success" @click="createAppointment">
+      Concluir Agendamento
+    </base-button>
   </div>
 </template>
 
 <script>
 export default {
-  components: { AppointmentForm, ClientForm, ClientSearch },
+  components: { AppointmentForm, ClientForm, ClientSearch, SlotDetail },
   emits: ["newAppointment"],
   data() {
     return {
@@ -42,6 +46,9 @@ export default {
       showSearch: false,
       appointmentFormKey: 0,
       showInfoButton: false,
+      selectedSlots: [],
+      showSlotDetail: false,
+      slotAppointments: [],
     };
   },
   computed: {
@@ -54,18 +61,16 @@ export default {
   },
   async created() {
     this.resetValues();
-    const selectedSlots = this.$store.getters["agenda/selectedSlots"];
+    this.selectedSlots = this.$store.getters["agenda/selectedSlots"];
     const takenHours = this.$store.getters["agenda/takenHours"];
 
     // If newValue is not null, has length 1 and
     this.showInfoButton =
-      selectedSlots &&
-      selectedSlots.length === 1 &&
-      takenHours.includes(selectedSlots[0].toString())
+      this.selectedSlots &&
+      this.selectedSlots.length === 1 &&
+      takenHours.includes(this.selectedSlots[0].toString())
         ? true
         : false;
-
-    // console.log(selectedSlots, takenHours);
     this.$store.watch(
       () => {
         return this.$store.getters["agenda/selectedSlots"];
@@ -80,6 +85,25 @@ export default {
     );
   },
   methods: {
+    async showInfo() {
+      if (this.selectedSlots && this.selectedSlots.length === 1) {
+        // for (let appointment of Object.values(
+        //   await this.$store.dispatch("agenda/loadAppointments")
+        // )) {
+        //   if (appointment.dateTime === this.selectedSlots[0].toString()) {
+        //     this.slotAppointments.push(appointment);
+        //   }
+        // }
+        for (let appointment of Object.entries(
+          await this.$store.dispatch("agenda/loadAppointments")
+        )) {
+          if (appointment[1].dateTime === this.selectedSlots[0].toString()) {
+            this.slotAppointments.push(appointment);
+          }
+        }
+      }
+      this.showSlotDetail = true;
+    },
     async createAppointment() {
       try {
         await this.$store.dispatch("agenda/createAppointment");
@@ -127,6 +151,7 @@ export default {
 // eslint-disable-next-line
 import { DateTime } from "luxon";
 import AppointmentForm from "./AppointmentForm.vue";
+import SlotDetail from "./SlotDetail.vue";
 import ClientForm from "./../clients/ClientForm.vue";
 import ClientSearch from "./../clients/ClientSearch.vue";
 </script>
