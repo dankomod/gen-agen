@@ -2,62 +2,62 @@
   <form @submit.prevent="newClient">
     <!-- //! Assumes that the prop will have the format ['id', {data}] -->
     <!-- Uses prop values if a formData prop is given -->
-    <!-- Switches view and edition mode if a elementEnabled prop is given -->
+    <!-- Switches view and edition mode if a element-enabled prop is given -->
     <base-form-element
-      :elementType="'inputText'"
-      :elementEnabled="formEnabled"
-      :elementLabel="'Nome'"
-      :elementValue="formData ? formData[1].name : ''"
+      :element-type="'inputText'"
+      :element-enabled="formEnabled"
+      :element-label="'Nome'"
+      :element-value="formData ? formData[1].name : ''"
       @keyup="clientInfo.name = $event.target.value"
     ></base-form-element>
     <base-form-element
-      :elementType="'inputNumber'"
-      :elementEnabled="formEnabled"
-      :elementLabel="'Telefone'"
-      :elementValue="formData ? formData[1].phone : ''"
+      :element-type="'inputNumber'"
+      :element-enabled="formEnabled"
+      :element-label="'Telefone'"
+      :element-value="formData ? formData[1].phone : ''"
       @keyup="clientInfo.phone = $event.target.value"
     ></base-form-element>
     <base-form-element
-      :elementType="'inputText'"
-      :elementEnabled="formEnabled"
-      :elementLabel="'Endereço'"
-      :elementValue="formData ? formData[1].address : ''"
+      :element-type="'inputText'"
+      :element-enabled="formEnabled"
+      :element-label="'Endereço'"
+      :element-value="formData ? formData[1].address : ''"
       @keyup="clientInfo.address = $event.target.value"
     ></base-form-element>
     <base-form-element
-      :elementType="'inputNumber'"
-      :elementEnabled="formEnabled"
-      :elementLabel="'Número'"
-      :elementValue="formData ? formData[1].number : ''"
+      :element-type="'inputNumber'"
+      :element-enabled="formEnabled"
+      :element-label="'Número'"
+      :element-value="formData ? formData[1].number : ''"
       @keyup="clientInfo.number = $event.target.value"
     ></base-form-element>
     <base-form-element
-      :elementType="'inputText'"
-      :elementEnabled="formEnabled"
-      :elementLabel="'Bairro'"
-      :elementValue="formData ? formData[1].district : ''"
+      :element-type="'inputText'"
+      :element-enabled="formEnabled"
+      :element-label="'Bairro'"
+      :element-value="formData ? formData[1].district : ''"
       @keyup="clientInfo.district = $event.target.value"
     ></base-form-element>
     <base-form-element
-      :elementType="'inputText'"
-      :elementEnabled="formEnabled"
-      :elementLabel="'Cidade'"
-      :elementValue="formData ? formData[1].city : ''"
+      :element-type="'inputText'"
+      :element-enabled="formEnabled"
+      :element-label="'Cidade'"
+      :element-value="formData ? formData[1].city : ''"
       @keyup="clientInfo.city = $event.target.value"
     ></base-form-element>
     <!-- //TODO: Mask -->
     <base-form-element
-      :elementType="'inputNumber'"
-      :elementEnabled="formEnabled"
-      :elementLabel="'CPF'"
-      :elementValue="formData ? formData[1].cpf : ''"
+      :element-type="'inputNumber'"
+      :element-enabled="formEnabled"
+      :element-label="'CPF'"
+      :element-value="formData ? formData[1].cpf : ''"
       @keyup="clientInfo.cpf = $event.target.value"
     ></base-form-element>
     <base-form-element
-      :elementType="'textarea'"
-      :elementEnabled="formEnabled"
-      :elementLabel="'Observações'"
-      :elementValue="formData ? formData[1].observations : ''"
+      :element-type="'textarea'"
+      :element-enabled="formEnabled"
+      :element-label="'Observações'"
+      :element-value="formData ? formData[1].observations : ''"
       @keyup="clientInfo.observations = $event.target.value"
     ></base-form-element>
   </form>
@@ -66,6 +66,20 @@
 <script>
 import BaseFormElement from "./../ui/BaseFormElement.vue";
 export default {
+  components: { BaseFormElement },
+  props: {
+    formData: {
+      type: Array,
+      default: () => [],
+    },
+    formEnabled: Boolean,
+  },
+  data() {
+    return {
+      // Holds all the inputs data
+      clientInfo: {},
+    };
+  },
   // Watches for deep changes in data()
   watch: {
     $data: {
@@ -86,13 +100,5 @@ export default {
     }
     console.log(this.formData);
   },
-  data() {
-    return {
-      // Holds all the inputs data
-      clientInfo: {},
-    };
-  },
-  props: ["formData", "formEnabled"],
-  components: { BaseFormElement },
 };
 </script>

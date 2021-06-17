@@ -2,11 +2,11 @@
   <h1>Pesquisar Cliente</h1>
   <div class="relative">
     <input
+      v-model="searchQuery"
       type="text"
       class="p-2 mb-2 placeholder-gray-600 border-2 border-red-800"
-      v-model="searchQuery"
-      @keyup="filteredList"
       placeholder="Digite o nome do cliente"
+      @keyup="filteredList"
     />
     <div
       class="absolute left-0 z-10 mt-1 bg-gray-100 border border-gray-400 shadow  top-full"
@@ -38,6 +38,17 @@
 
 <script>
 export default {
+  emits: ["selection"],
+  data() {
+    return {
+      // Clients' data retrieved from the API
+      clientsBulk: [],
+      // Clients filtered after a search
+      filteredClients: [],
+      // Search query
+      searchQuery: "",
+    };
+  },
   computed: {
     // Shows the client list if this.SearchQuery has any length
     showList() {
@@ -91,16 +102,5 @@ export default {
       this.filteredClients = [];
     },
   },
-  data() {
-    return {
-      // Clients' data retrieved from the API
-      clientsBulk: [],
-      // Clients filtered after a search
-      filteredClients: [],
-      // Search query
-      searchQuery: "",
-    };
-  },
-  emits: ["selection"],
 };
 </script>

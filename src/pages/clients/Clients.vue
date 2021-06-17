@@ -9,8 +9,8 @@
       </base-button>
       <!-- New Client Button -->
       <base-button
+        button-type="success"
         @click="toggleCreation(true), toggleSearch(false)"
-        buttonType="success"
       >
         Cadastrar
       </base-button>
@@ -21,12 +21,12 @@
 
   <client-form
     v-if="showForm"
-    :formData="formData"
-    :formEnabled="clientFormEnabled"
+    :form-data="formData"
+    :form-enabled="clientFormEnabled"
   ></client-form>
 
   <div v-if="showForm && showCreationMenu">
-    <base-button buttonType="success" @click="createClient">
+    <base-button button-type="success" @click="createClient">
       Cadastrar Cliente
     </base-button>
   </div>
@@ -35,13 +35,13 @@
   <div v-if="showForm && showActionsMenu && !showEditMenu">
     <!-- Edit Client Button -->
     <base-button
-      buttonType="warning"
+      button-type="warning"
       @click="toggleInputs(true), toggleEditMenu(true)"
     >
       Editar
     </base-button>
     <!-- Delete Client Button -->
-    <base-button buttonType="danger" @click="deleteClient">
+    <base-button button-type="danger" @click="deleteClient">
       Remover
     </base-button>
   </div>
@@ -50,7 +50,7 @@
   <div v-if="showForm && showActionsMenu && showEditMenu">
     <!-- Confirm Edit Button -->
     <base-button
-      buttonType="success"
+      button-type="success"
       @click="editClient, toggleInputs(false), toggleEditMenu(false)"
     >
       Confirmar alterações
@@ -58,7 +58,7 @@
     <!-- //TODO: -->
     <!-- Cancel Edit Button -->
     <base-button
-      buttonType="danger"
+      button-type="danger"
       @click="toggleInputs(false), toggleEditMenu(false)"
       >Cancelar</base-button
     >
@@ -69,6 +69,18 @@
 import ClientForm from "./../../components/clients/ClientForm.vue";
 import ClientSearch from "./../../components/clients/ClientSearch.vue";
 export default {
+  components: { ClientForm, ClientSearch },
+  data() {
+    return {
+      clientFormEnabled: false,
+      formData: null,
+      showActionsMenu: false,
+      showCreationMenu: false,
+      showEditMenu: false,
+      showForm: false,
+      showSearch: false,
+    };
+  },
   methods: {
     //!
     //!
@@ -154,17 +166,5 @@ export default {
       this.showSearch = value;
     },
   },
-  data() {
-    return {
-      clientFormEnabled: false,
-      formData: null,
-      showActionsMenu: false,
-      showCreationMenu: false,
-      showEditMenu: false,
-      showForm: false,
-      showSearch: false,
-    };
-  },
-  components: { ClientForm, ClientSearch },
 };
 </script>

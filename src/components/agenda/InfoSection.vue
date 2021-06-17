@@ -8,21 +8,21 @@
   <client-search v-if="showSearch" @selection="selection"></client-search>
   <client-form
     v-if="showClientForm"
-    :formData="clientFormData"
-    :formEnabled="clientFormEnabled"
+    :form-data="clientFormData"
+    :form-enabled="clientFormEnabled"
   ></client-form>
   <div v-if="showClientForm">
-    <base-button buttonType="success" @click="createClient">
+    <base-button button-type="success" @click="createClient">
       Cadastrar Cliente
     </base-button>
   </div>
   <appointment-form
-    :key="appointmentFormKey"
     v-if="showAppointmentForm"
-    :formEnabled="appointmentFormEnabled"
+    :key="appointmentFormKey"
+    :form-enabled="appointmentFormEnabled"
   ></appointment-form>
   <div v-if="showAppointmentForm">
-    <base-button buttonType="success" @click="createAppointment"
+    <base-button button-type="success" @click="createAppointment"
       >Concluir Agendamento</base-button
     >
   </div>
@@ -30,6 +30,55 @@
 
 <script>
 export default {
+  components: { AppointmentForm, ClientForm, ClientSearch },
+  emits: ["newAppointment"],
+  data() {
+    return {
+      clientFormData: [],
+      showAppointmentForm: false,
+      showClientForm: false,
+      appointmentFormEnabled: true,
+      clientFormEnabled: true,
+      showSearch: false,
+      appointmentFormKey: 0,
+      showInfoButton: false,
+    };
+  },
+  computed: {
+    appointmentButtonText() {
+      // If any form is shown...
+      return this.showAppointmentForm || this.showClientForm
+        ? "Pesquisar Novamente"
+        : "Novo Agendamento";
+    },
+  },
+  async created() {
+    this.resetValues();
+    const selectedSlots = this.$store.getters["agenda/selectedSlots"];
+    const takenHours = this.$store.getters["agenda/takenHours"];
+
+    // If newValue is not null, has length 1 and
+    this.showInfoButton =
+      selectedSlots &&
+      selectedSlots.length === 1 &&
+      takenHours.includes(selectedSlots[0].toString())
+        ? true
+        : false;
+
+    // console.log(selectedSlots, takenHours);
+    this.$store.watch(
+      () => {
+        return this.$store.getters["agenda/selectedSlots"];
+      },
+      (newValue) => {
+        // If newValue is not null and has length 1
+        if (newValue && newValue.length === 1) {
+          this.showInfoButton = true;
+        }
+        this.showInfoButton = false;
+      }
+    );
+  },
   methods: {
     async createAppointment() {
       try {
@@ -74,53 +123,6 @@ export default {
       this.showClientForm = false;
     },
   },
-  computed: {
-    appointmentButtonText() {
-      // If any form is shown...
-      return this.showAppointmentForm || this.showClientForm
-        ? "Pesquisar Novamente"
-        : "Novo Agendamento";
-    },
-  },
-  async created() {
-    this.resetValues();
-    const selectedSlots = this.$store.getters["agenda/selectedSlots"];
-    const takenHours = this.$store.getters["agenda/takenHours"];
-
-    this.showInfoButton =
-      selectedSlots.length === 1 &&
-      takenHours.includes(selectedSlots[0].toString())
-        ? true
-        : false;
-
-    // console.log(selectedSlots, takenHours);
-    this.$store.watch(
-      () => {
-        return this.$store.getters["agenda/selectedSlots"];
-      },
-      (newValue) => {
-        if (newValue.length === 1) {
-          this.showInfoButton = true;
-        } else {
-          this.showInfoButton = false;
-        }
-      }
-    );
-  },
-  data() {
-    return {
-      clientFormData: [],
-      showAppointmentForm: false,
-      showClientForm: false,
-      appointmentFormEnabled: true,
-      clientFormEnabled: true,
-      showSearch: false,
-      appointmentFormKey: 0,
-      showInfoButton: false,
-    };
-  },
-  components: { AppointmentForm, ClientForm, ClientSearch },
-  emits: ["newAppointment"],
 };
 // eslint-disable-next-line
 import { DateTime } from "luxon";

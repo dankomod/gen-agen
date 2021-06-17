@@ -5,30 +5,30 @@
     <!-- Input type="text" -->
     <input
       v-if="elementType === 'inputText'"
-      type="text"
       :id="elementLabel"
       :value="elementValue"
       :class="conditionalStyle"
       :disabled="!elementEnabled"
+      type="text"
     />
     <!-- Input type="number" -->
     <input
       v-if="elementType === 'inputNumber'"
-      type="number"
       :id="elementLabel"
       :value="elementValue"
       :class="conditionalStyle"
       :disabled="!elementEnabled"
+      type="number"
     />
     <!-- Input type='checkbox' -->
     <!-- //! requires a @change listener that gets the value from $event.target.checked -->
     <input
       v-if="elementType === 'checkbox'"
-      type="checkbox"
       :id="elementLabel"
       :value="elementValue"
       :class="conditionalStyle"
       :disabled="!elementEnabled"
+      type="checkbox"
       class="w-6 h-6"
     />
     <!-- Textarea -->
@@ -57,6 +57,13 @@
 <script>
 // * I can't use v-model here because it is sent to the div parent and conflicts with the :value prop. A good workaround is to use an event listener to get the data input and a prop to show the data which can accessed this way: '@event="appointmentInfo.observations = $event.target.value"'
 export default {
+  props: {
+    elementEnabled: Boolean,
+    elementLabel: { type: String, default: "" },
+    elementType: { type: String, default: "" },
+    elementValue: { type: String, default: "" },
+    optionValueArray: { type: Array, default: () => [] },
+  },
   computed: {
     conditionalStyle() {
       let baseElementStyle = "w-full px-3 py-2 border";
@@ -67,12 +74,5 @@ export default {
       }
     },
   },
-  props: [
-    "elementEnabled",
-    "elementLabel",
-    "elementType",
-    "elementValue",
-    "optionValueArray",
-  ],
 };
 </script>

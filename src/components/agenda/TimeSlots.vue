@@ -25,6 +25,29 @@
 
 <script>
 export default {
+  emits: ["slotSelected"],
+  data() {
+    return {
+      closingHour: "",
+      openingHour: "",
+      selectedSlots: [],
+      timeSlots: [],
+    };
+  },
+  watch: {
+    // If the ammount of selected slots change
+    selectedSlots(newValue) {
+      // Updates the API with the currently selected slots
+      this.$store.dispatch("agenda/setSelectedSlots", newValue);
+      // emits slotSelected with a value that will be used by Clients components to determine the visibility of InfoSection
+      let value = newValue.length > 0 ? true : false;
+      this.$emit("slotSelected", value);
+    },
+  },
+  async created() {
+    await this.$store.dispatch("agenda/loadAppointments");
+    this.intervalCalculator();
+  },
   methods: {
     async intervalCalculator() {
       const takenHours = this.$store.getters["agenda/takenHours"];
@@ -66,29 +89,6 @@ export default {
       }
     },
   },
-  watch: {
-    // If the ammount of selected slots change
-    selectedSlots(newValue) {
-      // Updates the API with the currently selected slots
-      this.$store.dispatch("agenda/setSelectedSlots", newValue);
-      // emits slotSelected with a value that will be used by Clients components to determine the visibility of InfoSection
-      let value = newValue.length > 0 ? true : false;
-      this.$emit("slotSelected", value);
-    },
-  },
-  async created() {
-    await this.$store.dispatch("agenda/loadAppointments");
-    this.intervalCalculator();
-  },
-  data() {
-    return {
-      closingHour: "",
-      openingHour: "",
-      selectedSlots: [],
-      timeSlots: [],
-    };
-  },
-  emits: ["slotSelected"],
 };
 // eslint-disable-next-line
 import { DateTime } from "luxon";

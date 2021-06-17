@@ -2,17 +2,21 @@
   <div>
     <label for="date-selector">Escolha uma data</label>
     <input
+      id="date-selector"
+      v-model="selectedDate"
       type="date"
       name="date-selector"
-      id="date-selector"
       class="bg-gray-300 w-min"
-      v-model="selectedDate"
       @change="selection"
     />
   </div>
 </template>
 <script>
 export default {
+  emits: ["dateSelected"],
+  data() {
+    return { selectedDate: "" };
+  },
   methods: {
     selection() {
       // Dispatches this.selectedDate as a DateTime object
@@ -23,10 +27,6 @@ export default {
       this.$emit("dateSelected");
     },
   },
-  data() {
-    return { selectedDate: "" };
-  },
-  emits: ["dateSelected"],
 };
 import { DateTime } from "luxon";
 </script>

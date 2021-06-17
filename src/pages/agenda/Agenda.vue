@@ -1,19 +1,23 @@
 <template>
   <date-selector @dateSelected="toggleTimeSlots"></date-selector>
   <time-slots
-    :key="componentsKey"
     v-if="showTimeSlots"
+    :key="componentsKey"
     @slotSelected="toggleInfoSection"
   ></time-slots>
   <info-section
-    :key="componentsKey"
     v-if="showInfoSection"
+    :key="componentsKey"
     @newAppointment="updateRendering"
   ></info-section>
 </template>
 
 <script>
 export default {
+  components: { DateSelector, InfoSection, TimeSlots },
+  data() {
+    return { showInfoSection: false, showTimeSlots: false, componentsKey: 0 };
+  },
   methods: {
     toggleInfoSection(value = true) {
       this.showInfoSection = value;
@@ -29,10 +33,6 @@ export default {
       this.componentsKey++;
     },
   },
-  data() {
-    return { showInfoSection: false, showTimeSlots: false, componentsKey: 0 };
-  },
-  components: { DateSelector, InfoSection, TimeSlots },
 };
 import DateSelector from "./../../components/agenda/DateSelector.vue";
 import InfoSection from "./../../components/agenda/InfoSection.vue";

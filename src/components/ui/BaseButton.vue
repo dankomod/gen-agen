@@ -9,6 +9,7 @@
 
 <script>
 export default {
+  props: { buttonType: { type: String, default: "" } },
   computed: {
     // Returns specific styling acording to the buttonTrype or a default styling
     setButtonStyle() {
@@ -24,6 +25,5 @@ export default {
       }
     },
   },
-  props: ["buttonType"],
 };
 </script>

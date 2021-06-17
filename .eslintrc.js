@@ -11,8 +11,10 @@ module.exports = {
     "plugin:vue/vue3-strongly-recommended",
     "@vue/prettier",
   ],
+  parser: "vue-eslint-parser",
   parserOptions: {
     parser: "babel-eslint",
+    sourceType: "module",
   },
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
