@@ -1,30 +1,32 @@
 <template>
+  <!-- // TODO: Remove DIV tag -->
   <div>
     <base-form-element
       :element-type="'inputText'"
       :element-label="'Nome'"
-      :element-value="localFormData ? localFormData[1].name : ''"
+      :element-value="localFormData[1].name"
       @keyup="appointmentInfo.name = $event.target.value"
     ></base-form-element>
     <base-form-element
       :element-type="'inputNumber'"
       :element-enabled="formEnabled"
       :element-label="'Valor'"
-      :element-value="localFormData ? localFormData[1].price : ''"
+      :element-value="localFormData[1].price"
       @keyup="appointmentInfo.price = $event.target.value"
     ></base-form-element>
+    <!-- //TODO: this only works if a string is sent when true and null when false -->
     <base-form-element
       :element-type="'checkbox'"
       :element-enabled="formEnabled"
       :element-label="'Leva e tras'"
-      :element-value="localFormData ? localFormData[1].transport : ''"
+      :element-value="localFormData[1].transport ? 'true' : null"
       @change="appointmentInfo.transport = $event.target.checked"
     ></base-form-element>
     <base-form-element
       :element-type="'textarea'"
       :element-enabled="formEnabled"
       :element-label="'Observações'"
-      :element-value="localFormData ? localFormData[1].observations : ''"
+      :element-value="localFormData[1].observations"
       @keyup="appointmentInfo.observations = $event.target.value"
     ></base-form-element>
   </div>
@@ -33,8 +35,8 @@
 export default {
   components: { BaseFormElement },
   props: {
-    formEnabled: Boolean,
-    formData: Object,
+    formEnabled: { type: Boolean, default: false },
+    formData: { type: Array, default: () => {} },
   },
   data() {
     return { appointmentInfo: {}, localFormData: {} };
@@ -54,18 +56,13 @@ export default {
       deep: true,
     },
   },
-  async created() {
+  created() {
+    // If no form data given then data is retrieved from the state. Localformdata holds both types of data input
     if (!this.formData) {
       this.localFormData = this.$store.getters["clients/selectedClient"];
     } else {
       this.localFormData = this.formData;
-      // this.localFormData.name = "";
-      // const clients = await this.$store.dispatch("clients/loadClients");
-      // for (let client of Object.entries(clients)) {
-      //   console.log(client);
-      // }
     }
-    // console.log(this.localFormData[1]);
   },
 };
 import BaseFormElement from "./../ui/BaseFormElement.vue";

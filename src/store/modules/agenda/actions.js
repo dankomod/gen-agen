@@ -1,54 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import { DateTime } from "luxon";
 export default {
-  async editAppointment(getters, payload) {
-    let entryId = "";
-    // For entry in entries of the agendaDetails State value
-    for (let entry of Object.entries(this.getters["agenda/agendaDetails"])) {
-      // If there is a entry with a name value equals to the payload name value (and times)
-      if (entry[1].id === payload.id) {
-        // The entry's id is the one to be deleted
-        entryId = entry[0];
-      } // TODO: else return error
-    }
-    const editData = JSON.parse(JSON.stringify(payload));
-    delete editData.dateTime;
-    const response = await fetch(
-      `https://gen-agen-default-rtdb.firebaseio.com/schedule/${payload.dateTime.year}/${payload.dateTime.month}/${payload.dateTime.day}/${entryId}.json`,
-      { method: "PATCH", body: JSON.stringify(editData) }
-    ); //TODO: error catching
-    const responseData = await response;
-    if (!response.ok) {
-      const error = new Error(
-        responseData.message || "Erro ao enviar solicitação."
-      );
-      throw error;
-    }
-  },
-
-  async removeAppointment(context, payload) {
-    let entryId = "";
-    // For entry in entries of the agendaDetails State value
-    for (let entry of Object.entries(this.getters["agenda/agendaDetails"])) {
-      // If there is a entry with a name value equals to the payload name value (and times)
-      if (entry[1].id === payload.id) {
-        // The entry's id is the one to be deleted
-        entryId = entry[0];
-      } // TODO: else return error
-    }
-    const response = await fetch(
-      `https://gen-agen-default-rtdb.firebaseio.com/schedule/${payload.dateTime.year}/${payload.dateTime.month}/${payload.dateTime.day}/${entryId}.json`,
-      { method: "DELETE" }
-    );
-    const responseData = JSON.stringify(response);
-    if (!response.ok) {
-      const error = new Error(
-        responseData.message || "Erro ao enviar solicitação."
-      );
-      throw error;
-    }
-  },
-
   setBaseDate(context, payload) {
     context.commit("setBaseDate", payload);
   },
@@ -106,6 +58,39 @@ export default {
         const error = "Data is lacking";
         throw error;
       }
+    }
+  },
+  async deleteAppointment(context, appointmentId) {
+    const selectedDate = this.getters["agenda/selectedDate"];
+    const response = await fetch(
+      `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}/${appointmentId}.json`,
+      {
+        method: "DELETE",
+      }
+    );
+    const responseData = await response.json();
+    if (!response.ok) {
+      const error = new Error(
+        responseData.message || "Erro ao enviar solicitação."
+      );
+      throw error;
+    }
+  },
+  async editAppointment(context, appointmentId) {
+    const selectedDate = this.getters["agenda/selectedDate"];
+    const response = await fetch(
+      `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}/${appointmentId}.json`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(this.getters["agenda/appointmentNewData"]),
+      }
+    );
+    const responseData = await response.json();
+    if (!response.ok) {
+      const error = new Error(
+        responseData.message || "Erro ao enviar solicitação."
+      );
+      throw error;
     }
   },
   async loadAppointments(context) {
