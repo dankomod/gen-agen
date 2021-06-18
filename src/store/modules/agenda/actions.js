@@ -1,34 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import { DateTime } from "luxon";
 export default {
-  setBaseDate(context, payload) {
-    context.commit("setBaseDate", payload);
-  },
-
-  setAgendaHours(context, agendaHours) {
-    context.commit("setAgendaHours", agendaHours);
-  },
-
-  setSelectedHours(context, selectedHours) {
-    context.commit("setSelectedHours", selectedHours);
-  },
-
-  setAppointmentInfo(context, appointmentInfo) {
-    context.commit("setAppointmentInfo", appointmentInfo);
-  },
-
-  ///////////////////////////////////////////
-
-  // Sets the date selected by the user
-  setSelectedDate(context, selectedDate) {
-    context.commit("setSelectedDate", selectedDate);
-  },
-  setSelectedSlots(context, selectedSlots) {
-    context.commit("setSelectedSlots", selectedSlots);
-  },
-  setAppointmentNewData(context, appointmentNewData) {
-    context.commit("setAppointmentNewData", appointmentNewData);
-  },
   async createAppointment() {
     const selectedDate = this.getters["agenda/selectedDate"];
     const selectedSlots = this.getters["agenda/selectedSlots"];
@@ -51,9 +23,6 @@ export default {
           const error = new Error(responseData.message);
           throw error;
         }
-        // } else {
-        //   dispatch("setSelectedClient", [responseData.name, formNewData]); // [id, { data }]
-        // }
       } else {
         const error = "Data is lacking";
         throw error;
@@ -115,5 +84,15 @@ export default {
       context.commit("setTakenHours", takenHours);
     }
     return responseData;
+  },
+  setAppointmentNewData(context, appointmentNewData) {
+    context.commit("setAppointmentNewData", appointmentNewData);
+  },
+  // Sets the date selected by the user
+  setSelectedDate(context, selectedDate) {
+    context.commit("setSelectedDate", selectedDate);
+  },
+  setSelectedSlots(context, selectedSlots) {
+    context.commit("setSelectedSlots", selectedSlots);
   },
 };
