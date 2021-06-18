@@ -2,19 +2,19 @@
   <section class="flex flex-col px-5">
     <!-- <router-view></router-view> -->
     <agenda></agenda>
-    <!-- <clients></clients> -->
+    <clients></clients>
   </section>
 </template>
 
 <script>
-import Agenda from "./pages/agenda/Agenda.vue";
-// import Clients from "./pages/clients/Clients.vue";
 export default {
   components: {
     Agenda,
-    // Clients,
+    Clients,
   },
 };
+import Agenda from "./pages/agenda/Agenda.vue";
+import Clients from "./pages/clients/Clients.vue";
 </script>
-
+// CSS Import
 <style src="./assets/css/style.css"></style>
