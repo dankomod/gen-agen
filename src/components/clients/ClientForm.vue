@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import BaseFormElement from "./../ui/BaseFormElement.vue";
+// TODO: Delete all the appointments of a client to be deleted
 export default {
   components: { BaseFormElement },
   props: {
@@ -84,7 +84,7 @@ export default {
   watch: {
     $data: {
       handler() {
-        // If form is enabled then dispatch every change in the form to the state
+        // If form is enabled then dispatch every change in the form to the State
         if (this.formEnabled === true) {
           this.$store.dispatch("clients/setFormNewData", this.clientInfo);
         }
@@ -100,4 +100,5 @@ export default {
     }
   },
 };
+import BaseFormElement from "./../ui/BaseFormElement.vue";
 </script>

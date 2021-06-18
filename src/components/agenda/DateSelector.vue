@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     selection() {
-      // Dispatches this.selectedDate as a DateTime object
+      // Dispatches this.selectedDate as a DateTime object to the State
       this.$store.dispatch(
         "agenda/setSelectedDate",
         DateTime.fromISO(this.selectedDate)

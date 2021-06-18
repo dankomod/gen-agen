@@ -23,10 +23,10 @@
         ></client-form>
         <!-- Action Buttons -->
         <div class="flex flex-row justify-between">
-          <!-- // TODO: Prevent the conditional formatting of the view client button on non-selected appointments -->
-          <!-- View Client Information Button -->
-
-          <span>
+          <!-- Client Action Buttons -->
+          <span v-if="!appointmentFormEnabled">
+            <!-- View Client Information Button -->
+            <!-- // TODO: Prevent the conditional formatting of the view client button on non-selected appointments -->
             <base-button
               v-if="!clientFormEnabled"
               @click="viewClient(appointment[1].clientId)"
@@ -34,6 +34,7 @@
               {{ !showClientForm ? "Ver Cliente" : "Ocultar Detalhes" }}
             </base-button>
             <span v-if="showClientForm">
+              <!-- Edit Client Button -->
               <base-button
                 v-if="!clientFormEnabled"
                 @click="clientFormEnabled = true"
@@ -41,8 +42,14 @@
                 Editar Cliente
               </base-button>
               <span v-else>
-                <base-button :button-type="'success'"> Confirmar </base-button>
-                <!-- Delete Appointment Button -->
+                <!-- Confirm Client Editing Button -->
+                <base-button
+                  :button-type="'success'"
+                  @click="editClient(appointment[1].clientId)"
+                >
+                  Confirmar
+                </base-button>
+                <!-- Cancel Client Editing Button -->
                 <base-button
                   :button-type="'danger'"
                   @click="clientFormEnabled = false"
@@ -52,36 +59,39 @@
               >
             </span>
           </span>
-          <span v-if="!appointmentFormEnabled">
-            <!-- Edit Appointment Button -->
-            <base-button
-              :button-type="'warning'"
-              @click="toggleAppointmentFormInput(true, appointment[0])"
-            >
-              Editar
-            </base-button>
-            <!-- Delete Appointment Button -->
-            <base-button
-              :button-type="'danger'"
-              @click="deleteAppointment(appointment[0])"
-              >Remover</base-button
-            >
-          </span>
-          <span v-else>
-            <!-- Confirm Edition Button -->
-            <base-button
-              :button-type="'success'"
-              @click="editAppointment(appointment[0])"
-            >
-              Confirmar
-            </base-button>
-            <!-- Delete Appointment Button -->
-            <base-button
-              :button-type="'danger'"
-              @click="toggleAppointmentFormInput(false, null)"
-            >
-              Cancelar
-            </base-button>
+          <!-- Appointment Action Buttons -->
+          <span v-if="!showClientForm">
+            <span v-if="!appointmentFormEnabled">
+              <!-- Edit Appointment Button -->
+              <base-button
+                :button-type="'warning'"
+                @click="toggleAppointmentFormInput(true, appointment[0])"
+              >
+                Editar
+              </base-button>
+              <!-- Delete Appointment Button -->
+              <base-button
+                :button-type="'danger'"
+                @click="deleteAppointment(appointment[0])"
+                >Remover</base-button
+              >
+            </span>
+            <span v-else>
+              <!-- Confirm Edition Button -->
+              <base-button
+                :button-type="'success'"
+                @click="editAppointment(appointment[0])"
+              >
+                Confirmar
+              </base-button>
+              <!-- Delete Appointment Button -->
+              <base-button
+                :button-type="'danger'"
+                @click="toggleAppointmentFormInput(false, null)"
+              >
+                Cancelar
+              </base-button>
+            </span>
           </span>
         </div>
       </div>
@@ -105,8 +115,9 @@ export default {
     };
   },
   methods: {
+    // Retrieves a client by Id
     async viewClient(clientId) {
-      // If client have not been selected
+      // Only sends requests when no client has been selected
       if (this.selectedClient[0] !== clientId) {
         let clientsBulk = {};
         try {
@@ -126,24 +137,42 @@ export default {
         this.showClientForm = !this.showClientForm;
       }
     },
-    close() {
-      this.showDialog = false;
+    async editClient(clientId) {
+      try {
+        await this.$store.dispatch("clients/editClient", clientId);
+      } catch (error) {
+        console.log(error || "Something went wrong!");
+      }
+      this.clientFormEnabled = false;
+      this.showClientForm = false;
+      // TODO: Confirmation popup
     },
     async deleteAppointment(appointmentId) {
       this.toggleAppointmentFormInput(false, null);
-      await this.$store.dispatch("agenda/deleteAppointment", appointmentId);
+      try {
+        await this.$store.dispatch("agenda/deleteAppointment", appointmentId);
+      } catch (error) {
+        console.log(error || "Something went wrong!");
+      }
       // TODO: Confirmation popup
       this.close();
     },
     async editAppointment(appointmentId) {
       this.toggleAppointmentFormInput(false, null);
-      await this.$store.dispatch("agenda/editAppointment", appointmentId);
+      try {
+        await this.$store.dispatch("agenda/editAppointment", appointmentId);
+      } catch (error) {
+        console.log(error || "Something went wrong!");
+      }
       // TODO: Confirmation popup
       this.close();
     },
     toggleAppointmentFormInput(value, appointmentId) {
       this.appointmentFormEnabled = value;
       this.showAppointmentItem = appointmentId;
+    },
+    close() {
+      this.showDialog = false;
     },
   },
 };

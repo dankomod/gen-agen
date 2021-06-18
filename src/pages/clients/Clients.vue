@@ -16,21 +16,17 @@
       </base-button>
     </div>
   </div>
-
   <client-search v-if="showSearch" @selection="selection"></client-search>
-
   <client-form
     v-if="showForm"
     :form-data="formData"
     :form-enabled="clientFormEnabled"
   ></client-form>
-
   <div v-if="showForm && showCreationMenu">
     <base-button button-type="success" @click="createClient">
       Cadastrar Cliente
     </base-button>
   </div>
-
   <!-- ACTIONS MENU -->
   <div v-if="showForm && showActionsMenu && !showEditMenu">
     <!-- Edit Client Button -->
@@ -45,7 +41,6 @@
       Remover
     </base-button>
   </div>
-
   <!-- EDIT MENU -->
   <div v-if="showForm && showActionsMenu && showEditMenu">
     <!-- Confirm Edit Button -->
@@ -82,28 +77,6 @@ export default {
     };
   },
   methods: {
-    //!
-    //!
-    //!
-    //!
-    //!
-    //!
-    //!
-    //!
-    //!
-    //!
-    //!
-    //!
-    //!
-    //!
-    //!
-    //!
-    //!
-    //!
-    //!
-    //!
-    //!
-    //!
     //!
     // async createClient() {
     //   // TODO: Better form validation
