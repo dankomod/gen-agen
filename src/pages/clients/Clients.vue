@@ -1,62 +1,64 @@
 <template>
   <div>
-    <h1>Base de clientes</h1>
-    <!-- TOP MENU -->
-    <div class="pb-5">
-      <!-- Search Button -->
-      <base-button @click="toggleSearch(true), toggleCreation(false)">
-        Pesquisar
-      </base-button>
-      <!-- New Client Button -->
-      <base-button
-        button-type="success"
-        @click="toggleCreation(true), toggleSearch(false)"
-      >
-        Cadastrar
+    <div>
+      <h1>Base de clientes</h1>
+      <!-- TOP MENU -->
+      <div class="pb-5">
+        <!-- Search Button -->
+        <base-button @click="toggleSearch(true), toggleCreation(false)">
+          Pesquisar
+        </base-button>
+        <!-- New Client Button -->
+        <base-button
+          button-type="success"
+          @click="toggleCreation(true), toggleSearch(false)"
+        >
+          Cadastrar
+        </base-button>
+      </div>
+    </div>
+    <client-search v-if="showSearch" @selection="selection"></client-search>
+    <client-form
+      v-if="showForm"
+      :form-data="formData"
+      :form-enabled="clientFormEnabled"
+    ></client-form>
+    <div v-if="showForm && showCreationMenu">
+      <base-button button-type="success" @click="createClient">
+        Cadastrar Cliente
       </base-button>
     </div>
-  </div>
-  <client-search v-if="showSearch" @selection="selection"></client-search>
-  <client-form
-    v-if="showForm"
-    :form-data="formData"
-    :form-enabled="clientFormEnabled"
-  ></client-form>
-  <div v-if="showForm && showCreationMenu">
-    <base-button button-type="success" @click="createClient">
-      Cadastrar Cliente
-    </base-button>
-  </div>
-  <!-- ACTIONS MENU -->
-  <div v-if="showForm && showActionsMenu && !showEditMenu">
-    <!-- Edit Client Button -->
-    <base-button
-      button-type="warning"
-      @click="toggleInputs(true), toggleEditMenu(true)"
-    >
-      Editar
-    </base-button>
-    <!-- Delete Client Button -->
-    <base-button button-type="danger" @click="deleteClient">
-      Remover
-    </base-button>
-  </div>
-  <!-- EDIT MENU -->
-  <div v-if="showForm && showActionsMenu && showEditMenu">
-    <!-- Confirm Edit Button -->
-    <base-button
-      button-type="success"
-      @click="editClient, toggleInputs(false), toggleEditMenu(false)"
-    >
-      Confirmar alterações
-    </base-button>
-    <!-- //TODO: -->
-    <!-- Cancel Edit Button -->
-    <base-button
-      button-type="danger"
-      @click="toggleInputs(false), toggleEditMenu(false)"
-      >Cancelar</base-button
-    >
+    <!-- ACTIONS MENU -->
+    <div v-if="showForm && showActionsMenu && !showEditMenu">
+      <!-- Edit Client Button -->
+      <base-button
+        button-type="warning"
+        @click="toggleInputs(true), toggleEditMenu(true)"
+      >
+        Editar
+      </base-button>
+      <!-- Delete Client Button -->
+      <base-button button-type="danger" @click="deleteClient">
+        Remover
+      </base-button>
+    </div>
+    <!-- EDIT MENU -->
+    <div v-if="showForm && showActionsMenu && showEditMenu">
+      <!-- Confirm Edit Button -->
+      <base-button
+        button-type="success"
+        @click="editClient, toggleInputs(false), toggleEditMenu(false)"
+      >
+        Confirmar alterações
+      </base-button>
+      <!-- //TODO: -->
+      <!-- Cancel Edit Button -->
+      <base-button
+        button-type="danger"
+        @click="toggleInputs(false), toggleEditMenu(false)"
+        >Cancelar</base-button
+      >
+    </div>
   </div>
 </template>
 

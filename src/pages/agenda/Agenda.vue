@@ -1,15 +1,17 @@
 <template>
-  <date-selector @dateSelected="toggleTimeSlots"></date-selector>
-  <time-slots
-    v-if="showTimeSlots"
-    :key="componentsKey"
-    @slotSelected="toggleInfoSection"
-  ></time-slots>
-  <info-section
-    v-if="showInfoSection"
-    :key="componentsKey"
-    @newAppointment="updateRendering"
-  ></info-section>
+  <div>
+    <date-selector @dateSelected="toggleTimeSlots"></date-selector>
+    <time-slots
+      v-if="showTimeSlots"
+      :key="componentsKey"
+      @slotSelected="toggleInfoSection"
+    ></time-slots>
+    <info-section
+      v-if="showInfoSection"
+      :key="componentsKey"
+      @newAppointment="updateRendering"
+    ></info-section>
+  </div>
 </template>
 
 <script>
