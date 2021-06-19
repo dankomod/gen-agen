@@ -7,8 +7,5 @@ const store = createStore({
     agenda: agendaModule,
     clients: clientsModule,
   },
-  state() {},
-  mutations: {},
-  actions: {},
 });
 export default store;

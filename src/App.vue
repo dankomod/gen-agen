@@ -1,20 +1,17 @@
 <template>
-  <section class="flex flex-col px-5">
-    <!-- <router-view></router-view> -->
-    <agenda></agenda>
-    <clients></clients>
-  </section>
+  <h1>All the Things</h1>
+  <div>
+    <router-link :to="{ name: 'Dashboard' }">
+      <base-button>Início</base-button>
+    </router-link>
+    <router-link :to="{ name: 'Agenda' }">
+      <base-button>Agenda</base-button>
+    </router-link>
+    <router-link :to="{ name: 'Clients' }">
+      <base-button>Clientes</base-button>
+    </router-link>
+  </div>
+  <router-view />
 </template>
 
-<script>
-export default {
-  components: {
-    Agenda,
-    Clients,
-  },
-};
-import Agenda from "./pages/agenda/Agenda.vue";
-import Clients from "./pages/clients/Clients.vue";
-</script>
-// CSS Import
 <style src="./assets/css/style.css"></style>
