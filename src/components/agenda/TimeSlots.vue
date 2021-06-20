@@ -1,6 +1,5 @@
 <template>
-  <div><h1>Slots Menu</h1></div>
-  <div class="flex flex-wrap items-center justify-center max-w-screen-md pb-10">
+  <div class="flex flex-wrap items-center justify-center">
     <!-- Turns checkboxes into selectable boxes: <article> holds the base style, <input> makes the box selectable and stylable as such, <div> is shown whether the input is selected or not, and <span> holds the text -->
     <article
       v-for="timeSlot in timeSlots"

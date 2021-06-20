@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex flex-col items-center justify-center space-y-10">
     <date-selector @dateSelected="toggleTimeSlots"></date-selector>
     <time-slots
       v-if="showTimeSlots"

@@ -1,32 +1,34 @@
 <template>
-  <base-form-element
-    :element-type="'inputText'"
-    :element-label="'Nome'"
-    :element-value="localFormData[1].name"
-    @keyup="appointmentInfo.name = $event.target.value"
-  ></base-form-element>
-  <base-form-element
-    :element-type="'inputNumber'"
-    :element-enabled="formEnabled"
-    :element-label="'Valor'"
-    :element-value="localFormData[1].price"
-    @keyup="appointmentInfo.price = $event.target.value"
-  ></base-form-element>
-  <!-- //TODO: fix: this only works if a string is sent when true and null when false -->
-  <base-form-element
-    :element-type="'checkbox'"
-    :element-enabled="formEnabled"
-    :element-label="'Leva e tras'"
-    :element-value="localFormData[1].transport ? 'true' : null"
-    @change="appointmentInfo.transport = $event.target.checked"
-  ></base-form-element>
-  <base-form-element
-    :element-type="'textarea'"
-    :element-enabled="formEnabled"
-    :element-label="'Observações'"
-    :element-value="localFormData[1].observations"
-    @keyup="appointmentInfo.observations = $event.target.value"
-  ></base-form-element>
+  <div class="space-y-2">
+    <base-form-element
+      :element-type="'inputText'"
+      :element-label="'Nome'"
+      :element-value="localFormData[1].name"
+      @keyup="appointmentInfo.name = $event.target.value"
+    ></base-form-element>
+    <base-form-element
+      :element-type="'inputNumber'"
+      :element-enabled="formEnabled"
+      :element-label="'Valor'"
+      :element-value="localFormData[1].price"
+      @keyup="appointmentInfo.price = $event.target.value"
+    ></base-form-element>
+    <!-- //TODO: fix: this only works if a string is sent when true and null when false -->
+    <base-form-element
+      :element-type="'checkbox'"
+      :element-enabled="formEnabled"
+      :element-label="'Leva e tras'"
+      :element-value="localFormData[1].transport ? 'true' : null"
+      @change="appointmentInfo.transport = $event.target.checked"
+    ></base-form-element>
+    <base-form-element
+      :element-type="'textarea'"
+      :element-enabled="formEnabled"
+      :element-label="'Observações'"
+      :element-value="localFormData[1].observations"
+      @keyup="appointmentInfo.observations = $event.target.value"
+    ></base-form-element>
+  </div>
 </template>
 <script>
 export default {

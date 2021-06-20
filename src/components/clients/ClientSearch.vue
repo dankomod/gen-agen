@@ -1,15 +1,14 @@
 <template>
-  <h1>Pesquisar Cliente</h1>
-  <div class="relative">
+  <div class="relative py-3">
     <input
       v-model="searchQuery"
       type="text"
-      class="p-2 mb-2 placeholder-gray-600 border-2 border-red-800"
+      class="p-2 mb-2 placeholder-gray-600 bg-indigo-100"
       placeholder="Digite o nome do cliente"
       @keyup="filteredList"
     />
     <div
-      class="absolute left-0 z-10 mt-1 bg-gray-100 border border-gray-400 shadow  top-full"
+      class="absolute left-0 z-10 w-full mt-1 bg-gray-100 border border-gray-400 shadow "
       :class="this.searchQuery.length > 0 ? 'opacity-100' : 'opacity-0'"
     >
       <ul class="block text-gray-900">

@@ -1,21 +1,18 @@
 <template>
-  <div>
-    <div>
-      <h1>Base de clientes</h1>
-      <!-- TOP MENU -->
-      <div class="pb-5">
-        <!-- Search Button -->
-        <base-button @click="toggleSearch(true), toggleCreation(false)">
-          Pesquisar
-        </base-button>
-        <!-- New Client Button -->
-        <base-button
-          button-type="success"
-          @click="toggleCreation(true), toggleSearch(false)"
-        >
-          Cadastrar
-        </base-button>
-      </div>
+  <div class="flex flex-col items-center justify-center space-y-10">
+    <!-- TOP MENU -->
+    <div class="space-x-2">
+      <!-- Search Button -->
+      <base-button @click="toggleSearch(true), toggleCreation(false)">
+        Pesquisar Clientes
+      </base-button>
+      <!-- New Client Button -->
+      <base-button
+        button-type="success"
+        @click="toggleCreation(true), toggleSearch(false)"
+      >
+        Cadastrar novo Cliente
+      </base-button>
     </div>
     <client-search v-if="showSearch" @selection="selection"></client-search>
     <client-form
@@ -29,7 +26,7 @@
       </base-button>
     </div>
     <!-- ACTIONS MENU -->
-    <div v-if="showForm && showActionsMenu && !showEditMenu">
+    <div v-if="showForm && showActionsMenu && !showEditMenu" class="space-x-2">
       <!-- Edit Client Button -->
       <base-button
         button-type="warning"
@@ -43,7 +40,7 @@
       </base-button>
     </div>
     <!-- EDIT MENU -->
-    <div v-if="showForm && showActionsMenu && showEditMenu">
+    <div v-if="showForm && showActionsMenu && showEditMenu" class="space-x-2">
       <!-- Confirm Edit Button -->
       <base-button
         button-type="success"

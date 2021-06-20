@@ -1,34 +1,39 @@
 <template>
-  <base-button v-if="showInfoButton" @click="showInfo">
-    Mostrar Informações
-  </base-button>
-  <slot-detail
-    v-if="showSlotDetail"
-    :slot-appointments="slotAppointments"
-  ></slot-detail>
-  <base-button @click="showSearch = true">
-    {{ appointmentButtonText }}
-  </base-button>
-  <client-search v-if="showSearch" @selection="selection"></client-search>
-  <client-form
-    v-if="showClientForm"
-    :form-data="clientFormData"
-    :form-enabled="clientFormEnabled"
-  ></client-form>
-  <div v-if="showClientForm">
-    <base-button button-type="success" @click="createClient">
-      Cadastrar Cliente
-    </base-button>
-  </div>
-  <appointment-form
-    v-if="showAppointmentForm"
-    :key="appointmentFormKey"
-    :form-enabled="appointmentFormEnabled"
-  ></appointment-form>
-  <div v-if="showAppointmentForm">
-    <base-button button-type="success" @click="createAppointment">
-      Concluir Agendamento
-    </base-button>
+  <div class="flex flex-col items-center space-y-10">
+    <div class="space-x-2">
+      <base-button v-if="showInfoButton" @click="showInfo">
+        Mostrar Informações
+      </base-button>
+      <base-button @click="showSearch = true">
+        {{ appointmentButtonText }}
+      </base-button>
+    </div>
+
+    <slot-detail
+      v-if="showSlotDetail"
+      :slot-appointments="slotAppointments"
+    ></slot-detail>
+    <client-search v-if="showSearch" @selection="selection"></client-search>
+    <client-form
+      v-if="showClientForm"
+      :form-data="clientFormData"
+      :form-enabled="clientFormEnabled"
+    ></client-form>
+    <div v-if="showClientForm">
+      <base-button button-type="success" @click="createClient">
+        Cadastrar Cliente
+      </base-button>
+    </div>
+    <appointment-form
+      v-if="showAppointmentForm"
+      :key="appointmentFormKey"
+      :form-enabled="appointmentFormEnabled"
+    ></appointment-form>
+    <div v-if="showAppointmentForm">
+      <base-button button-type="success" @click="createAppointment">
+        Concluir Agendamento
+      </base-button>
+    </div>
   </div>
 </template>
 
