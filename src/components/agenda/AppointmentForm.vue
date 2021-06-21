@@ -22,6 +22,20 @@
       @change="appointmentInfo.transport = $event.target.checked"
     ></base-form-element>
     <base-form-element
+      :element-type="'checkbox'"
+      :element-enabled="formEnabled"
+      :element-label="'Pago'"
+      :element-value="localFormData[1].isPaid ? 'true' : null"
+      @change="appointmentInfo.isPaid = $event.target.checked"
+    ></base-form-element>
+    <base-form-element
+      :element-type="'checkbox'"
+      :element-enabled="formEnabled"
+      :element-label="'Concluído'"
+      :element-value="localFormData[1].isDone ? 'true' : null"
+      @change="appointmentInfo.isDone = $event.target.checked"
+    ></base-form-element>
+    <base-form-element
       :element-type="'textarea'"
       :element-enabled="formEnabled"
       :element-label="'Observações'"

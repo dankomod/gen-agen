@@ -8,11 +8,6 @@
         {{ appointmentButtonText }}
       </base-button>
     </div>
-
-    <slot-detail
-      v-if="showSlotDetail"
-      :slot-appointments="slotAppointments"
-    ></slot-detail>
     <client-search v-if="showSearch" @selection="selection"></client-search>
     <client-form
       v-if="showClientForm"
@@ -39,8 +34,8 @@
 
 <script>
 export default {
-  components: { AppointmentForm, ClientForm, ClientSearch, SlotDetail },
-  emits: ["newAppointment"],
+  components: { AppointmentForm, ClientForm, ClientSearch },
+  emits: ["newAppointment", "toggleSlotDetail"],
   data() {
     return {
       // TODO: check if some of these can be removed
@@ -53,8 +48,6 @@ export default {
       appointmentFormKey: 0,
       showInfoButton: false,
       selectedSlots: [],
-      showSlotDetail: false,
-      slotAppointments: [],
     };
   },
   computed: {
@@ -96,21 +89,21 @@ export default {
   },
   methods: {
     // TODO: verify if this function can be split
-    // TODO: error catching
     // Loads the appointments then shows the slot details
     async showInfo() {
       if (this.selectedSlots && this.selectedSlots.length === 1) {
+        let slotAppointments = [];
         for (let appointment of Object.entries(
           await this.$store.dispatch("agenda/loadAppointments")
         )) {
           if (appointment[1].dateTime === this.selectedSlots[0].toString()) {
-            this.slotAppointments.push(appointment);
+            slotAppointments.push(appointment);
           }
         }
+        this.$store.dispatch("agenda/setSlotAppointments", slotAppointments);
       }
-      this.showSlotDetail = true;
+      this.$emit("toggleSlotDetail");
     },
-
     async createAppointment() {
       try {
         await this.$store.dispatch("agenda/createAppointment");
@@ -159,7 +152,6 @@ export default {
 // eslint-disable-next-line
 import { DateTime } from "luxon";
 import AppointmentForm from "./AppointmentForm.vue";
-import SlotDetail from "./SlotDetail.vue";
 import ClientForm from "./../clients/ClientForm.vue";
 import ClientSearch from "./../clients/ClientSearch.vue";
 </script>

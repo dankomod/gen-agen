@@ -23,10 +23,10 @@
 
 <style>
 .route-enter-active {
-  transition: all 100ms ease-out;
+  transition: all 250ms ease-out;
 }
 .route-enter-to {
-  transition: all 100ms ease-in;
+  transition: all 250ms ease-in;
 }
 .route-enter-from,
 .route-leave-to {

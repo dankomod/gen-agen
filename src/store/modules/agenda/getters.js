@@ -14,6 +14,9 @@ export default {
   selectedSlots(state) {
     return state.selectedSlots;
   },
+  slotAppointments(state) {
+    return state.slotAppointments;
+  },
   takenHours(state) {
     return state.takenHours;
   },

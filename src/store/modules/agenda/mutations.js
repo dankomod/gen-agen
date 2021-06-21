@@ -11,4 +11,7 @@ export default {
   setTakenHours(state, takenHours) {
     state.takenHours = takenHours;
   },
+  setSlotAppointments(state, slotAppointments) {
+    state.slotAppointments = slotAppointments;
+  },
 };

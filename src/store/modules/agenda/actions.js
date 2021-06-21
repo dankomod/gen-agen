@@ -46,6 +46,7 @@ export default {
     }
   },
   async editAppointment(context, appointmentId) {
+    console.log(this.getters["agenda/appointmentNewData"]);
     const selectedDate = this.getters["agenda/selectedDate"];
     const response = await fetch(
       `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}/${appointmentId}.json`,
@@ -94,5 +95,8 @@ export default {
   },
   setSelectedSlots(context, selectedSlots) {
     context.commit("setSelectedSlots", selectedSlots);
+  },
+  setSlotAppointments(context, slotAppointments) {
+    context.commit("setSlotAppointments", slotAppointments);
   },
 };

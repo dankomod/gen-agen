@@ -11,6 +11,7 @@ export default {
       selectedSlots: [],
       appointmentNewData: "",
       takenHours: [],
+      slotAppointments: [], //The appointments of the currently selected hour slot
     };
   },
   actions,
