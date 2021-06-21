@@ -1,8 +1,11 @@
+// eslint-disable-next-line no-unused-vars
+import { DateTime } from "luxon";
 export default {
   // Posts a new client to the API.
   // * POST requests to the Firebase Rest API automatically creates an ID.
   async createClient({ dispatch }) {
     const formNewData = this.getters["clients/formNewData"];
+    formNewData.creationDate = DateTime.now();
     if (formNewData.name !== undefined && formNewData.phone !== undefined) {
       const response = await fetch(
         "https://gen-agen-default-rtdb.firebaseio.com/clients.json",

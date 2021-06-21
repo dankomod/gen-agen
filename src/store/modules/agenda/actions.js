@@ -5,6 +5,7 @@ export default {
     const selectedDate = this.getters["agenda/selectedDate"];
     const selectedSlots = this.getters["agenda/selectedSlots"];
     const appointmentNewData = this.getters["agenda/appointmentNewData"];
+    appointmentNewData.creationDate = DateTime.now();
     const selectedClient = this.getters["clients/selectedClient"];
     // Adds the client's name and ID to the appointment information. The name is needed despite of the ID because it avoids requests to get the client name when an appointment is shown
     appointmentNewData.clientId = selectedClient[0];
