@@ -41,11 +41,12 @@
               <!-- Edit Client Button -->
               <base-button
                 v-if="!clientFormEnabled"
+                :button-type="'warning'"
                 @click="clientFormEnabled = true"
               >
                 Editar Cliente
               </base-button>
-              <span v-else>
+              <span v-else class="space-x-2">
                 <!-- Confirm Client Editing Button -->
                 <base-button
                   :button-type="'success'"

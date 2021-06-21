@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center space-y-10">
+  <div class="flex flex-col items-center">
     <div class="space-x-2">
       <base-button v-if="showInfoButton" @click="showInfo">
         Mostrar Informações
@@ -79,7 +79,9 @@ export default {
     // Watches the store for changes in the selected slots
     this.$store.watch(
       () => {
-        return this.$store.getters["agenda/selectedSlots"];
+        return this.$store.state.selectedSlots;
+        //  ? The watch with this getter can't detect when the selectedSlots array looses a value and turns to length = 1
+        // //  return this.$store.getters["agenda/selectedSlots"];
       },
       (newValue) => {
         // If newValue is not null and has length 1
@@ -87,7 +89,9 @@ export default {
           this.showInfoButton = true;
         }
         this.showInfoButton = false;
-      }
+        console.log(this.$store.getters["agenda/selectedSlots"]);
+      },
+      { deep: true }
     );
   },
   methods: {
