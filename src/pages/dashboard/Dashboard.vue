@@ -16,6 +16,11 @@
       </div>
       <div class="p-5 pb-2">
         <h2 class="text-xl">Clientes</h2>
+        <p>Últimos 30 dias: {{}}</p>
+        <p>Últimos 15 dias: {{}}</p>
+        <p>Últimos 7 dias: {{}}</p>
+        <p>Ontem: {{}}</p>
+        <p>Hoje: {{}}</p>
       </div>
     </div>
   </div>
@@ -27,91 +32,61 @@ export default {
   data() {
     return {
       allAppointments: [],
-      currentMonthAppointments: {},
-      pastMonthAppointments: {},
-      nextMonthAppointments: {},
     };
   },
   async created() {
-    await this.monthsAppointments();
-    console.log(this.filterAppointments("future", 2).length);
+    await this.getAppointments();
   },
   methods: {
+    // Requests appointments for current, past and last month
+    async getAppointments() {
+      const now = DateTime.now(); // Current YYYY/MM
+      const past = now.minus({ months: 1 }); // Past YYYY/MM
+      const future = now.plus({ months: 1 }); // Future YYYY/MM
+      for (let time of [now, past, future]) {
+        this.joinAppointments(
+          await this.$store.dispatch("agenda/monthAppointments", time) // Retrieves data and sends it to be joined
+        );
+      }
+    },
+    // Join the appointments to a single array
+    joinAppointments(monthAppointments) {
+      if (monthAppointments && Object.keys(monthAppointments).length !== 0) {
+        for (let day of Object.values(monthAppointments)) {
+          for (let appointment of Object.values(day)) {
+            this.allAppointments.push(appointment);
+          }
+        }
+      }
+    },
     filterAppointments(when = "now", value = null) {
-      const startOfToday = DateTime.now().startOf("day");
+      const startOfToday = DateTime.now().startOf("day"); // Today, 00h:00m
       const endOfToday = DateTime.now()
         .startOf("day")
         .plus({ days: 1 })
-        .minus({ milliseconds: 1 });
+        .minus({ milliseconds: 1 }); // Today, 23h:59m:59s:999ms
+      // Past Filter
       if (when === "past") {
-        const dateTimeFilter = startOfToday
-          .minus({ days: value })
-          .startOf("day");
+        const pastTimeFilter = startOfToday.minus({ days: value }); // Today minus number of days argument
         return this.allAppointments.filter((val) => {
-          const valueDateTime = DateTime.fromISO(val.dateTime);
+          const valDateTime = DateTime.fromISO(val.dateTime); // The DateTime of each appointment
           return (
-            valueDateTime >= dateTimeFilter && valueDateTime < startOfToday
+            valDateTime >= pastTimeFilter && valDateTime < startOfToday // >= Start of first day of the past, < start of current day
           );
         });
+        // Future Filter
       } else if (when === "future") {
-        const dateTimeFilter = endOfToday.plus({ days: value }); // End of the future day
+        const futureTimeFilter = endOfToday.plus({ days: value }); // End of the future day
         return this.allAppointments.filter((val) => {
-          const valueDateTime = DateTime.fromISO(val.dateTime);
-          return valueDateTime > endOfToday && valueDateTime <= dateTimeFilter;
+          const valDateTime = DateTime.fromISO(val.dateTime);
+          return valDateTime > endOfToday && valDateTime <= futureTimeFilter; // > End of current day, <= end of future day
         });
+        // Current date filter
       } else if (when === "now") {
         return this.allAppointments.filter((val) => {
-          const valueDateTime = DateTime.fromISO(val.dateTime);
-          return valueDateTime >= startOfToday && valueDateTime <= endOfToday;
+          const valDateTime = DateTime.fromISO(val.dateTime);
+          return valDateTime >= startOfToday && valDateTime <= endOfToday; // >= Start of current day, <= End of current day
         });
-      }
-    },
-    // Requests appointments for current, past and last month and pushes all the appointments into an array
-    async monthsAppointments() {
-      // current yyyy/mm
-      const currentMonthAppointments = await this.$store.dispatch(
-        "agenda/monthAppointments",
-        DateTime.now()
-      );
-      if (
-        currentMonthAppointments &&
-        Object.keys(currentMonthAppointments).length !== 0
-      ) {
-        for (let day of Object.values(currentMonthAppointments)) {
-          for (let appointment of Object.values(day)) {
-            this.allAppointments.push(appointment);
-          }
-        }
-      }
-      // past yyyy/mm
-      const pastMonthAppointments = await this.$store.dispatch(
-        "agenda/monthAppointments",
-        DateTime.now().minus({ months: 1 })
-      );
-      if (
-        pastMonthAppointments &&
-        Object.keys(pastMonthAppointments).length !== 0
-      ) {
-        for (let day of Object.values(pastMonthAppointments)) {
-          for (let appointment of Object.values(day)) {
-            this.allAppointments.push(appointment);
-          }
-        }
-      }
-      // next yyyy/mm
-      const nextMonthAppointments = await this.$store.dispatch(
-        "agenda/monthAppointments",
-        DateTime.now().plus({ months: 1 })
-      );
-      if (
-        nextMonthAppointments &&
-        Object.keys(nextMonthAppointments).length !== 0
-      ) {
-        for (let day of Object.values(nextMonthAppointments)) {
-          for (let appointment of Object.values(day)) {
-            this.allAppointments.push(appointment);
-          }
-        }
       }
     },
   },
