@@ -1,13 +1,13 @@
 // eslint-disable-next-line no-unused-vars
 import { DateTime } from "luxon";
 export default {
-  async createAppointment() {
+  async createAppointment({ dispatch }) {
     const selectedDate = this.getters["agenda/selectedDate"];
     const selectedSlots = this.getters["agenda/selectedSlots"];
     const appointmentNewData = this.getters["agenda/appointmentNewData"];
     appointmentNewData.creationDate = DateTime.now();
     const selectedClient = this.getters["clients/selectedClient"];
-    // Adds the client's name and ID to the appointment information. The name is needed despite of the ID because it avoids requests to get the client name when an appointment is shown
+    // Having the client's name and ID on the appointment information minimizes API requests
     appointmentNewData.clientId = selectedClient[0];
     appointmentNewData.name = selectedClient[1].name;
     for (let selectedSlot of selectedSlots) {
@@ -28,6 +28,14 @@ export default {
         const error = "Data is lacking";
         throw error;
       }
+      // Adds a dateTime for this appointment in the client's data
+      dispatch(
+        "clients/setFormNewData",
+        { lastAppointment: appointmentNewData.creationDate },
+        { root: true }
+      );
+      // Sends the new appointment datetime to the API
+      dispatch("clients/editClient", selectedClient[0], { root: true }); // (action, clientID, root: true to reach a namespaced action)
     }
   },
   async deleteAppointment(context, appointmentId) {
