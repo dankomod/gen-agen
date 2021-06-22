@@ -26,6 +26,18 @@
         <p>Ontem: {{ filter("clients", "past", 1).length }}</p>
         <p>Hoje: {{ filter("clients").length }}</p>
       </div>
+      <div class="p-5 pb-2">
+        <h2 class="pb-2 text-xl">Clientes Ativos</h2>
+        <p>
+          Últimos 30 dias: {{ filter("lastAppointment", "past", 30).length }}
+        </p>
+        <p>
+          Últimos 15 dias: {{ filter("lastAppointment", "past", 15).length }}
+        </p>
+        <p>Últimos 7 dias: {{ filter("lastAppointment", "past", 7).length }}</p>
+        <p>Ontem: {{ filter("lastAppointment", "past", 1).length }}</p>
+        <p>Hoje: {{ filter("lastAppointment").length }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -75,6 +87,9 @@ export default {
       } else if (type === "clients") {
         arrayToFilter = this.allClients;
         filterKey = "creationDate";
+      } else if (type === "lastAppointment") {
+        arrayToFilter = this.allClients;
+        filterKey = "lastAppointment";
       }
       const startOfToday = DateTime.now().startOf("day"); // Today, 00h:00m
       const endOfToday = startOfToday
