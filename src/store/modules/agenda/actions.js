@@ -87,6 +87,19 @@ export default {
     }
     return responseData;
   },
+  async monthAppointments(context, payload) {
+    const response = await fetch(
+      `https://gen-agen-default-rtdb.firebaseio.com/schedule/${payload.year}/${payload.month}.json`
+    );
+    const responseData = await response.json();
+    if (!response.ok) {
+      const error = new Error(
+        responseData.message || "Erro ao enviar solicitação."
+      );
+      throw error;
+    }
+    return responseData;
+  },
   setAppointmentNewData(context, appointmentNewData) {
     context.commit("setAppointmentNewData", appointmentNewData);
   },
