@@ -1,9 +1,5 @@
 <template>
   <div>
-    <the-heatmap
-      v-if="showHeatmap"
-      :appointments="allAppointments"
-    ></the-heatmap>
     <h1 class="text-2xl text-center">Administração</h1>
     <div class="flex flex-wrap">
       <div class="p-5">
@@ -48,7 +44,6 @@
 
 <script>
 export default {
-  components: { TheHeatmap },
   data() {
     return {
       allAppointments: [],
@@ -134,5 +129,4 @@ export default {
   },
 };
 import { DateTime } from "luxon";
-import TheHeatmap from "./../../components/dashboard/TheHeatmap.vue";
 </script>
