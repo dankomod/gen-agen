@@ -1,5 +1,9 @@
 <template>
   <div>
+    <the-heatmap
+      v-if="showHeatmap"
+      :appointments="allAppointments"
+    ></the-heatmap>
     <h1 class="text-2xl text-center">Administração</h1>
     <div class="flex flex-wrap">
       <div class="p-5">
@@ -43,17 +47,19 @@
 </template>
 
 <script>
-import { DateTime } from "luxon";
 export default {
+  components: { TheHeatmap },
   data() {
     return {
       allAppointments: [],
       allClients: [],
+      showHeatmap: false,
     };
   },
   async created() {
     await this.loadAppointments();
     await this.loadClients();
+    this.showHeatmap = true;
   },
   methods: {
     // Requests appointments for current, past and last month
@@ -127,4 +133,6 @@ export default {
     },
   },
 };
+import { DateTime } from "luxon";
+import TheHeatmap from "./../../components/dashboard/TheHeatmap.vue";
 </script>
