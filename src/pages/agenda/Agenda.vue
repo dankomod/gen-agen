@@ -11,7 +11,11 @@
     ></time-slots>
 
     <!-- Slot Details Menu -->
-    <slot-detail v-if="showSlotDetail" :key="componentsKey"></slot-detail>
+    <slot-detail
+      v-if="showSlotDetail"
+      :key="componentsKey"
+      @update="toggleSlotDetail(false), updateRendering"
+    ></slot-detail>
 
     <info-section
       v-if="showInfoSection"

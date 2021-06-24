@@ -42,10 +42,7 @@
     <!-- EDIT MENU -->
     <div v-if="showForm && showActionsMenu && showEditMenu" class="space-x-2">
       <!-- Confirm Edit Button -->
-      <base-button
-        button-type="success"
-        @click="editClient, toggleInputs(false), toggleEditMenu(false)"
-      >
+      <base-button button-type="success" @click="editClient">
         Confirmar alterações
       </base-button>
       <!-- //TODO: -->
@@ -90,7 +87,8 @@ export default {
         await this.$store.dispatch("clients/deleteClient", this.formData[0]);
         this.toggleInputs(false);
         this.toggleForm(false);
-        this.toggleSearch(false);
+        this.toggleEditMenu(false);
+        this.toggleSearch(true);
         // TODO: Popup Asking for confirmation and the confirming the deletion or denying
       } catch (error) {
         console.log(error);
@@ -113,13 +111,13 @@ export default {
       this.toggleForm();
       this.toggleActionsMenu(true);
     },
-    toggleActionsMenu(value = true) {
-      this.showActionsMenu = value;
-    },
     toggleCreation(value = true) {
       this.toggleForm(value);
       this.toggleInputs(value);
       this.showCreationMenu = value;
+    },
+    toggleActionsMenu(value = true) {
+      this.showActionsMenu = value;
     },
     toggleEditMenu(value = true) {
       this.showEditMenu = value;

@@ -8,6 +8,7 @@
       v-if="
         showAppointmentItem === null || showAppointmentItem === appointment[0]
       "
+      :key="appointment[0]"
       class="p-4 space-y-1 border border-indigo-300 hover:bg-indigo-100"
     >
       <p v-if="Object.keys(slotAppointments).length > 1" class="pb-2 text-lg">
@@ -24,40 +25,113 @@
         :form-enabled="clientFormEnabled"
         class="pb-2"
       ></client-form>
-      <!-- Action Buttons -->
       <div class="flex flex-row justify-between">
-        <!-- Client Action Buttons -->
-        <span v-if="!appointmentFormEnabled" class="space-x-2">
-          <!-- View Client Information Button -->
-          <!-- // TODO: Prevent the conditional formatting of the view client button on non-selected appointments -->
-          <base-button
-            v-if="!clientFormEnabled"
-            @click="viewClient(appointment[1].clientId)"
-          >
-            {{ !showClientForm ? "Ver Cliente" : "Ocultar Detalhes" }}
-          </base-button>
-          <base-button
-            v-if="!appointment.isPaid"
-            :button-type="'success'"
-            @click="changeStatus(appointment[0], 'isPaid')"
-            >Pago</base-button
-          >
-          <base-button
-            v-if="!appointment.isDone"
-            :button-type="'success'"
-            @click="changeStatus(appointment[0], 'isDone')"
-            >Concluído</base-button
-          >
-          <span v-if="showClientForm">
-            <!-- Edit Client Button -->
-            <base-button
-              v-if="!clientFormEnabled"
-              :button-type="'warning'"
-              @click="clientFormEnabled = true"
+        <div class="relative inline-block text-left">
+          <div>
+            <button
+              type="button"
+              class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm  hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+              aria-expanded="true"
+              aria-haspopup="true"
+              @click="toggleDrop()"
             >
-              Editar Cliente
-            </base-button>
-            <span v-else class="space-x-2">
+              Opções
+              <svg
+                class="w-5 h-5 ml-2 -mr-1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
+            :key="appointment[0]"
+            v-if="showDrop"
+            class="absolute left-0 w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg  ring-1 ring-black ring-opacity-5 focus:outline-none"
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="menu-button"
+            tabindex="-1"
+          >
+            <div v-if="showDrop" class="py-1" role="none">
+              <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100"
+                role="menuitem"
+                tabindex="-1"
+                @click="viewClient(appointment[1].clientId), toggleDrop()"
+              >
+                {{ !showClientForm ? "Ver Cliente" : "Ocultar Detalhes" }}</a
+              >
+              <a
+                v-if="showClientForm && !clientFormEnabled"
+                href="#"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100"
+                role="menuitem"
+                tabindex="-1"
+                @click="
+                  viewClient(appointment[1].clientId),
+                    toggleDrop(),
+                    (clientFormEnabled = true)
+                "
+              >
+                Editar Cliente
+              </a>
+              <a
+                v-if="!appointment.isPaid"
+                href="#"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100"
+                role="menuitem"
+                tabindex="-1"
+                @click="changeStatus(appointment[0], 'isPaid'), toggleDrop()"
+              >
+                Marcar como Pago</a
+              >
+              <a
+                v-if="!appointment.isDone"
+                href="#"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100"
+                role="menuitem"
+                tabindex="-1"
+                @click="changeStatus(appointment[0], 'isDone'), toggleDrop()"
+              >
+                Marcar como Concluído</a
+              >
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-yellow-700  hover:bg-blue-100"
+                role="menuitem"
+                tabindex="-1"
+                @click="
+                  toggleDrop(), toggleAppointmentFormInput(true, appointment[0])
+                "
+                >Editar Agendamento</a
+              >
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-red-700 hover:bg-blue-100"
+                role="menuitem"
+                tabindex="-1"
+                @click="toggleDrop(), deleteAppointment(appointment[0])"
+                >Excluir Agendamento</a
+              >
+            </div>
+          </div>
+        </div>
+        <!-- Start of Action Buttons -->
+        <div class="flex flex-row justify-between">
+          <!-- Start of Client Action Buttons -->
+          <span v-if="!appointmentFormEnabled" class="space-x-2">
+            <!-- Start of Client Edition Menu -->
+            <span v-if="showClientForm && !clientFormEnabled" class="space-x-2">
               <!-- Confirm Client Editing Button -->
               <base-button
                 :button-type="'success'"
@@ -71,44 +145,35 @@
                 @click="clientFormEnabled = false"
               >
                 Cancelar
-              </base-button></span
-            >
+              </base-button>
+            </span>
+            <!-- End of Client Edition Menu -->
           </span>
-        </span>
-        <!-- Appointment Action Buttons -->
-        <span v-if="!showClientForm">
-          <span v-if="!appointmentFormEnabled" class="space-x-2">
-            <!-- Edit Appointment Button -->
-            <base-button
-              :button-type="'warning'"
-              @click="toggleAppointmentFormInput(true, appointment[0])"
-            >
-              Editar
-            </base-button>
-            <!-- Delete Appointment Button -->
-            <base-button
-              :button-type="'danger'"
-              @click="deleteAppointment(appointment[0])"
-              >Remover</base-button
-            >
+          <!-- End of Client Action Buttons -->
+          <!-- Appointment Action Buttons -->
+          <span v-if="!showClientForm">
+            <!-- Start of Appointment Edition Menu -->
+            <span v-if="!appointmentFormEnabled" class="space-x-2">
+              <!-- Confirm Edition Button -->
+              <base-button
+                :button-type="'success'"
+                @click="editAppointment(appointment[0])"
+              >
+                Confirmar
+              </base-button>
+              <!-- Delete Appointment Button -->
+              <base-button
+                :button-type="'danger'"
+                @click="toggleAppointmentFormInput(false, null)"
+              >
+                Cancelar
+              </base-button>
+            </span>
+            <!-- End of Appointment Edition Menu -->
           </span>
-          <span v-else class="space-x-2">
-            <!-- Confirm Edition Button -->
-            <base-button
-              :button-type="'success'"
-              @click="editAppointment(appointment[0])"
-            >
-              Confirmar
-            </base-button>
-            <!-- Delete Appointment Button -->
-            <base-button
-              :button-type="'danger'"
-              @click="toggleAppointmentFormInput(false, null)"
-            >
-              Cancelar
-            </base-button>
-          </span>
-        </span>
+          <!-- End of Appointment Action Buttons -->
+        </div>
+        <!-- End of Action Buttons -->
       </div>
     </div>
   </div>
@@ -117,8 +182,10 @@
 <script>
 export default {
   components: { AppointmentForm, BaseButton, ClientForm },
+  emits: ["update"],
   data() {
     return {
+      showDrop: false,
       appointmentFormEnabled: false,
       dialogKey: 0,
       showAppointmentItem: null,
@@ -163,6 +230,7 @@ export default {
       }
       this.$store.dispatch("agenda/setAppointmentNewData", appointmentInfo);
       this.editAppointment(appointmentId);
+      this.$emit("update");
     },
     async editClient(clientId) {
       try {
@@ -172,7 +240,8 @@ export default {
       }
       this.clientFormEnabled = false;
       this.showClientForm = false;
-      // TODO: Confirmation popup and rerendering
+      this.update();
+      // TODO: Confirmation popup
     },
     async deleteAppointment(appointmentId) {
       this.toggleAppointmentFormInput(false, null);
@@ -181,7 +250,9 @@ export default {
       } catch (error) {
         console.log(error || "Something went wrong!");
       }
-      // TODO: Confirmation popup and rerendering
+      this.showClientForm = false;
+      this.update();
+      // TODO: Confirmation popup
     },
     async editAppointment(appointmentId) {
       this.toggleAppointmentFormInput(false, null);
@@ -190,11 +261,20 @@ export default {
       } catch (error) {
         console.log(error || "Something went wrong!");
       }
-      // TODO: Confirmation popup and rerendering
+      this.showClientForm = false;
+      this.update();
+      // TODO: Confirmation popup
     },
     toggleAppointmentFormInput(value, appointmentId) {
       this.appointmentFormEnabled = value;
       this.showAppointmentItem = appointmentId;
+    },
+    // Re-rendering
+    update() {
+      this.$emit("update");
+    },
+    toggleDrop() {
+      this.showDrop = !this.showDrop;
     },
   },
 };

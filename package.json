@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "apexcharts": "^3.27.1",
+    "click-outside-vue3": "^4.0.1",
     "core-js": "^3.6.5",
     "firebase": "^8.6.7",
     "luxon": "^1.27.0",
