@@ -2,7 +2,7 @@
   <div class="flex flex-col items-center">
     <div class="space-x-2">
       <base-button v-if="showInfoButton" @click="showInfo">
-        Mostrar Informações
+        {{ infoButtonText ? "Mostrar Informações" : "Fechar" }}
       </base-button>
       <base-button @click="showSearch = true">
         {{ appointmentButtonText }}
@@ -48,6 +48,7 @@ export default {
       appointmentFormKey: 0,
       showInfoButton: false,
       selectedSlots: [],
+      infoButtonText: true,
     };
   },
   computed: {
@@ -100,6 +101,7 @@ export default {
             slotAppointments.push(appointment);
           }
         }
+        this.infoButtonText = !this.infoButtonText;
         this.$store.dispatch("agenda/setSlotAppointments", slotAppointments);
       }
       this.$emit("toggleSlotDetail");

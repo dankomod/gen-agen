@@ -1,7 +1,10 @@
 <template>
   <div class="flex flex-col items-center justify-center space-y-10">
     <!-- Date Input -->
-    <date-selector @dateSelected="toggleTimeSlots"></date-selector>
+    <date-selector
+      v-if="!showSlotDetail"
+      @dateSelected="toggleTimeSlots"
+    ></date-selector>
 
     <!-- Time Slots Menu -->
     <time-slots

@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col items-center">
+  <div class="flex flex-col items-center py-10">
     <div class="container flex flex-col items-center max-w-screen-lg">
-      <div class="py-10 space-x-2">
+      <div class="pb-10 space-x-2">
         <router-link :to="{ name: 'Dashboard' }">
           <base-button>Início</base-button>
         </router-link>
