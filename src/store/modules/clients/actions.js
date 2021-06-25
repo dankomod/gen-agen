@@ -36,7 +36,9 @@ export default {
     }
   },
   // Edits a client based on it's ID. Retrieves the data to be changed from the state
-  async editClient(getters, payload, { dispatch }) {
+  async editClient(getters, payload) {
+    // TODO: {dispatch} does not work here
+    console.log(payload);
     const response = await fetch(
       `https://gen-agen-default-rtdb.firebaseio.com/clients/${payload}.json`,
       {
@@ -49,7 +51,7 @@ export default {
       const error = new Error(responseData.message);
       throw error;
     }
-    dispatch("clients/setFormNewData", {});
+    // TODO: dispatch("clients/setFormNewData", {});
   },
   // Load all clients from the API
   async loadClients() {
