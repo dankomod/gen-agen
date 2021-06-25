@@ -1,25 +1,19 @@
 <template>
   <div class="flex flex-col items-center justify-center space-y-10">
     <!-- Date Input -->
-    <date-selector
-      v-if="!showSlotDetail"
-      @dateSelected="toggleTimeSlots"
-    ></date-selector>
-
+    <date-selector @dateSelected="toggleTimeSlots"></date-selector>
     <!-- Time Slots Menu -->
     <time-slots
-      v-if="showTimeSlots && !showSlotDetail"
+      v-if="showTimeSlots"
       :key="componentsKey"
       @slotSelected="toggleInfoSection"
     ></time-slots>
-
     <!-- Slot Details Menu -->
     <slot-detail
       v-if="showSlotDetail"
       :key="componentsKey"
-      @update="toggleSlotDetail(false), updateRendering"
+      @update="toggleSlotDetail"
     ></slot-detail>
-
     <info-section
       v-if="showInfoSection"
       :key="componentsKey"
@@ -34,26 +28,31 @@ export default {
   components: { DateSelector, InfoSection, SlotDetail, TimeSlots },
   data() {
     return {
-      showInfoSection: false,
-      showTimeSlots: false,
       componentsKey: 0,
+      showTimeSlots: false,
       showSlotDetail: false,
+      showInfoSection: false,
     };
   },
   methods: {
-    toggleSlotDetail(value) {
-      this.showSlotDetail = value ? value : !this.showSlotDetail;
-    },
-    toggleInfoSection(value = true) {
-      this.showInfoSection = value;
-    },
     toggleTimeSlots(value = true) {
       // Forced re-rendering when a new date is selected
       this.updateRendering();
       this.showTimeSlots = value;
+      this.showSlotDetail = false;
       // Makes sure that the InfoSection is hidden after a re-rendering
       this.toggleInfoSection(false);
     },
+
+    toggleSlotDetail() {
+      this.showSlotDetail = !this.showSlotDetail;
+      this.showTimeSlots = !this.showTimeSlots;
+    },
+
+    toggleInfoSection(value = true) {
+      this.showInfoSection = value;
+    },
+
     updateRendering() {
       this.componentsKey++;
     },

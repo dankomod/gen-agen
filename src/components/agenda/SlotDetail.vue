@@ -58,7 +58,6 @@
               class="py-1 text-sm text-gray-700"
               role="none"
             >
-              <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
               <a
                 href="#"
                 class="block px-4 py-2 hover:bg-blue-100"
@@ -83,7 +82,7 @@
                 Editar Cliente
               </a>
               <a
-                v-if="!appointment.isPaid"
+                v-if="!appointment[1].isPaid"
                 href="#"
                 class="block px-4 py-2 hover:bg-blue-100"
                 role="menuitem"
@@ -93,7 +92,7 @@
                 Marcar como Pago
               </a>
               <a
-                v-if="!appointment.isDone"
+                v-if="!appointment[1].isDone"
                 href="#"
                 class="block px-4 py-2 hover:bg-blue-100"
                 role="menuitem"
@@ -197,7 +196,6 @@ export default {
       }
       this.$store.dispatch("agenda/setAppointmentNewData", appointmentInfo);
       this.editAppointment(appointmentId);
-      this.update();
     },
     async editClient(clientId) {
       try {
