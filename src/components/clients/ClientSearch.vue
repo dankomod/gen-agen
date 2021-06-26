@@ -8,8 +8,17 @@
       @keyup="filteredList"
     />
     <div
-      class="absolute left-0 z-10 w-full mt-1 bg-gray-100 border border-gray-400 shadow "
-      :class="this.searchQuery.length > 0 ? 'opacity-100' : 'opacity-0'"
+      class="
+        absolute
+        left-0
+        z-10
+        w-full
+        mt-1
+        bg-gray-100
+        border border-gray-400
+        shadow
+      "
+      :class="searchQuery.length > 0 ? 'opacity-100' : 'opacity-0'"
     >
       <ul class="block text-gray-900">
         <li
