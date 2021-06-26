@@ -4,26 +4,16 @@
     <div class="flex flex-wrap">
       <div class="p-5">
         <h2 class="pb-2 text-xl deep-purple-700-accent">
-          Agendamentos {{ allAppointments.length }}
+          Agendamentos: {{ allAppointments.length }}
         </h2>
-        <p>Últimos 30 dias: {{ filter("appointments", "past", 30).length }}</p>
-        <p>Últimos 15 dias: {{ filter("appointments", "past", 15).length }}</p>
         <p>Últimos 7 dias: {{ filter("appointments", "past", 7).length }}</p>
         <p>Ontem: {{ filter("appointments", "past", 1).length }}</p>
         <p>Hoje: {{ filter("appointments").length }}</p>
         <p>Amanhã: {{ filter("appointments", "future", 1).length }}</p>
         <p>Próximos 7 dias: {{ filter("appointments", "future", 7).length }}</p>
-        <!-- <p>
-          Próximos 15 dias: {{ filter("appointments", "future", 15).length }}
-        </p>
-        <p>
-          Próximos 30 dias: {{ filter("appointments", "future", 30).length }}
-        </p> -->
       </div>
       <div class="p-5 pb-2">
-        <h2 class="pb-2 text-xl">Clientes {{ allClients.length }}</h2>
-        <p>Últimos 30 dias: {{ filter("clients", "past", 30).length }}</p>
-        <p>Últimos 15 dias: {{ filter("clients", "past", 15).length }}</p>
+        <h2 class="pb-2 text-xl">Novos Clientes: {{ allClients.length }}</h2>
         <p>Últimos 7 dias: {{ filter("clients", "past", 7).length }}</p>
         <p>Ontem: {{ filter("clients", "past", 1).length }}</p>
         <p>Hoje: {{ filter("clients").length }}</p>

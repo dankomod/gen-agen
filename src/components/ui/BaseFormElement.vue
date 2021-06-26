@@ -7,8 +7,7 @@
       v-if="elementType === 'inputText'"
       :id="elementLabel"
       :value="elementValue"
-      :class="conditionalStyle"
-      class="disabled:opacity-30"
+      class="w-full px-3 py-2 bg-white border border-indigo-400  disabled:border-0"
       :disabled="!elementEnabled"
       type="text"
     />
@@ -17,7 +16,7 @@
       v-if="elementType === 'inputNumber'"
       :id="elementLabel"
       :value="elementValue"
-      :class="conditionalStyle"
+      class="w-full px-3 py-2 bg-white border border-indigo-400  disabled:border-0"
       :disabled="!elementEnabled"
       type="number"
     />
@@ -25,22 +24,20 @@
     <!-- //! requires a @change listener that gets the value from $event.target.checked -->
     <!-- //! has a checked attribute instead of value -->
     <!-- //! !! returns a truthy/falsey value -->
-    <!-- //TODO:Change disabled styling property -->
     <input
       v-if="elementType === 'checkbox'"
       :id="elementLabel"
       :checked="elementValue"
-      :class="conditionalStyle"
+      class="w-6 w-full h-6 px-3 py-2 bg-white border border-indigo-400  disabled:border-0"
       :disabled="!elementEnabled"
       type="checkbox"
-      class="w-6 h-6"
     />
     <!-- Textarea -->
     <textarea
       v-if="elementType === 'textarea'"
       :id="elementLabel"
       :value="elementValue"
-      :class="conditionalStyle"
+      class="w-full px-3 py-2 bg-white border border-indigo-400  disabled:border-0"
       :disabled="!elementEnabled"
     ></textarea>
     <!-- Select that takes and options array as prop -->
@@ -48,7 +45,7 @@
       v-if="elementType === 'select'"
       :id="elementLabel"
       :value="elementValue"
-      :class="conditionalStyle"
+      class="w-full px-3 py-2 bg-white border border-indigo-400  disabled:border-0"
       :disabled="!elementEnabled"
     >
       <option v-for="option of optionValueArray" :key="option" :value="option">
@@ -67,16 +64,6 @@ export default {
     elementType: { type: String, default: "" },
     elementValue: { type: String, default: "" },
     optionValueArray: { type: Array, default: () => [] },
-  },
-  computed: {
-    conditionalStyle() {
-      let baseElementStyle = "w-full px-3 py-2 border bg-white";
-      if (this.elementEnabled) {
-        return `${baseElementStyle} bg-indigo-100 border-indigo-400`;
-      } else {
-        return `${baseElementStyle} border-0 border-gray-300`;
-      }
-    },
   },
 };
 </script>
