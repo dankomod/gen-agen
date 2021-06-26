@@ -3,7 +3,9 @@
     <h1 class="text-2xl text-center">Administração</h1>
     <div class="flex flex-wrap">
       <div class="p-5">
-        <h2 class="pb-2 text-xl">Agendamentos {{ allAppointments.length }}</h2>
+        <h2 class="pb-2 text-xl deep-purple-700-accent">
+          Agendamentos {{ allAppointments.length }}
+        </h2>
         <p>Últimos 30 dias: {{ filter("appointments", "past", 30).length }}</p>
         <p>Últimos 15 dias: {{ filter("appointments", "past", 15).length }}</p>
         <p>Últimos 7 dias: {{ filter("appointments", "past", 7).length }}</p>
@@ -57,27 +59,6 @@ export default {
     this.showHeatmap = true;
   },
   methods: {
-    // Requests appointments for current, past and last month
-    async loadAppointments() {
-      const now = DateTime.now(); // Current YYYY/MM
-      const past = now.minus({ months: 1 }); // Past YYYY/MM
-      const future = now.plus({ months: 1 }); // Future YYYY/MM
-      for (let time of [now, past, future]) {
-        this.joinAppointments(
-          await this.$store.dispatch("agenda/monthAppointments", time) // Retrieves data and sends it to be joined
-        );
-      }
-    },
-    // Join the appointments to a single array
-    joinAppointments(monthAppointments) {
-      if (monthAppointments && Object.keys(monthAppointments).length !== 0) {
-        for (let day of Object.values(monthAppointments)) {
-          for (let appointment of Object.values(day)) {
-            this.allAppointments.push(appointment);
-          }
-        }
-      }
-    },
     // Returns filtered appointments based on time and number of days. Takes the 'now', 'past' and 'future' time filters.
     filter(type, when = "now", value = null) {
       let arrayToFilter = [];
@@ -118,6 +99,27 @@ export default {
           const dateTime = DateTime.fromISO(val[filterKey]);
           return dateTime >= startOfToday && dateTime <= endOfToday; // >= Start of current day, <= End of current day
         });
+      }
+    },
+    // Join the appointments to a single array
+    joinAppointments(monthAppointments) {
+      if (monthAppointments && Object.keys(monthAppointments).length !== 0) {
+        for (let day of Object.values(monthAppointments)) {
+          for (let appointment of Object.values(day)) {
+            this.allAppointments.push(appointment);
+          }
+        }
+      }
+    },
+    // Requests appointments for current, past and last month
+    async loadAppointments() {
+      const now = DateTime.now(); // Current YYYY/MM
+      const past = now.minus({ months: 1 }); // Past YYYY/MM
+      const future = now.plus({ months: 1 }); // Future YYYY/MM
+      for (let time of [now, past, future]) {
+        this.joinAppointments(
+          await this.$store.dispatch("agenda/monthAppointments", time) // Retrieves data and sends it to be joined
+        );
       }
     },
     async loadClients() {

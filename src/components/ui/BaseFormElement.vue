@@ -8,6 +8,7 @@
       :id="elementLabel"
       :value="elementValue"
       :class="conditionalStyle"
+      class="disabled:opacity-30"
       :disabled="!elementEnabled"
       type="text"
     />

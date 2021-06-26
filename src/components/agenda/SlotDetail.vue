@@ -149,13 +149,13 @@ export default {
   emits: ["update"],
   data() {
     return {
-      showDropMenu: null,
       appointmentFormEnabled: false,
+      clientFormEnabled: false,
       dialogKey: 0,
+      selectedClient: [],
       showAppointmentItem: null,
       showClientForm: null,
-      selectedClient: [],
-      clientFormEnabled: false,
+      showDropMenu: null,
       slotAppointments: [],
     };
   },
@@ -163,6 +163,60 @@ export default {
     this.slotAppointments = this.$store.getters["agenda/slotAppointments"];
   },
   methods: {
+    async changeStatus(appointmentId, status) {
+      const appointmentInfo = {};
+      if (status === "isPaid") {
+        appointmentInfo.isPaid = true;
+      } else if (status === "isDone") {
+        appointmentInfo.isDone = true;
+      }
+      this.$store.dispatch("agenda/setAppointmentNewData", appointmentInfo);
+      this.editAppointment(appointmentId);
+    },
+    async deleteAppointment(appointmentId) {
+      this.toggleAppointmentFormInput(false, null);
+      try {
+        await this.$store.dispatch("agenda/deleteAppointment", appointmentId);
+      } catch (error) {
+        console.log(error || "Something went wrong!");
+      }
+      this.update();
+      // TODO: Confirmation popup
+    },
+    async editAppointment(appointmentId) {
+      this.toggleAppointmentFormInput(false, null);
+      try {
+        await this.$store.dispatch("agenda/editAppointment", appointmentId);
+      } catch (error) {
+        console.log(error || "Something went wrong!");
+      }
+      this.update();
+      // TODO: Confirmation popup
+    },
+    async editClient(clientId) {
+      try {
+        await this.$store.dispatch("clients/editClient", clientId);
+      } catch (error) {
+        console.log(error || "Something went wrong!");
+      }
+      this.clientFormEnabled = false;
+      this.update();
+      // TODO: Confirmation popup
+    },
+    toggleAppointmentFormInput(value, appointmentId) {
+      this.appointmentFormEnabled = value;
+      this.showAppointmentItem = appointmentId;
+    },
+    toggleDrop(value) {
+      this.showDropMenu === value
+        ? (this.showDropMenu = null)
+        : (this.showDropMenu = value);
+    },
+    // Re-rendering
+    update() {
+      this.showClientForm = null;
+      this.$emit("update");
+    },
     // Retrieves client by Id
     async viewClient(clientId) {
       // Only sends requests when a new selection is made
@@ -186,60 +240,6 @@ export default {
         this.selectedClient = {};
         this.showClientForm = null;
       }
-    },
-    async changeStatus(appointmentId, status) {
-      const appointmentInfo = {};
-      if (status === "isPaid") {
-        appointmentInfo.isPaid = true;
-      } else if (status === "isDone") {
-        appointmentInfo.isDone = true;
-      }
-      this.$store.dispatch("agenda/setAppointmentNewData", appointmentInfo);
-      this.editAppointment(appointmentId);
-    },
-    async editClient(clientId) {
-      try {
-        await this.$store.dispatch("clients/editClient", clientId);
-      } catch (error) {
-        console.log(error || "Something went wrong!");
-      }
-      this.clientFormEnabled = false;
-      this.update();
-      // TODO: Confirmation popup
-    },
-    async deleteAppointment(appointmentId) {
-      this.toggleAppointmentFormInput(false, null);
-      try {
-        await this.$store.dispatch("agenda/deleteAppointment", appointmentId);
-      } catch (error) {
-        console.log(error || "Something went wrong!");
-      }
-      this.update();
-      // TODO: Confirmation popup
-    },
-    async editAppointment(appointmentId) {
-      this.toggleAppointmentFormInput(false, null);
-      try {
-        await this.$store.dispatch("agenda/editAppointment", appointmentId);
-      } catch (error) {
-        console.log(error || "Something went wrong!");
-      }
-      this.update();
-      // TODO: Confirmation popup
-    },
-    toggleAppointmentFormInput(value, appointmentId) {
-      this.appointmentFormEnabled = value;
-      this.showAppointmentItem = appointmentId;
-    },
-    // Re-rendering
-    update() {
-      this.showClientForm = null;
-      this.$emit("update");
-    },
-    toggleDrop(value) {
-      this.showDropMenu === value
-        ? (this.showDropMenu = null)
-        : (this.showDropMenu = value);
     },
   },
 };

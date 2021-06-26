@@ -92,7 +92,7 @@ export default {
       } else if (appointments === 1) {
         return "text-yellow-600 border-yellow-400 bg-yellow-100";
       } else if (appointments >= 2) {
-        return "text-red-600 border-red-300 bg-red-100";
+        return "xs:text-white text-red-600 border-red-300 bg-red-100";
       }
     },
   },

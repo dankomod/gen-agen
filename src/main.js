@@ -9,7 +9,7 @@ import "./assets/css/style.css";
 const app = createApp(App);
 
 import BaseButton from "./components/ui/BaseButton.vue";
-app.component("base-button", BaseButton);
+app.component("BaseButton", BaseButton);
 
 import BaseBinaryButtons from "./components/ui/BaseBinaryButtons.vue";
 app.component("BaseBinaryButtons", BaseBinaryButtons);
@@ -17,16 +17,13 @@ app.component("BaseBinaryButtons", BaseBinaryButtons);
 const BaseFormElement = defineAsyncComponent(() =>
   import("./components/ui/BaseFormElement.vue")
 );
-app.component("base-form-element", BaseFormElement);
+app.component("BaseFormElement", BaseFormElement);
 
 const BaseDialog = defineAsyncComponent(() =>
   import("./components/ui/BaseDialog.vue")
 );
-app.component("base-dialog", BaseDialog);
+app.component("BaseDialog", BaseDialog);
 
-// Router addition
 app.use(router);
-// Store addition
 app.use(store);
-// App is mounted
 app.mount("#app");

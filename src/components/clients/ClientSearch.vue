@@ -64,13 +64,11 @@ export default {
     this.loadClients();
   },
   methods: {
-    // Calls the API for the clients data and fills this.clientsBulk with the response
-    async loadClients() {
-      try {
-        this.clientsBulk = await this.$store.dispatch("clients/loadClients");
-      } catch (error) {
-        console.log(error || "Something went wrong!");
-      }
+    emitSelection(value) {
+      this.$emit("selection", value, this.searchQuery);
+      // Clearing this.searchQuery to hide the query and this.filteredClients to destroy the rendering
+      this.searchQuery = "";
+      this.filteredClients = [];
     },
     // Filters this.clientsBulk acording to the this.searchQuery string
     filteredList() {
@@ -85,6 +83,14 @@ export default {
         }
       }
     },
+    // Calls the API for the clients data and fills this.clientsBulk with the response
+    async loadClients() {
+      try {
+        this.clientsBulk = await this.$store.dispatch("clients/loadClients");
+      } catch (error) {
+        console.log(error || "Something went wrong!");
+      }
+    },
     // Receives the ID of a client, search for it in this.filteredClients and fills this.selectedClient with it's full data
     showClient(clientId) {
       for (let client of this.filteredClients) {
@@ -93,12 +99,6 @@ export default {
           this.emitSelection(true);
         }
       }
-    },
-    emitSelection(value) {
-      this.$emit("selection", value, this.searchQuery);
-      // Clearing this.searchQuery to hide the query and this.filteredClients to destroy the rendering
-      this.searchQuery = "";
-      this.filteredClients = [];
     },
   },
 };

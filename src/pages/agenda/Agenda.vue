@@ -35,6 +35,16 @@ export default {
     };
   },
   methods: {
+    toggleInfoSection(value = true) {
+      this.showInfoSection = value;
+    },
+    updateRendering() {
+      this.componentsKey++;
+    },
+    toggleSlotDetail() {
+      this.showSlotDetail = !this.showSlotDetail;
+      this.showTimeSlots = !this.showTimeSlots;
+    },
     toggleTimeSlots(value = true) {
       // Forced re-rendering when a new date is selected
       this.updateRendering();
@@ -43,29 +53,12 @@ export default {
       // Makes sure that the InfoSection is hidden after a re-rendering
       this.toggleInfoSection(false);
     },
-
-    toggleSlotDetail() {
-      this.showSlotDetail = !this.showSlotDetail;
-      this.showTimeSlots = !this.showTimeSlots;
-    },
-
-    toggleInfoSection(value = true) {
-      this.showInfoSection = value;
-    },
-
-    updateRendering() {
-      this.componentsKey++;
-    },
   },
 };
 import DateSelector from "./../../components/agenda/DateSelector.vue";
 import InfoSection from "./../../components/agenda/InfoSection.vue";
-import TimeSlots from "./../../components/agenda/TimeSlots.vue";
 import SlotDetail from "./../../components/agenda/SlotDetail.vue";
+import TimeSlots from "./../../components/agenda/TimeSlots.vue";
 // TODO: Incorporate the style tag's CSS onto Tailwind
-// TODO: make a root page for root router
-// ? Admin Dashboard
-// ? disabled hours and days
 // ? Specific opening and closing hours (weekends and holydays)
-// ? custom closing and opening hours
 </script>

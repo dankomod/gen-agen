@@ -12,7 +12,7 @@
     <client-form
       v-if="showClientForm"
       :form-data="clientFormData"
-      :form-enabled="clientFormEnabled"
+      :form-enabled="true"
     ></client-form>
     <div v-if="showClientForm">
       <base-button button-type="success" @click="createClient">
@@ -38,17 +38,15 @@ export default {
   emits: ["newAppointment", "toggleSlotDetail"],
   data() {
     return {
-      // TODO: check if some of these can be removed
+      appointmentFormEnabled: true,
+      appointmentFormKey: 0,
       clientFormData: [],
+      infoButtonText: true,
+      selectedSlots: [],
       showAppointmentForm: false,
       showClientForm: false,
-      appointmentFormEnabled: true,
-      clientFormEnabled: true,
-      showSearch: false,
-      appointmentFormKey: 0,
       showInfoButton: false,
-      selectedSlots: [],
-      infoButtonText: true,
+      showSearch: false,
     };
   },
   computed: {
@@ -89,23 +87,6 @@ export default {
     );
   },
   methods: {
-    // TODO: verify if this function can be split
-    // Loads the appointments then shows the slot details
-    async showInfo() {
-      if (this.selectedSlots && this.selectedSlots.length === 1) {
-        let slotAppointments = [];
-        for (let appointment of Object.entries(
-          await this.$store.dispatch("agenda/loadAppointments")
-        )) {
-          if (appointment[1].dateTime === this.selectedSlots[0].toString()) {
-            slotAppointments.push(appointment);
-          }
-        }
-        this.infoButtonText = !this.infoButtonText;
-        this.$store.dispatch("agenda/setSlotAppointments", slotAppointments);
-      }
-      this.$emit("toggleSlotDetail");
-    },
     async createAppointment() {
       try {
         await this.$store.dispatch("agenda/createAppointment");
@@ -129,6 +110,12 @@ export default {
         console.log(error);
       }
     },
+    // Called on creation to assure t reset all data when this component is re-rendered
+    resetValues() {
+      this.showSearch = false;
+      this.showAppointmentForm = false;
+      this.showClientForm = false;
+    },
     // Called when a client is selected in the search
     selection(value, data) {
       this.clientFormData = [null, { name: data }]; // The same format of a Object.entries output
@@ -143,11 +130,21 @@ export default {
       }
       this.showSearch = false;
     },
-    // Called on creation to assure t reset all data when this component is re-rendered
-    resetValues() {
-      this.showSearch = false;
-      this.showAppointmentForm = false;
-      this.showClientForm = false;
+    // Loads the appointments then shows the slot details
+    async showInfo() {
+      if (this.selectedSlots && this.selectedSlots.length === 1) {
+        let slotAppointments = [];
+        for (let appointment of Object.entries(
+          await this.$store.dispatch("agenda/loadAppointments")
+        )) {
+          if (appointment[1].dateTime === this.selectedSlots[0].toString()) {
+            slotAppointments.push(appointment);
+          }
+        }
+        this.infoButtonText = !this.infoButtonText;
+        this.$store.dispatch("agenda/setSlotAppointments", slotAppointments);
+      }
+      this.$emit("toggleSlotDetail");
     },
   },
 };

@@ -55,7 +55,7 @@ export default {
     return { appointmentInfo: {}, localFormData: {} };
   },
   watch: {
-    // Watches for deep changes in data()
+    // Watches for deep changes in (local) data()
     $data: {
       handler() {
         // ? Maybe this If can be removed
