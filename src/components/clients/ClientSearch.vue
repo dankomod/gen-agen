@@ -77,6 +77,8 @@ export default {
       for (let client of Object.entries(this.clientsBulk)) {
         // If the name in the entry contains the this.searchQuery as a substring, push the entry onto the this.filteredClients array
         if (
+          client &&
+          client[1].name &&
           client[1].name.toLowerCase().includes(this.searchQuery.toLowerCase())
         ) {
           this.filteredClients.push(client);

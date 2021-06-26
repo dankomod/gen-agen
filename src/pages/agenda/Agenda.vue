@@ -39,6 +39,8 @@ export default {
       this.showInfoSection = value;
     },
     updateRendering() {
+      // Hides the info section so it will have fresh values when rendered again
+      this.toggleInfoSection(false);
       this.componentsKey++;
     },
     toggleSlotDetail() {
@@ -46,12 +48,12 @@ export default {
       this.showTimeSlots = !this.showTimeSlots;
     },
     toggleTimeSlots(value = true) {
-      // Forced re-rendering when a new date is selected
-      this.updateRendering();
       this.showTimeSlots = value;
       this.showSlotDetail = false;
       // Makes sure that the InfoSection is hidden after a re-rendering
       this.toggleInfoSection(false);
+      // Forced re-rendering when a new date is selected
+      this.updateRendering();
     },
   },
 };
