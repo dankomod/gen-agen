@@ -138,6 +138,14 @@ export default {
           await this.$store.dispatch("agenda/loadAppointments")
         )) {
           if (appointment[1].dateTime === this.selectedSlots[0].toString()) {
+            const response = await this.$store.dispatch(
+              "clients/loadClients",
+              appointment[1].clientId
+            );
+            if (appointment[1].name !== response.name) {
+              appointment[1].name = response.name;
+            }
+            console.log(appointment[1].name);
             slotAppointments.push(appointment);
           }
         }

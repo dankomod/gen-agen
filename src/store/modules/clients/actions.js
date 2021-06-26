@@ -51,13 +51,15 @@ export default {
       const error = new Error(responseData.message);
       throw error;
     }
+    console.log(response, responseData);
     // TODO: dispatch("clients/setFormNewData", {});
   },
   // Load all clients from the API
-  async loadClients() {
-    const response = await fetch(
-      'https://gen-agen-default-rtdb.firebaseio.com/clients.json?orderBy="$key"'
-    );
+  async loadClients(getters, payload) {
+    const query = payload
+      ? `https://gen-agen-default-rtdb.firebaseio.com/clients/${payload}.json`
+      : 'https://gen-agen-default-rtdb.firebaseio.com/clients.json?orderBy="$key"';
+    const response = await fetch(query);
     const responseData = await response.json();
     if (!response.ok) {
       const error = new Error(responseData.message);

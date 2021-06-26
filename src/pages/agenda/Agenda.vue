@@ -12,7 +12,7 @@
     <slot-detail
       v-if="showSlotDetail"
       :key="componentsKey"
-      @update="toggleSlotDetail"
+      @update="toggleSlotDetail(), toggleInfoSection(false)"
     ></slot-detail>
     <info-section
       v-if="showInfoSection"
