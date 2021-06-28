@@ -29,6 +29,15 @@
         Concluir Agendamento
       </base-button>
     </div>
+    <teleport to="body">
+      <base-alert-message
+        v-if="showMessage"
+        :alert-type="alertType"
+        @closeAlert="showMessage = false"
+      >
+        {{ alertMessage }}
+      </base-alert-message>
+    </teleport>
   </div>
 </template>
 
@@ -47,6 +56,9 @@ export default {
       showClientForm: false,
       showInfoButton: false,
       showSearch: false,
+      showMessage: false,
+      alertMessage: "",
+      alertType: "",
     };
   },
   computed: {
@@ -95,7 +107,9 @@ export default {
         this.$store.dispatch("agenda/setSelectedSlots", null);
         this.$emit("newAppointment");
       } catch (error) {
-        console.log(error);
+        this.alertMessage = error || "Erro";
+        this.alertType = "danger";
+        this.showMessage = true;
       }
     },
     // Creates a new client and resets the rendering
@@ -107,7 +121,9 @@ export default {
         this.showAppointmentForm = true;
         this.appointmentFormEnabled = true;
       } catch (error) {
-        console.log(error);
+        this.alertMessage = error || "Erro";
+        this.alertType = "danger";
+        this.showMessage = true;
       }
     },
     // Called on creation to assure t reset all data when this component is re-rendered
