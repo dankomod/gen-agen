@@ -21,9 +21,7 @@
       type="number"
     />
     <!-- Input type='checkbox' -->
-    <!-- //! requires a @change listener that gets the value from $event.target.checked -->
-    <!-- //! has a checked attribute instead of value -->
-    <!-- //! !! returns a truthy/falsey value -->
+    <!-- //! Requires a @change listener that gets the value from $event.target.checked, Has 'checked' attribute instead of 'value', Returns a truthy/falsey value -->
     <input
       v-if="elementType === 'checkbox'"
       :id="uid(elementLabel)"
@@ -56,7 +54,7 @@
 </template>
 
 <script>
-// * I can't use v-model here because it is sent to the div parent and conflicts with the :value prop. A good workaround is to use an event listener to get the data input and a prop to show the data which can accessed this way: '@event="appointmentInfo.observations = $event.target.value"'
+// * V-model can't be used here because it is sent to the div parent and conflicts with the :value prop. A good workaround is to use an event listener to get the data input and a prop to show the data which can accessed this way: '@event="appointmentInfo.observations = $event.target.value"'
 export default {
   props: {
     elementEnabled: Boolean,
@@ -66,6 +64,7 @@ export default {
     optionValueArray: { type: Array, default: () => [] },
   },
   methods: {
+    // Very simpe Unique ID generator
     uid(elementLabel) {
       return `${elementLabel}${Math.random()}`;
     },

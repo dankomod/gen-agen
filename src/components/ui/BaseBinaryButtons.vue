@@ -10,7 +10,7 @@
 </template>
 
 <script>
-// * Having two props makes easier to call multiple functions with arguments
+// * Having two props facilitates calling multiple functions with arguments
 export default {
   emits: ["yes", "no"],
 };

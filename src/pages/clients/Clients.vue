@@ -11,22 +11,25 @@
         button-type="success"
         @click="toggleCreation(true), toggleSearch(false)"
       >
-        Cadastrar novo Cliente
+        Cadastrar Cliente
       </base-button>
     </div>
     <client-search v-if="showSearch" @selection="selection"></client-search>
     <client-form
-      v-if="showForm"
+      v-if="showClientForm"
       :form-data="formData"
       :form-enabled="clientFormEnabled"
     ></client-form>
-    <div v-if="showForm && showCreationMenu">
+    <div v-if="showClientForm && showCreationMenu">
       <base-button button-type="success" @click="createClient">
         Cadastrar Cliente
       </base-button>
     </div>
     <!-- ACTIONS MENU -->
-    <div v-if="showForm && showActionsMenu && !showEditMenu" class="space-x-2">
+    <div
+      v-if="showClientForm && showActionsMenu && !showEditMenu"
+      class="space-x-2"
+    >
       <!-- Edit Client Button -->
       <base-button
         button-type="warning"
@@ -40,19 +43,11 @@
       </base-button>
     </div>
     <!-- EDIT MENU -->
-    <div v-if="showForm && showActionsMenu && showEditMenu" class="space-x-2">
-      <!-- Confirm Edit Button -->
-      <base-button button-type="success" @click="editClient">
-        Confirmar alterações
-      </base-button>
-      <!-- //TODO: -->
-      <!-- Cancel Edit Button -->
-      <base-button
-        button-type="danger"
-        @click="toggleInputs(false), toggleEditMenu(false)"
-        >Cancelar</base-button
-      >
-    </div>
+    <base-binary-buttons
+      v-if="showClientForm && showActionsMenu && showEditMenu"
+      @yes="editClient"
+      @no="toggleInputs(false), toggleEditMenu(false)"
+    ></base-binary-buttons>
   </div>
 </template>
 
@@ -66,7 +61,7 @@ export default {
       showActionsMenu: false,
       showCreationMenu: false,
       showEditMenu: false,
-      showForm: false,
+      showClientForm: false,
       showSearch: false,
     };
   },
@@ -77,7 +72,7 @@ export default {
         await this.$store.dispatch("clients/createClient");
         this.toggleCreation(false);
         const alertData = {
-          alertMessage: "Cliente criado com sucesso!",
+          alertMessage: "Cliente cadastrado",
           alertType: "success",
           alertTimer: 4,
         };
@@ -100,7 +95,7 @@ export default {
         this.toggleSearch(true);
         // TODO: Popup Asking for confirmation and the confirming the deletion or denying
         const alertData = {
-          alertMessage: "Agendamento alterado com sucesso!",
+          alertMessage: "Cliente removido",
           alertType: "success",
           alertTimer: 4,
         };
@@ -121,7 +116,7 @@ export default {
         this.toggleSearch(false);
         // TODO: Popup Informing the success or failure of the operation
         const alertData = {
-          alertMessage: "Agendamento alterado com sucesso!",
+          alertMessage: "Cadastro editado",
           alertType: "success",
           alertTimer: 4,
         };
@@ -137,22 +132,22 @@ export default {
     // Called when a client is selected in ClientSearch component
     selection() {
       this.formData = this.$store.getters["clients/selectedClient"];
-      this.toggleForm();
       this.toggleActionsMenu(true);
+      this.toggleForm();
+    },
+    toggleActionsMenu(value = true) {
+      this.showActionsMenu = value;
     },
     toggleCreation(value = true) {
       this.toggleForm(value);
       this.toggleInputs(value);
       this.showCreationMenu = value;
     },
-    toggleActionsMenu(value = true) {
-      this.showActionsMenu = value;
-    },
     toggleEditMenu(value = true) {
       this.showEditMenu = value;
     },
     toggleForm(value = true) {
-      this.showForm = value;
+      this.showClientForm = value;
     },
     // Toggle form inputs
     toggleInputs(value = true) {
