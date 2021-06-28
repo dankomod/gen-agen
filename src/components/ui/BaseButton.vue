@@ -11,7 +11,7 @@
 export default {
   props: { buttonType: { type: String, default: "" } },
   computed: {
-    // Returns specific styling acording to the buttonTrype or a default styling
+    // Returns specific styling acording to the buttonType or a default styling
     setButtonStyle() {
       switch (this.buttonType) {
         case "success":

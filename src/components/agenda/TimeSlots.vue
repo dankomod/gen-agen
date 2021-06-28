@@ -14,20 +14,20 @@
         class="absolute top-0 left-0 w-24 h-24 opacity-0 cursor-pointer"
       />
       <div
-        class="
-          flex
-          items-center
-          justify-center
-          w-full
-          h-full
-          transition
-          duration-100
-          ease-linear
-        "
+        class="flex items-center justify-center w-full h-full transition duration-100 ease-linear "
       >
         <span>{{ timeSlot.dateTime.toFormat("HH:mm") }}</span>
       </div>
     </article>
+    <teleport to="body">
+      <base-alert-message
+        v-if="showMessage"
+        :alert-type="alertType"
+        @closeAlert="showMessage = false"
+      >
+        {{ alertMessage }}
+      </base-alert-message>
+    </teleport>
   </div>
 </template>
 
@@ -40,6 +40,9 @@ export default {
       openingHour: "",
       selectedSlots: [],
       timeSlots: [],
+      showMessage: false,
+      alertMessage: "",
+      alertType: "",
     };
   },
   watch: {
@@ -49,7 +52,9 @@ export default {
       try {
         await this.$store.dispatch("agenda/setSelectedSlots", newValue);
       } catch (error) {
-        console.log(error || "Something went wrong!");
+        this.alertMessage = error || "Erro";
+        this.alertType = "danger";
+        this.showMessage = true;
       }
       // emits slotSelected with a value that will be used by Clients components to determine the visibility of InfoSection
       let value = newValue.length > 0 ? true : false;
@@ -60,7 +65,9 @@ export default {
     try {
       await this.$store.dispatch("agenda/loadAppointments");
     } catch (error) {
-      console.log(error || "Something went wrong!");
+      this.alertMessage = error || "Erro";
+      this.alertType = "danger";
+      this.showMessage = true;
     }
     this.intervalCalculator();
   },

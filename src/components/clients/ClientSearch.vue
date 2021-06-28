@@ -8,16 +8,7 @@
       @keyup="filteredList"
     />
     <div
-      class="
-        absolute
-        left-0
-        z-10
-        w-full
-        mt-1
-        bg-gray-100
-        border border-gray-400
-        shadow
-      "
+      class="absolute left-0 z-10 w-full mt-1 bg-gray-100 border border-gray-400 shadow "
       :class="searchQuery.length > 0 ? 'opacity-100' : 'opacity-0'"
     >
       <ul class="block text-gray-900">
@@ -41,6 +32,15 @@
         </li>
       </ul>
     </div>
+    <teleport to="body">
+      <base-alert-message
+        v-if="showMessage"
+        :alert-type="alertType"
+        @closeAlert="showMessage = false"
+      >
+        {{ alertMessage }}
+      </base-alert-message>
+    </teleport>
   </div>
 </template>
 
@@ -53,8 +53,10 @@ export default {
       clientsBulk: [],
       // Clients filtered after a search
       filteredClients: [],
-      // Search query
       searchQuery: "",
+      showMessage: false,
+      alertMessage: "",
+      alertType: "",
     };
   },
   computed: {
@@ -99,7 +101,9 @@ export default {
       try {
         this.clientsBulk = await this.$store.dispatch("clients/loadClients");
       } catch (error) {
-        console.log(error || "Something went wrong!");
+        this.alertMessage = error || "Erro";
+        this.alertType = "danger";
+        this.showMessage = true;
       }
     },
     // Receives the ID of a client, search for it in this.filteredClients and fills this.selectedClient with it's full data

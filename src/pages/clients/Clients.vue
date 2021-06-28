@@ -53,6 +53,15 @@
         >Cancelar</base-button
       >
     </div>
+    <teleport to="body">
+      <base-alert-message
+        v-if="showMessage"
+        :alert-type="alertType"
+        @closeAlert="showMessage = false"
+      >
+        {{ alertMessage }}
+      </base-alert-message>
+    </teleport>
   </div>
 </template>
 
@@ -68,6 +77,9 @@ export default {
       showEditMenu: false,
       showForm: false,
       showSearch: false,
+      showMessage: false,
+      alertMessage: "",
+      alertType: "",
     };
   },
   methods: {
@@ -78,7 +90,9 @@ export default {
         this.toggleCreation(false);
         // TODO: Popup message
       } catch (error) {
-        console.log(error);
+        this.alertMessage = error || "Erro";
+        this.alertType = "danger";
+        this.showMessage = true;
       }
     },
     async deleteClient() {
@@ -91,7 +105,9 @@ export default {
         this.toggleSearch(true);
         // TODO: Popup Asking for confirmation and the confirming the deletion or denying
       } catch (error) {
-        console.log(error);
+        this.alertMessage = error || "Erro";
+        this.alertType = "danger";
+        this.showMessage = true;
       }
     },
     async editClient() {
@@ -102,7 +118,9 @@ export default {
         this.toggleSearch(false);
         // TODO: Popup Informing the success or failure of the operation
       } catch (error) {
-        console.log(error);
+        this.alertMessage = error || "Erro";
+        this.alertType = "danger";
+        this.showMessage = true;
       }
     },
     // Called when a client is selected in ClientSearch component

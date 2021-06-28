@@ -7,14 +7,7 @@
       v-if="elementType === 'inputText'"
       :id="uid(elementLabel)"
       :value="elementValue"
-      class="
-        w-full
-        px-3
-        py-2
-        bg-white
-        border border-indigo-400
-        disabled:border-0
-      "
+      class="w-full px-3 py-2 bg-white border border-indigo-400  disabled:border-0"
       :disabled="!elementEnabled"
       type="text"
     />
@@ -23,14 +16,7 @@
       v-if="elementType === 'inputNumber'"
       :id="uid(elementLabel)"
       :value="elementValue"
-      class="
-        w-full
-        px-3
-        py-2
-        bg-white
-        border border-indigo-400
-        disabled:border-0
-      "
+      class="w-full px-3 py-2 bg-white border border-indigo-400  disabled:border-0"
       :disabled="!elementEnabled"
       type="number"
     />
@@ -42,15 +28,7 @@
       v-if="elementType === 'checkbox'"
       :id="uid(elementLabel)"
       :checked="elementValue"
-      class="
-        w-6
-        h-6
-        px-3
-        py-2
-        bg-white
-        border border-indigo-400
-        disabled:border-0
-      "
+      class="w-6 h-6 px-3 py-2 bg-white border border-indigo-400  disabled:border-0"
       :disabled="!elementEnabled"
       type="checkbox"
     />
@@ -59,14 +37,7 @@
       v-if="elementType === 'textarea'"
       :id="uid(elementLabel)"
       :value="elementValue"
-      class="
-        w-full
-        px-3
-        py-2
-        bg-white
-        border border-indigo-400
-        disabled:border-0
-      "
+      class="w-full px-3 py-2 bg-white border border-indigo-400  disabled:border-0"
       :disabled="!elementEnabled"
     ></textarea>
     <!-- Select that takes and options array as prop -->
@@ -74,14 +45,7 @@
       v-if="elementType === 'select'"
       :id="uid(elementLabel)"
       :value="elementValue"
-      class="
-        w-full
-        px-3
-        py-2
-        bg-white
-        border border-indigo-400
-        disabled:border-0
-      "
+      class="w-full px-3 py-2 bg-white border border-indigo-400  disabled:border-0"
       :disabled="!elementEnabled"
     >
       <option v-for="option of optionValueArray" :key="option" :value="option">

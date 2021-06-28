@@ -14,15 +14,20 @@ app.component("BaseButton", BaseButton);
 import BaseBinaryButtons from "./components/ui/BaseBinaryButtons.vue";
 app.component("BaseBinaryButtons", BaseBinaryButtons);
 
-const BaseFormElement = defineAsyncComponent(() =>
-  import("./components/ui/BaseFormElement.vue")
-);
-app.component("BaseFormElement", BaseFormElement);
-
 const BaseDialog = defineAsyncComponent(() =>
   import("./components/ui/BaseDialog.vue")
 );
 app.component("BaseDialog", BaseDialog);
+
+const BaseAlertMessage = defineAsyncComponent(() =>
+  import("./components/ui/BaseAlertMessage.vue")
+);
+app.component("BaseAlertMessage", BaseAlertMessage);
+
+const BaseFormElement = defineAsyncComponent(() =>
+  import("./components/ui/BaseFormElement.vue")
+);
+app.component("BaseFormElement", BaseFormElement);
 
 app.use(router);
 app.use(store);
