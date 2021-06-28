@@ -52,10 +52,10 @@ export default {
       }
     },
   },
-  created() {
+  mounted() {
     if (this.alertTimer) {
       this.showCloseButton = false;
-      setTimeout(close(), this.alertTimer * 1000);
+      setTimeout(() => this.closeAlert(), this.alertTimer * 1000);
     }
   },
   methods: {

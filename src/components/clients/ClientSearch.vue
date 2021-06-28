@@ -32,15 +32,6 @@
         </li>
       </ul>
     </div>
-    <teleport to="body">
-      <base-alert-message
-        v-if="showMessage"
-        :alert-type="alertType"
-        @closeAlert="showMessage = false"
-      >
-        {{ alertMessage }}
-      </base-alert-message>
-    </teleport>
   </div>
 </template>
 
@@ -54,9 +45,6 @@ export default {
       // Clients filtered after a search
       filteredClients: [],
       searchQuery: "",
-      showMessage: false,
-      alertMessage: "",
-      alertType: "",
     };
   },
   computed: {
@@ -101,9 +89,11 @@ export default {
       try {
         this.clientsBulk = await this.$store.dispatch("clients/loadClients");
       } catch (error) {
-        this.alertMessage = error || "Erro";
-        this.alertType = "danger";
-        this.showMessage = true;
+        const alertData = {
+          alertMessage: error || "Erro!",
+          alertType: "danger",
+        };
+        this.$store.dispatch("setAlertData", alertData);
       }
     },
     // Receives the ID of a client, search for it in this.filteredClients and fills this.selectedClient with it's full data

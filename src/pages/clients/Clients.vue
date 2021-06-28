@@ -53,15 +53,6 @@
         >Cancelar</base-button
       >
     </div>
-    <teleport to="body">
-      <base-alert-message
-        v-if="showMessage"
-        :alert-type="alertType"
-        @closeAlert="showMessage = false"
-      >
-        {{ alertMessage }}
-      </base-alert-message>
-    </teleport>
   </div>
 </template>
 
@@ -77,9 +68,6 @@ export default {
       showEditMenu: false,
       showForm: false,
       showSearch: false,
-      showMessage: false,
-      alertMessage: "",
-      alertType: "",
     };
   },
   methods: {
@@ -88,11 +76,18 @@ export default {
       try {
         await this.$store.dispatch("clients/createClient");
         this.toggleCreation(false);
-        // TODO: Popup message
+        const alertData = {
+          alertMessage: "Cliente criado com sucesso!",
+          alertType: "success",
+          alertTimer: 4,
+        };
+        this.$store.dispatch("setAlertData", alertData);
       } catch (error) {
-        this.alertMessage = error || "Erro";
-        this.alertType = "danger";
-        this.showMessage = true;
+        const alertData = {
+          alertMessage: error || "Erro!",
+          alertType: "danger",
+        };
+        this.$store.dispatch("setAlertData", alertData);
       }
     },
     async deleteClient() {
@@ -104,10 +99,18 @@ export default {
         this.toggleEditMenu(false);
         this.toggleSearch(true);
         // TODO: Popup Asking for confirmation and the confirming the deletion or denying
+        const alertData = {
+          alertMessage: "Agendamento alterado com sucesso!",
+          alertType: "success",
+          alertTimer: 4,
+        };
+        this.$store.dispatch("setAlertData", alertData);
       } catch (error) {
-        this.alertMessage = error || "Erro";
-        this.alertType = "danger";
-        this.showMessage = true;
+        const alertData = {
+          alertMessage: error || "Erro!",
+          alertType: "danger",
+        };
+        this.$store.dispatch("setAlertData", alertData);
       }
     },
     async editClient() {
@@ -117,10 +120,18 @@ export default {
         this.toggleForm(false);
         this.toggleSearch(false);
         // TODO: Popup Informing the success or failure of the operation
+        const alertData = {
+          alertMessage: "Agendamento alterado com sucesso!",
+          alertType: "success",
+          alertTimer: 4,
+        };
+        this.$store.dispatch("setAlertData", alertData);
       } catch (error) {
-        this.alertMessage = error || "Erro";
-        this.alertType = "danger";
-        this.showMessage = true;
+        const alertData = {
+          alertMessage: error || "Erro!",
+          alertType: "danger",
+        };
+        this.$store.dispatch("setAlertData", alertData);
       }
     },
     // Called when a client is selected in ClientSearch component

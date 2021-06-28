@@ -29,15 +29,6 @@
         Concluir Agendamento
       </base-button>
     </div>
-    <teleport to="body">
-      <base-alert-message
-        v-if="showMessage"
-        :alert-type="alertType"
-        @closeAlert="showMessage = false"
-      >
-        {{ alertMessage }}
-      </base-alert-message>
-    </teleport>
   </div>
 </template>
 
@@ -56,9 +47,6 @@ export default {
       showClientForm: false,
       showInfoButton: false,
       showSearch: false,
-      showMessage: false,
-      alertMessage: "",
-      alertType: "",
     };
   },
   computed: {
@@ -105,11 +93,19 @@ export default {
         this.showAppointmentForm = false;
         this.appointmentFormEnabled = false;
         this.$store.dispatch("agenda/setSelectedSlots", null);
+        const alertData = {
+          alertMessage: "Agendamento alterado com sucesso!",
+          alertType: "success",
+          alertTimer: 4,
+        };
+        this.$store.dispatch("setAlertData", alertData);
         this.$emit("newAppointment");
       } catch (error) {
-        this.alertMessage = error || "Erro";
-        this.alertType = "danger";
-        this.showMessage = true;
+        const alertData = {
+          alertMessage: error || "Erro!",
+          alertType: "danger",
+        };
+        this.$store.dispatch("setAlertData", alertData);
       }
     },
     // Creates a new client and resets the rendering
@@ -120,10 +116,18 @@ export default {
         this.showClientForm = false;
         this.showAppointmentForm = true;
         this.appointmentFormEnabled = true;
+        const alertData = {
+          alertMessage: "Agendamento criado com sucesso!",
+          alertType: "success",
+          alertTimer: 4,
+        };
+        this.$store.dispatch("setAlertData", alertData);
       } catch (error) {
-        this.alertMessage = error || "Erro";
-        this.alertType = "danger";
-        this.showMessage = true;
+        const alertData = {
+          alertMessage: error || "Erro!",
+          alertType: "danger",
+        };
+        this.$store.dispatch("setAlertData", alertData);
       }
     },
     // Called on creation to assure t reset all data when this component is re-rendered

@@ -18,8 +18,46 @@
         </transition>
       </router-view>
     </div>
+    <teleport to="body">
+      <base-alert-message
+        v-if="showAlert"
+        :alert-type="alertType"
+        :alert-timer="alertTimer"
+        @closeAlert="showAlert = false"
+      >
+        {{ alertMessage }}
+      </base-alert-message>
+    </teleport>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      alertMessage: "",
+      alertType: "",
+      alertTimer: null,
+      showAlert: false,
+    };
+  },
+  async created() {
+    // Watches the store for changes in the alertselected slots
+    this.$store.watch(
+      () => {
+        return this.$store.state.alertData;
+      },
+      (newValue) => {
+        this.alertMessage = newValue.alertMessage;
+        this.alertType = newValue.alertType;
+        this.alertTimer = newValue.alertTimer;
+        this.showAlert = true;
+      },
+      { deep: true }
+    );
+  },
+};
+</script>
 
 <style>
 .route-enter-active {

@@ -18,6 +18,7 @@
         :form-data="selectedClient"
         :form-enabled="clientFormEnabled"
       ></client-form>
+      <!-- // TODO: Turn the dropdown into a component -->
       <div class="flex flex-row justify-between">
         <div class="relative inline-block text-left">
           <div>
@@ -140,15 +141,6 @@
         </div>
       </div>
     </div>
-    <teleport to="body">
-      <base-alert-message
-        v-if="showMessage"
-        :alert-type="alertType"
-        @closeAlert="showMessage = false"
-      >
-        {{ alertMessage }}
-      </base-alert-message>
-    </teleport>
   </div>
 </template>
 
@@ -167,9 +159,6 @@ export default {
       showClientForm: null,
       showDropMenu: null,
       slotAppointments: [],
-      showMessage: false,
-      alertMessage: "",
-      alertType: "",
     };
   },
   created() {
@@ -190,37 +179,58 @@ export default {
       this.toggleAppointmentFormInput(false, null);
       try {
         await this.$store.dispatch("agenda/deleteAppointment", appointmentId);
+        const alertData = {
+          alertMessage: "Agendamento removido com sucesso!",
+          alertType: "success",
+          alertTimer: 4,
+        };
+        this.$store.dispatch("setAlertData", alertData);
       } catch (error) {
-        this.alertMessage = error || "Erro";
-        this.alertType = "danger";
-        this.showMessage = true;
+        const alertData = {
+          alertMessage: error || "Erro!",
+          alertType: "danger",
+        };
+        this.$store.dispatch("setAlertData", alertData);
       }
       this.update();
-      // TODO: Confirmation popup
     },
     async editAppointment(appointmentId) {
       this.toggleAppointmentFormInput(false, null);
       try {
         await this.$store.dispatch("agenda/editAppointment", appointmentId);
+        const alertData = {
+          alertMessage: "Agendamento alterado com sucesso!",
+          alertType: "success",
+          alertTimer: 4,
+        };
+        this.$store.dispatch("setAlertData", alertData);
       } catch (error) {
-        this.alertMessage = error || "Erro";
-        this.alertType = "danger";
-        this.showMessage = true;
+        const alertData = {
+          alertMessage: error || "Erro!",
+          alertType: "danger",
+        };
+        this.$store.dispatch("setAlertData", alertData);
       }
       this.update();
-      // TODO: Confirmation popup
     },
     async editClient(clientId) {
       try {
         await this.$store.dispatch("clients/editClient", clientId);
+        const alertData = {
+          alertMessage: "Cadastro alterado com sucesso!",
+          alertType: "success",
+          alertTimer: 4,
+        };
+        this.$store.dispatch("setAlertData", alertData);
       } catch (error) {
-        this.alertMessage = error || "Erro";
-        this.alertType = "danger";
-        this.showMessage = true;
+        const alertData = {
+          alertMessage: error || "Erro!",
+          alertType: "danger",
+        };
+        this.$store.dispatch("setAlertData", alertData);
       }
       this.clientFormEnabled = false;
       this.update();
-      // TODO: Confirmation popup
     },
     toggleAppointmentFormInput(value, appointmentId) {
       this.appointmentFormEnabled = value;
@@ -244,7 +254,11 @@ export default {
         try {
           clientsBulk = await this.$store.dispatch("clients/loadClients");
         } catch (error) {
-          console.log(error || "Something went wrong!");
+          const alertData = {
+            alertMessage: error || "Erro!",
+            alertType: "danger",
+          };
+          this.$store.dispatch("setAlertData", alertData);
         }
         // For entry of clientsBulk
         for (let client of Object.entries(clientsBulk)) {

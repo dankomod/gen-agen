@@ -66,7 +66,7 @@
 </template>
 
 <script>
-// TODO: Delete all the appointments of a client to be deleted
+// TODO: Delete the future appointments of a client to be deleted
 export default {
   components: { BaseFormElement },
   props: {
