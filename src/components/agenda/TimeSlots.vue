@@ -35,33 +35,21 @@ export default {
   },
   watch: {
     // If the ammount of selected slots change
-    async selectedSlots(newValue) {
+    selectedSlots(newValue) {
       // Updates the API with the currently selected slots
-      try {
-        await this.$store.dispatch("agenda/setSelectedSlots", newValue);
-      } catch (error) {
-        const alertData = {
-          alertMessage: error || "Erro!",
-          alertType: "danger",
-        };
-        this.$store.dispatch("setAlertData", alertData);
-      }
+      this.$store.dispatch("agenda/setSelectedSlots", newValue);
       // emits slotSelected with a value that will be used by Clients components to determine the visibility of InfoSection
       let value = newValue.length > 0 ? true : false;
       this.$emit("slotSelected", value);
     },
   },
   async created() {
-    try {
-      await this.$store.dispatch("agenda/loadAppointments");
-    } catch (error) {
-      const alertData = {
-        alertMessage: error || "Erro!",
-        alertType: "danger",
-      };
-      this.$store.dispatch("setAlertData", alertData);
+    const response = await this.$store.dispatch("agenda/loadAppointments");
+    if ("alertMessage" in response) {
+      this.$store.dispatch("setAlertData", response);
+    } else {
+      this.intervalCalculator();
     }
-    this.intervalCalculator();
   },
   methods: {
     async intervalCalculator() {

@@ -88,46 +88,22 @@ export default {
   },
   methods: {
     async createAppointment() {
-      try {
-        await this.$store.dispatch("agenda/createAppointment");
+      const response = await this.$store.dispatch("agenda/createAppointment");
+      this.$store.dispatch("setAlertData", response);
+      if (response.alertType === "success") {
         this.showAppointmentForm = false;
         this.appointmentFormEnabled = false;
         this.$store.dispatch("agenda/setSelectedSlots", null);
-        const alertData = {
-          alertMessage: "Agendamento alterado com sucesso!",
-          alertType: "success",
-          alertTimer: 4,
-        };
-        this.$store.dispatch("setAlertData", alertData);
         this.$emit("newAppointment");
-      } catch (error) {
-        const alertData = {
-          alertMessage: error || "Erro!",
-          alertType: "danger",
-        };
-        this.$store.dispatch("setAlertData", alertData);
       }
     },
     // Creates a new client and resets the rendering
     async createClient() {
       // TODO: Better form validation
-      try {
-        await this.$store.dispatch("clients/createClient");
-        this.showClientForm = false;
-        this.showAppointmentForm = true;
-        this.appointmentFormEnabled = true;
-        const alertData = {
-          alertMessage: "Agendamento criado com sucesso!",
-          alertType: "success",
-          alertTimer: 4,
-        };
-        this.$store.dispatch("setAlertData", alertData);
-      } catch (error) {
-        const alertData = {
-          alertMessage: error || "Erro!",
-          alertType: "danger",
-        };
-        this.$store.dispatch("setAlertData", alertData);
+      const response = await this.$store.dispatch("clients/createClient");
+      this.$store.dispatch("setAlertData", response);
+      if (response.alertType === "success") {
+        this.toggleCreation(false);
       }
     },
     // Called on creation to assure t reset all data when this component is re-rendered
@@ -154,19 +130,25 @@ export default {
     async showInfo() {
       if (this.selectedSlots && this.selectedSlots.length === 1) {
         let slotAppointments = [];
-        for (let appointment of Object.entries(
-          await this.$store.dispatch("agenda/loadAppointments")
-        )) {
-          if (appointment[1].dateTime === this.selectedSlots[0].toString()) {
-            const response = await this.$store.dispatch(
-              "clients/loadClients",
-              appointment[1].clientId
-            );
-            if (appointment[1].name !== response.name) {
-              appointment[1].name = response.name;
+        const responseAppointments = await this.$store.dispatch(
+          "agenda/loadAppointments"
+        );
+        if (!("alertMessage" in responseAppointments)) {
+          for (let appointment of Object.entries(responseAppointments)) {
+            if (appointment[1].dateTime === this.selectedSlots[0].toString()) {
+              const responseClients = await this.$store.dispatch(
+                "clients/loadClients",
+                appointment[1].clientId
+              );
+              if (
+                responseClients &&
+                !("alertMessage" in responseClients) &&
+                appointment[1].name !== responseClients.name
+              ) {
+                appointment[1].name = responseClients.name;
+              }
+              slotAppointments.push(appointment);
             }
-            console.log(appointment[1].name);
-            slotAppointments.push(appointment);
           }
         }
         this.infoButtonText = !this.infoButtonText;

@@ -68,65 +68,35 @@ export default {
   methods: {
     async createClient() {
       // TODO: Better form validation
-      try {
-        await this.$store.dispatch("clients/createClient");
+      const response = await this.$store.dispatch("clients/createClient");
+      this.$store.dispatch("setAlertData", response);
+      if (response.alertType === "success") {
         this.toggleCreation(false);
-        const alertData = {
-          alertMessage: "Cliente cadastrado",
-          alertType: "success",
-          alertTimer: 4,
-        };
-        this.$store.dispatch("setAlertData", alertData);
-      } catch (error) {
-        const alertData = {
-          alertMessage: error || "Erro!",
-          alertType: "danger",
-        };
-        this.$store.dispatch("setAlertData", alertData);
       }
     },
     async deleteClient() {
-      try {
-        // this.formData[0] is the id of the client, the array is formatted as [id,{data}]
-        await this.$store.dispatch("clients/deleteClient", this.formData[0]);
+      const response = await this.$store.dispatch(
+        "clients/deleteClient",
+        this.formData[0]
+      );
+      this.$store.dispatch("setAlertData", response);
+      if (response.alertType === "success") {
         this.toggleInputs(false);
         this.toggleForm(false);
         this.toggleEditMenu(false);
         this.toggleSearch(true);
-        // TODO: Popup Asking for confirmation and the confirming the deletion or denying
-        const alertData = {
-          alertMessage: "Cliente removido",
-          alertType: "success",
-          alertTimer: 4,
-        };
-        this.$store.dispatch("setAlertData", alertData);
-      } catch (error) {
-        const alertData = {
-          alertMessage: error || "Erro!",
-          alertType: "danger",
-        };
-        this.$store.dispatch("setAlertData", alertData);
       }
     },
     async editClient() {
-      try {
-        await this.$store.dispatch("clients/editClient", this.formData[0]);
+      const response = await this.$store.dispatch(
+        "clients/editClient",
+        this.formData[0]
+      );
+      this.$store.dispatch("setAlertData", response);
+      if (response.alertType === "success") {
         this.toggleInputs(false);
         this.toggleForm(false);
         this.toggleSearch(false);
-        // TODO: Popup Informing the success or failure of the operation
-        const alertData = {
-          alertMessage: "Cadastro editado",
-          alertType: "success",
-          alertTimer: 4,
-        };
-        this.$store.dispatch("setAlertData", alertData);
-      } catch (error) {
-        const alertData = {
-          alertMessage: error || "Erro!",
-          alertType: "danger",
-        };
-        this.$store.dispatch("setAlertData", alertData);
       }
     },
     // Called when a client is selected in ClientSearch component

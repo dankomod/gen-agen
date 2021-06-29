@@ -177,60 +177,36 @@ export default {
     },
     async deleteAppointment(appointmentId) {
       this.toggleAppointmentFormInput(false, null);
-      try {
-        await this.$store.dispatch("agenda/deleteAppointment", appointmentId);
-        const alertData = {
-          alertMessage: "Agendamento removido com sucesso!",
-          alertType: "success",
-          alertTimer: 4,
-        };
-        this.$store.dispatch("setAlertData", alertData);
-      } catch (error) {
-        const alertData = {
-          alertMessage: error || "Erro!",
-          alertType: "danger",
-        };
-        this.$store.dispatch("setAlertData", alertData);
+      const response = await this.$store.dispatch(
+        "agenda/deleteAppointment",
+        appointmentId
+      );
+      this.$store.dispatch("setAlertData", response);
+      if (response.alertType === "success") {
+        this.update();
       }
-      this.update();
     },
     async editAppointment(appointmentId) {
       this.toggleAppointmentFormInput(false, null);
-      try {
-        await this.$store.dispatch("agenda/editAppointment", appointmentId);
-        const alertData = {
-          alertMessage: "Agendamento alterado com sucesso!",
-          alertType: "success",
-          alertTimer: 4,
-        };
-        this.$store.dispatch("setAlertData", alertData);
-      } catch (error) {
-        const alertData = {
-          alertMessage: error || "Erro!",
-          alertType: "danger",
-        };
-        this.$store.dispatch("setAlertData", alertData);
+      const response = await this.$store.dispatch(
+        "agenda/editAppointment",
+        appointmentId
+      );
+      this.$store.dispatch("setAlertData", response);
+      if (response.alertType === "success") {
+        this.update();
       }
-      this.update();
     },
     async editClient(clientId) {
-      try {
-        await this.$store.dispatch("clients/editClient", clientId);
-        const alertData = {
-          alertMessage: "Cadastro alterado com sucesso!",
-          alertType: "success",
-          alertTimer: 4,
-        };
-        this.$store.dispatch("setAlertData", alertData);
-      } catch (error) {
-        const alertData = {
-          alertMessage: error || "Erro!",
-          alertType: "danger",
-        };
-        this.$store.dispatch("setAlertData", alertData);
+      const response = await this.$store.dispatch(
+        "clients/editClient",
+        clientId
+      );
+      this.$store.dispatch("setAlertData", response);
+      if (response.alertType === "success") {
+        this.clientFormEnabled = false;
+        this.update();
       }
-      this.clientFormEnabled = false;
-      this.update();
     },
     toggleAppointmentFormInput(value, appointmentId) {
       this.appointmentFormEnabled = value;
@@ -250,22 +226,18 @@ export default {
     async viewClient(clientId) {
       // Only sends requests when a new selection is made
       if (this.selectedClient[0] !== clientId) {
-        let clientsBulk = {};
-        try {
-          clientsBulk = await this.$store.dispatch("clients/loadClients");
-        } catch (error) {
-          const alertData = {
-            alertMessage: error || "Erro!",
-            alertType: "danger",
-          };
-          this.$store.dispatch("setAlertData", alertData);
-        }
-        // For entry of clientsBulk
-        for (let client of Object.entries(clientsBulk)) {
-          // If the name in the entry contains the this.searchQuery as a substring, push the entry to the this.filteredClients array
-          if (client[0].includes(clientId)) {
-            this.selectedClient = client;
-            this.showClientForm = clientId;
+        const response = await this.$store.dispatch("clients/loadClients");
+        // If error
+        if ("alertMessage" in response) {
+          this.$store.dispatch("setAlertData", response);
+        } else {
+          // For entry of clientsBulk
+          for (let client of Object.entries(response)) {
+            // If the name in the entry contains the this.searchQuery as a substring, push the entry to the this.filteredClients array
+            if (client[0].includes(clientId)) {
+              this.selectedClient = client;
+              this.showClientForm = clientId;
+            }
           }
         }
         // Toggles the view if no new selection is made, resets selectedClient

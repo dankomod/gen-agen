@@ -102,14 +102,11 @@ export default {
     },
     // Calls the API for the clients data and fills this.clientsBulk with the response
     async loadClients() {
-      try {
-        this.clientsBulk = await this.$store.dispatch("clients/loadClients");
-      } catch (error) {
-        const alertData = {
-          alertMessage: error || "Erro!",
-          alertType: "danger",
-        };
-        this.$store.dispatch("setAlertData", alertData);
+      const response = await this.$store.dispatch("clients/loadClients");
+      if ("alertMessage" in response) {
+        this.$store.dispatch("setAlertData", response);
+      } else {
+        this.clientsBulk = response;
       }
     },
     // Receives the ID of a client, search for it in this.filteredClients and fills this.selectedClient with it's full data

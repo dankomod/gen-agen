@@ -28,12 +28,12 @@
 <script>
 export default {
   props: {
-    alertType: { type: String, default: "" },
     alertTimer: { type: Number, default: null },
+    alertType: { type: String, default: "" },
   },
   emits: ["closeAlert"],
   data() {
-    return { showCloseButton: true };
+    return { localAlertTimer: null, showCloseButton: true };
   },
   computed: {
     // Returns specific styling acording to the alertType
@@ -52,15 +52,27 @@ export default {
       }
     },
   },
-  mounted() {
-    if (this.alertTimer) {
-      this.showCloseButton = false;
-      setTimeout(() => this.closeAlert(), this.alertTimer * 1000);
-    }
+  created() {
+    this.setTimer();
+  },
+  // Updates when a new alert is emmited while another one was being shown
+  beforeUpdate() {
+    this.setTimer();
   },
   methods: {
     closeAlert() {
       this.$emit("closeAlert");
+    },
+    setTimer() {
+      if (this.alertType === "success" && !this.alertTimer) {
+        this.localAlertTimer = 4;
+      } else {
+        this.localAlertTimer = this.alertTimer;
+      }
+      if (this.localAlertTimer) {
+        this.showCloseButton = false;
+        setTimeout(() => this.closeAlert(), this.localAlertTimer * 1000);
+      }
     },
   },
 };

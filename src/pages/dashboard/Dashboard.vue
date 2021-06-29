@@ -113,9 +113,13 @@ export default {
       }
     },
     async loadClients() {
-      const clients = await this.$store.dispatch("clients/loadClients");
-      for (let client of Object.values(clients)) {
-        this.allClients.push(client);
+      const response = await this.$store.dispatch("clients/loadClients");
+      if ("alertMessage" in response) {
+        this.$store.dispatch("setAlertData", response);
+      } else {
+        for (let client of Object.values(response)) {
+          this.allClients.push(client);
+        }
       }
     },
   },

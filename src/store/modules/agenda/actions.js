@@ -2,6 +2,7 @@
 import { DateTime } from "luxon";
 export default {
   async createAppointment({ dispatch }) {
+    let alertData = {};
     const selectedDate = this.getters["agenda/selectedDate"];
     const selectedSlots = this.getters["agenda/selectedSlots"];
     const appointmentNewData = this.getters["agenda/appointmentNewData"];
@@ -21,12 +22,12 @@ export default {
         );
         const responseData = await response.json();
         if (!response.ok) {
-          const error = new Error(responseData.message);
-          throw error;
+          alertData["alertMessage"] = responseData.message;
+          alertData["alertType"] = "danger";
         }
       } else {
-        const error = "Data is lacking";
-        throw error;
+        alertData["alertMessage"] = "Data is lacking";
+        alertData["alertType"] = "danger";
       }
       // Adds a dateTime for this appointment in the client's data
       dispatch(
@@ -37,8 +38,15 @@ export default {
       // Sends the new appointment datetime to the API
       dispatch("clients/editClient", selectedClient[0], { root: true }); // (action, clientID, root: true to reach a namespaced action)
     }
+    alertData["alertMessage"] =
+      Object.values(selectedSlots).length > 1
+        ? "Agendamentos criados"
+        : "Agendamento criado";
+    alertData["alertType"] = "success";
+    return alertData;
   },
   async deleteAppointment(context, appointmentId) {
+    let alertData = {};
     const selectedDate = this.getters["agenda/selectedDate"];
     const response = await fetch(
       `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}/${appointmentId}.json`,
@@ -48,13 +56,16 @@ export default {
     );
     const responseData = await response.json();
     if (!response.ok) {
-      const error = new Error(
-        responseData.message || "Erro ao enviar solicitação."
-      );
-      throw error;
+      alertData["alertMessage"] = responseData.message;
+      alertData["alertType"] = "danger";
+    } else {
+      alertData["alertMessage"] = "Agendamento removido";
+      alertData["alertType"] = "success";
     }
+    return alertData;
   },
   async editAppointment(context, appointmentId) {
+    let alertData = {};
     const selectedDate = this.getters["agenda/selectedDate"];
     const response = await fetch(
       `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}/${appointmentId}.json`,
@@ -65,23 +76,25 @@ export default {
     );
     const responseData = await response.json();
     if (!response.ok) {
-      const error = new Error(
-        responseData.message || "Erro ao enviar solicitação."
-      );
-      throw error;
+      alertData["alertMessage"] = responseData.message;
+      alertData["alertType"] = "danger";
+    } else {
+      alertData["alertMessage"] = "Agendamento editado";
+      alertData["alertType"] = "success";
     }
+    return alertData;
   },
   async loadAppointments(context) {
+    let alertData = {};
     const selectedDate = this.getters["agenda/selectedDate"];
     const response = await fetch(
       `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}.json`
     );
     const responseData = await response.json();
     if (!response.ok) {
-      const error = new Error(
-        responseData.message || "Erro ao enviar solicitação."
-      );
-      throw error;
+      alertData["alertMessage"] = responseData.message;
+      alertData["alertType"] = "danger";
+      return alertData;
     }
     // If any appointment, pushes an array to the state with all the selected hours. This will be used by TimeSlots and InfoSection
     // * Having the array in the State allows fast data access
