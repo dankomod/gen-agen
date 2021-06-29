@@ -2,52 +2,67 @@
   <div class="flex flex-col items-center justify-center space-y-10">
     <!-- TOP MENU -->
     <div class="space-x-2">
-      <!-- Search Button -->
-      <base-button @click="toggleSearch(true), toggleCreation(false)">
+      <!-- Search View -->
+      <base-button @click="toggleClientCreation(false)">
         Pesquisar Clientes
       </base-button>
-      <!-- New Client Button -->
-      <base-button
-        button-type="success"
-        @click="toggleCreation(true), toggleSearch(false)"
-      >
+      <!-- New Client View -->
+      <base-button button-type="success" @click="toggleClientCreation(true)">
         Cadastrar Cliente
       </base-button>
     </div>
-    <client-search v-if="showSearch" @selection="selection"></client-search>
+    <!-- Search -->
+    <client-search
+      v-if="showClientSearch"
+      @selection="selection"
+    ></client-search>
     <client-form
       v-if="showClientForm"
       :form-data="formData"
       :form-enabled="clientFormEnabled"
     ></client-form>
-    <div v-if="showClientForm && showCreationMenu">
-      <base-button button-type="success" @click="createClient">
+    <!-- New Client Menu -->
+    <div>
+      <base-button
+        v-if="showCreationButton"
+        button-type="success"
+        @click="createClient"
+      >
         Cadastrar Cliente
       </base-button>
     </div>
-    <!-- ACTIONS MENU -->
-    <div
-      v-if="showClientForm && showActionsMenu && !showEditMenu"
-      class="space-x-2"
-    >
-      <!-- Edit Client Button -->
-      <base-button
-        button-type="warning"
-        @click="toggleInputs(true), toggleEditMenu(true)"
-      >
-        Editar
-      </base-button>
-      <!-- Delete Client Button -->
-      <base-button button-type="danger" @click="deleteClient">
-        Remover
-      </base-button>
+    <!-- Existing Client Menu -->
+    <div v-if="showEditMenu" class="space-x-2">
+      <div v-if="!showEditConfirmation && !showDeletionConfirmation">
+        <!-- Edit Client Button -->
+        <base-button
+          button-type="warning"
+          @click="(clientFormEnabled = true), (showEditConfirmation = true)"
+        >
+          Editar
+        </base-button>
+        <!-- Delete Client Button -->
+        <base-button
+          button-type="danger"
+          @click="showDeletionConfirmation = true"
+        >
+          Remover
+        </base-button>
+      </div>
+      <base-binary-buttons
+        v-if="showEditConfirmation"
+        @yes="editClient()"
+        @no="(clientFormEnabled = false), (showEditMenu = false)"
+      ></base-binary-buttons>
+      <p v-if="showDeletionConfirmation" class="font-bold text-red-900">
+        Tem certeza de que deseja remover o cadastro do cliente?
+      </p>
+      <base-binary-buttons
+        v-if="showDeletionConfirmation"
+        @yes="deleteClient"
+        @no="showDeletionConfirmation = false"
+      ></base-binary-buttons>
     </div>
-    <!-- EDIT MENU -->
-    <base-binary-buttons
-      v-if="showClientForm && showActionsMenu && showEditMenu"
-      @yes="editClient"
-      @no="toggleInputs(false), toggleEditMenu(false)"
-    ></base-binary-buttons>
   </div>
 </template>
 
@@ -58,11 +73,12 @@ export default {
     return {
       clientFormEnabled: false,
       formData: null,
-      showActionsMenu: false,
-      showCreationMenu: false,
       showEditMenu: false,
+      showCreationButton: false,
+      showDeletionConfirmation: false,
+      showEditConfirmation: false,
       showClientForm: false,
-      showSearch: false,
+      showClientSearch: false,
     };
   },
   methods: {
@@ -71,7 +87,9 @@ export default {
       const response = await this.$store.dispatch("clients/createClient");
       this.$store.dispatch("setAlertData", response);
       if (response.alertType === "success") {
-        this.toggleCreation(false);
+        this.clientFormEnabled = false;
+        this.showCreationButton = false;
+        this.showClientForm = false;
       }
     },
     async deleteClient() {
@@ -81,10 +99,11 @@ export default {
       );
       this.$store.dispatch("setAlertData", response);
       if (response.alertType === "success") {
-        this.toggleInputs(false);
-        this.toggleForm(false);
-        this.toggleEditMenu(false);
-        this.toggleSearch(true);
+        this.clientFormEnabled = false;
+        this.showClientForm = false;
+        this.showClientSearch = false;
+        this.showEditMenu = false;
+        this.showDeletionConfirmation = false;
       }
     },
     async editClient() {
@@ -94,37 +113,26 @@ export default {
       );
       this.$store.dispatch("setAlertData", response);
       if (response.alertType === "success") {
-        this.toggleInputs(false);
-        this.toggleForm(false);
-        this.toggleSearch(false);
+        this.clientFormEnabled = false;
+        this.showClientForm = false;
+        this.showClientSearch = false;
+        this.showEditConfirmation = false;
+        this.showEditMenu = false;
       }
     },
     // Called when a client is selected in ClientSearch component
     selection() {
       this.formData = this.$store.getters["clients/selectedClient"];
-      this.toggleActionsMenu(true);
-      this.toggleForm();
+      this.showClientForm = true;
+      this.showEditMenu = true;
     },
-    toggleActionsMenu(value = true) {
-      this.showActionsMenu = value;
-    },
-    toggleCreation(value = true) {
-      this.toggleForm(value);
-      this.toggleInputs(value);
-      this.showCreationMenu = value;
-    },
-    toggleEditMenu(value = true) {
-      this.showEditMenu = value;
-    },
-    toggleForm(value = true) {
-      this.showClientForm = value;
-    },
-    // Toggle form inputs
-    toggleInputs(value = true) {
+    toggleClientCreation(value) {
+      this.formData = null;
+      this.showEditMenu = false;
       this.clientFormEnabled = value;
-    },
-    toggleSearch(value = true) {
-      this.showSearch = value;
+      this.showClientForm = value;
+      this.showClientSearch = !value;
+      this.showCreationButton = value;
     },
   },
 };
