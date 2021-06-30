@@ -1,42 +1,50 @@
 <template>
   <div>
-    <h1 class="text-2xl text-center">Administração</h1>
+    <h1 class="pb-6 text-2xl text-center">Administração</h1>
     <div class="flex flex-wrap">
-      <!-- <div class="p-5">
-        <h2 class="pb-2 text-xl deep-purple-700-accent">
-          Agendamentos: {{ allAppointments.length }}
-        </h2>
-        <p>Últimos 7 dias: {{ filter("appointments", "past", 7).length }}</p>
-        <p>Ontem: {{ filter("appointments", "past", 1).length }}</p>
-        <p>Hoje: {{ filter("appointments").length }}</p>
-        <p>Amanhã: {{ filter("appointments", "future", 1).length }}</p>
-        <p>Próximos 7 dias: {{ filter("appointments", "future", 7).length }}</p>
+      <div class="w-full p-2 xs:w-1/2 sm:w-1/3">
+        <div class="w-full p-5 border border-indigo-300">
+          <h2 class="pb-2 text-xl deep-purple-700-accent">
+            Agendamentos: {{ allAppointments.length }}
+          </h2>
+          <p>-30 dias: {{ filter("appointments", "past", 30).length }}</p>
+          <p>-15 dias: {{ filter("appointments", "past", 15).length }}</p>
+          <p>-7 dias: {{ filter("appointments", "past", 7).length }}</p>
+          <p>Ontem: {{ filter("appointments", "past", 1).length }}</p>
+          <p>Hoje: {{ filter("appointments").length }}</p>
+          <p>Amanhã: {{ filter("appointments", "future", 1).length }}</p>
+          <p>+7 dias: {{ filter("appointments", "future", 7).length }}</p>
+        </div>
       </div>
-      <div class="p-5 pb-2">
-        <h2 class="pb-2 text-xl">Novos Clientes: {{ allClients.length }}</h2>
-        <p>Últimos 7 dias: {{ filter("clients", "past", 7).length }}</p>
-        <p>Ontem: {{ filter("clients", "past", 1).length }}</p>
-        <p>Hoje: {{ filter("clients").length }}</p>
+      <div class="w-full p-2 xs:w-1/2 sm:w-1/3">
+        <div class="w-full p-5 border border-indigo-300">
+          <h2 class="pb-2 text-xl">Clientes Ativos</h2>
+          <p>-30 dias: {{ filter("lastAppointment", "past", 30).length }}</p>
+          <p>-15 dias: {{ filter("lastAppointment", "past", 15).length }}</p>
+          <p>-7 dias: {{ filter("lastAppointment", "past", 7).length }}</p>
+          <p>Ontem: {{ filter("lastAppointment", "past", 1).length }}</p>
+          Hoje: {{ filter("lastAppointment").length }}
+        </div>
       </div>
-      <div class="p-5 pb-2">
-        <h2 class="pb-2 text-xl">Clientes Ativos</h2>
-        <p>
-          Últimos 30 dias: {{ filter("lastAppointment", "past", 30).length }}
-        </p>
-        <p>
-          Últimos 15 dias: {{ filter("lastAppointment", "past", 15).length }}
-        </p>
-        <p>Últimos 7 dias: {{ filter("lastAppointment", "past", 7).length }}</p>
-        <p>Ontem: {{ filter("lastAppointment", "past", 1).length }}</p>
-        <p>Hoje: {{ filter("lastAppointment").length }}</p>
-      </div> -->
-      <div class="p-5 pb-2">
-        <h2>Pagamentos</h2>
-        <p>Últimos 30 dias: {{ paid.last30 }}</p>
-        <p>Últimos 15 dias: {{ paid.last15 }}</p>
-        <p>Últimos 7 dias: {{ paid.last7 }}</p>
-        <!-- <p>Ontem: {{ paid.yesterday }}</p> -->
-        <p>Hoje: {{ paid.today }}</p>
+      <div class="w-full p-2 xs:w-1/2 sm:w-1/3">
+        <div class="w-full p-5 border border-indigo-300">
+          <h2 class="pb-2 text-xl">Novos Clientes: {{ allClients.length }}</h2>
+          <p>-30 dias: {{ filter("clients", "past", 30).length }}</p>
+          <p>-15 dias: {{ filter("clients", "past", 15).length }}</p>
+          <p>-7 dias: {{ filter("clients", "past", 7).length }}</p>
+          <p>Ontem: {{ filter("clients", "past", 1).length }}</p>
+          <p>Hoje: {{ filter("clients").length }}</p>
+        </div>
+      </div>
+      <div class="w-full p-2 xs:w-1/2 sm:w-1/3">
+        <div class="w-full p-5 border border-indigo-300">
+          <h2 class="pb-2 text-xl">Pagamentos</h2>
+          <p>-30 dias: {{ paid.last30 }}</p>
+          <p>-15 dias: {{ paid.last15 }}</p>
+          <p>-7 dias: {{ paid.last7 }}</p>
+          <p>Ontem: {{ paid.yesterday }}</p>
+          <p>Hoje: {{ paid.today }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -57,11 +65,12 @@ export default {
     this.filterPaid();
   },
   methods: {
+    // This function minimizes filter() calls
     filterPaid() {
       let paidAppointments = [];
       const queries = [
         ["today", "null", "today"],
-        // ["past", 1, "yesterday"], // TODO: Fix: This = 'yesterday' + 'today', must show 'yesterday' only
+        ["past", 1, "yesterday"], // TODO: Fix: This = 'yesterday' + 'today', must show 'yesterday' only
         ["past", 7, "last7"],
         ["past", 15, "last15"],
         ["past", 30, "last30"],
@@ -91,6 +100,8 @@ export default {
       } else if (type === "lastAppointment") {
         arrayToFilter = this.allClients;
         filterKey = "lastAppointment";
+      } else {
+        return null;
       }
       const startOfToday = DateTime.now().startOf("day"); // Today, 00h:00m
       const endOfToday = startOfToday
