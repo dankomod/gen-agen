@@ -2,7 +2,7 @@
   <div>
     <h1 class="text-2xl text-center">Administração</h1>
     <div class="flex flex-wrap">
-      <div class="p-5">
+      <!-- <div class="p-5">
         <h2 class="pb-2 text-xl deep-purple-700-accent">
           Agendamentos: {{ allAppointments.length }}
         </h2>
@@ -29,6 +29,14 @@
         <p>Últimos 7 dias: {{ filter("lastAppointment", "past", 7).length }}</p>
         <p>Ontem: {{ filter("lastAppointment", "past", 1).length }}</p>
         <p>Hoje: {{ filter("lastAppointment").length }}</p>
+      </div> -->
+      <div class="p-5 pb-2">
+        <h2>Pagamentos</h2>
+        <p>Últimos 30 dias: {{ paid.last30 }}</p>
+        <p>Últimos 15 dias: {{ paid.last15 }}</p>
+        <p>Últimos 7 dias: {{ paid.last7 }}</p>
+        <!-- <p>Ontem: {{ paid.yesterday }}</p> -->
+        <p>Hoje: {{ paid.today }}</p>
       </div>
     </div>
   </div>
@@ -40,17 +48,38 @@ export default {
     return {
       allAppointments: [],
       allClients: [],
-      showHeatmap: false,
+      paid: {},
     };
   },
   async created() {
-    await this.loadAppointments();
     await this.loadClients();
-    this.showHeatmap = true;
+    await this.loadAppointments();
+    this.filterPaid();
   },
   methods: {
-    // Returns filtered appointments based on time and number of days. Takes the 'now', 'past' and 'future' time filters.
-    filter(type, when = "now", value = null) {
+    filterPaid() {
+      let paidAppointments = [];
+      const queries = [
+        ["today", "null", "today"],
+        // ["past", 1, "yesterday"], // TODO: Fix: This = 'yesterday' + 'today', must show 'yesterday' only
+        ["past", 7, "last7"],
+        ["past", 15, "last15"],
+        ["past", 30, "last30"],
+      ];
+      for (let query of queries) {
+        const dateFiltered = this.filter("appointments", query[0], query[1]);
+        for (let appointment of dateFiltered) {
+          if (appointment.isPaid) {
+            paidAppointments.push(parseInt(appointment.price));
+          }
+        }
+        this.paid[query[2]] = paidAppointments.reduce((a, b) => {
+          return a + b;
+        }, 0);
+      }
+    },
+    // Returns filtered appointments based on time and number of days. Takes the 'today', 'past' and 'future' time filters.
+    filter(type, when = "today", value = null) {
       let arrayToFilter = [];
       let filterKey = "";
       if (type === "appointments") {
@@ -84,7 +113,7 @@ export default {
           return dateTime > endOfToday && dateTime <= futureTimeFilter; // > End of current day, <= end of future day
         });
         // Current date filter
-      } else if (when === "now") {
+      } else if (when === "today") {
         return arrayToFilter.filter((val) => {
           const dateTime = DateTime.fromISO(val[filterKey]);
           return dateTime >= startOfToday && dateTime <= endOfToday; // >= Start of current day, <= End of current day
@@ -103,10 +132,10 @@ export default {
     },
     // Requests appointments for current, past and last month
     async loadAppointments() {
-      const now = DateTime.now(); // Current YYYY/MM
-      const past = now.minus({ months: 1 }); // Past YYYY/MM
-      const future = now.plus({ months: 1 }); // Future YYYY/MM
-      for (let time of [now, past, future]) {
+      const today = DateTime.now(); // Current YYYY/MM
+      const past = today.minus({ months: 1 }); // Past YYYY/MM
+      const future = today.plus({ months: 1 }); // Future YYYY/MM
+      for (let time of [today, past, future]) {
         this.joinAppointments(
           await this.$store.dispatch("agenda/monthAppointments", time) // Retrieves data and sends it to be joined
         );
@@ -114,7 +143,7 @@ export default {
     },
     async loadClients() {
       const response = await this.$store.dispatch("clients/loadClients");
-      if ("alertMessage" in response) {
+      if (response && "alertMessage" in response) {
         this.$store.dispatch("setAlertData", response);
       } else {
         for (let client of Object.values(response)) {

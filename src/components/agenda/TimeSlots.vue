@@ -45,7 +45,7 @@ export default {
   },
   async created() {
     const response = await this.$store.dispatch("agenda/loadAppointments");
-    if ("alertMessage" in response) {
+    if (response && "alertMessage" in response) {
       this.$store.dispatch("setAlertData", response);
     } else {
       this.intervalCalculator();

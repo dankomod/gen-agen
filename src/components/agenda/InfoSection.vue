@@ -47,6 +47,7 @@ export default {
       showClientForm: false,
       showInfoButton: false,
       showSearch: false,
+      lastSlot: null,
     };
   },
   computed: {
@@ -68,20 +69,16 @@ export default {
       takenHours.includes(this.selectedSlots[0].toString())
         ? true
         : false;
-    // Watches the store for changes in the selected slots
+    // Watches the store for changes in the value of the selected slots on the store
     this.$store.watch(
       () => {
-        return this.$store.state.selectedSlots;
-        //  ? The watch with this getter can't detect when the selectedSlots array looses a value and turns to length = 1
-        // //  return this.$store.getters["agenda/selectedSlots"];
+        return this.$store.getters["agenda/selectedSlots"];
+        // // Possible alternative return this.$store.state.selectedSlots;
       },
+      // Sets the local record of selected slots and may toggle the info button when there is a change in the selectedSlots agenda store
       (newValue) => {
-        // If newValue is not null and has length 1
-        if (newValue && newValue.length === 1) {
-          this.showInfoButton = true;
-        }
-        this.showInfoButton = false;
-        console.log(this.$store.getters["agenda/selectedSlots"]);
+        this.selectedSlots = this.$store.getters["agenda/selectedSlots"];
+        this.showInfoButton = newValue && newValue.length === 1 ? true : false;
       },
       { deep: true }
     );
@@ -128,12 +125,17 @@ export default {
     },
     // Loads the appointments then shows the slot details
     async showInfo() {
-      if (this.selectedSlots && this.selectedSlots.length === 1) {
+      // The this.infoButtonText check assures that the if statement don't get called when appointment-form is closed
+      if (
+        this.infoButtonText &&
+        this.selectedSlots &&
+        this.selectedSlots.length === 1
+      ) {
         let slotAppointments = [];
         const responseAppointments = await this.$store.dispatch(
           "agenda/loadAppointments"
         );
-        if (!("alertMessage" in responseAppointments)) {
+        if (responseAppointments && !("alertMessage" in responseAppointments)) {
           for (let appointment of Object.entries(responseAppointments)) {
             if (appointment[1].dateTime === this.selectedSlots[0].toString()) {
               const responseClients = await this.$store.dispatch(
@@ -151,9 +153,9 @@ export default {
             }
           }
         }
-        this.infoButtonText = !this.infoButtonText;
         this.$store.dispatch("agenda/setSlotAppointments", slotAppointments);
       }
+      this.infoButtonText = !this.infoButtonText;
       this.$emit("toggleSlotDetail");
     },
   },
