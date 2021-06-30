@@ -24,7 +24,23 @@
           <div>
             <button
               type="button"
-              class="inline-flex justify-center w-full px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 shadow-sm  hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+              class="
+                inline-flex
+                justify-center
+                w-full
+                px-4
+                py-2
+                text-sm text-gray-700
+                bg-white
+                border border-gray-300
+                shadow-sm
+                hover:bg-gray-50
+                focus:outline-none
+                focus:ring-2
+                focus:ring-offset-2
+                focus:ring-offset-gray-100
+                focus:ring-indigo-500
+              "
               aria-expanded="true"
               aria-haspopup="true"
               @click="toggleDrop(appointment[0])"
@@ -47,7 +63,17 @@
           </div>
           <div
             v-if="showDropMenu === appointment[0]"
-            class="absolute left-0 w-56 mt-2 origin-top-right bg-white shadow-lg  ring-1 ring-black ring-opacity-5 focus:outline-none"
+            class="
+              absolute
+              left-0
+              w-56
+              mt-2
+              origin-top-right
+              bg-white
+              shadow-lg
+              ring-1 ring-black ring-opacity-5
+              focus:outline-none
+            "
             role="menu"
             aria-orientation="vertical"
             aria-labelledby="menu-button"
@@ -106,7 +132,14 @@
                 >Editar Agendamento
               </a>
               <a
-                class="block px-4 py-2 text-red-700 cursor-pointer  hover:bg-blue-100"
+                class="
+                  block
+                  px-4
+                  py-2
+                  text-red-700
+                  cursor-pointer
+                  hover:bg-blue-100
+                "
                 role="menuitem"
                 tabindex="-1"
                 @click="showDeletionConfirmation = true"

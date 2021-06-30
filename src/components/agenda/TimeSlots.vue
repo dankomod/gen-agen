@@ -1,20 +1,50 @@
 <template>
   <div class="flex flex-wrap items-center justify-center">
-    <!-- Turns checkboxes into selectable boxes: <article> holds the base style, <input> makes the box selectable and stylable as such, <div> is shown whether the input is selected or not, and <span> holds the text -->
+    <!-- Turns checkboxes into selectable boxes: <article> contains the base style, <input> makes the box selectable and stylable as such, <div> is shown whether the input is selected or not, and <span> contains the text -->
     <article
       v-for="timeSlot in timeSlots"
       :key="timeSlot.dateTime"
-      class="relative float-left w-24 h-24 m-1 overflow-hidden text-2xl border"
+      class="
+        relative
+        float-left
+        w-24
+        h-24
+        m-1
+        overflow-hidden
+        text-2xl
+        font-medium
+        tracking-wide
+        text-white
+        border
+      "
       :class="takenFormat(timeSlot.appointments)"
     >
       <input
         v-model="selectedSlots"
         :value="timeSlot.dateTime"
         type="checkbox"
-        class="absolute top-0 left-0 w-24 h-24 opacity-0 cursor-pointer"
+        class="
+          absolute
+          top-0
+          left-0
+          w-24
+          h-24
+          bg-indigo-900
+          opacity-0
+          cursor-pointer
+        "
       />
       <div
-        class="flex items-center justify-center w-full h-full transition duration-100 ease-linear "
+        class="
+          flex
+          items-center
+          justify-center
+          w-full
+          h-full
+          transition
+          duration-100
+          ease-linear
+        "
       >
         <span>{{ timeSlot.dateTime.toFormat("HH:mm") }}</span>
       </div>
@@ -84,11 +114,11 @@ export default {
     // Conditional format based on the ammount of appointments on the slot
     takenFormat(appointments) {
       if (appointments === 0 || appointments === undefined) {
-        return "text-green-600 border-green-400 bg-green-100";
+        return "bg-green-900";
       } else if (appointments === 1) {
-        return "text-yellow-600 border-yellow-400 bg-yellow-100";
+        return "bg-orange-900";
       } else if (appointments >= 2) {
-        return "xs:text-white text-red-600 border-red-300 bg-red-100";
+        return "bg-red-900";
       }
     },
   },
@@ -99,7 +129,6 @@ import { DateTime } from "luxon";
 
 <style scoped>
 input[type="checkbox"]:checked ~ div {
-  background-color: rgb(191, 217, 257);
-  color: rgb(30, 64, 175);
+  background-color: rgb(26, 35, 126);
 }
 </style>

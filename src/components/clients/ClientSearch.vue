@@ -4,7 +4,14 @@
       <input
         v-model="searchQuery"
         type="text"
-        class="p-3 pl-12 mb-2 border border-indigo-100  bg-indigo-50 placeholder-grey-900"
+        class="
+          p-3
+          pl-12
+          mb-2
+          border border-indigo-100
+          bg-indigo-50
+          placeholder-grey-900
+        "
         placeholder="Pesquisar cadastros"
         @keyup="filteredList"
       />
@@ -25,7 +32,16 @@
     </div>
     <div
       v-show="searchQuery.length > 0"
-      class="absolute left-0 z-10 w-full mt-1 bg-white border border-indigo-300 shadow "
+      class="
+        absolute
+        left-0
+        z-10
+        w-full
+        mt-1
+        bg-white
+        border border-indigo-300
+        shadow
+      "
     >
       <ul class="block text-grey-900">
         <li

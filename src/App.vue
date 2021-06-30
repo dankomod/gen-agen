@@ -14,7 +14,10 @@
       </div>
       <router-view v-slot="slotProps">
         <transition name="route" mode="out-in">
-          <component :is="slotProps.Component"></component>
+          <component
+            :is="slotProps.Component"
+            class="max-w-screen-lg"
+          ></component>
         </transition>
       </router-view>
     </div>
