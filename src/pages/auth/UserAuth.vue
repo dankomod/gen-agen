@@ -78,14 +78,24 @@ export default {
       this.mode = mode;
     },
     async submitForm() {
-      // this.formIsValid = true;
-      if (
-        this.userInfo.email === "" ||
-        !this.userInfo.email.includes("@") ||
-        !this.userInfo.email.includes(".") ||
-        this.userInfo.password.length < 6
-      ) {
-        // this.formIsValid = false;
+      // eslint-disable-next-line no-unused-vars
+      let message;
+      if (this.userInfo.email === "") {
+        message = "Informe um email";
+      } else if (this.userInfo.password.length < 6) {
+        message = "Informe uma senha de ao menos seis dígitos";
+      } else if (!this.userInfo.email.includes("@")) {
+        message = "Seu email deve conter uma arroba (@)";
+      } else if (!this.userInfo.email.includes(".")) {
+        message = "Seu email deve conter um ponto (.)";
+      } else {
+        message = "";
+      }
+      if (message !== "") {
+        this.$store.dispatch("setAlertData", {
+          alertMessage: message,
+          alertType: "danger",
+        });
         return;
       }
       const response = await this.$store.dispatch(this.mode, this.userInfo);

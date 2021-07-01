@@ -3,31 +3,28 @@ import { DateTime } from "luxon";
 export default {
   async createAppointment({ dispatch }) {
     let alertData = {};
+    const appointmentNewData = this.getters["agenda/appointmentNewData"];
+    if (!appointmentNewData.price) {
+      alertData["alertMessage"] = "Informe um preço";
+      alertData["alertType"] = "danger";
+      return alertData;
+    }
     const selectedDate = this.getters["agenda/selectedDate"];
     const selectedSlots = this.getters["agenda/selectedSlots"];
-    const appointmentNewData = this.getters["agenda/appointmentNewData"];
     appointmentNewData.creationDate = DateTime.now();
     const selectedClient = this.getters["clients/selectedClient"];
     // Having the client's name and ID on the appointment information minimizes API requests
     appointmentNewData.clientId = selectedClient[0];
     appointmentNewData.name = selectedClient[1].name;
     for (let selectedSlot of selectedSlots) {
-      appointmentNewData.dateTime = "";
       appointmentNewData.dateTime = selectedSlot;
-      // TODO:better error handling
-      if (appointmentNewData.price !== undefined) {
-        const response = await fetch(
-          `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}.json?auth=${this.getters.token}`,
-          { method: "POST", body: JSON.stringify(appointmentNewData) }
-        );
-        const responseData = await response.json();
-        console.log(responseData);
-        if (!response.ok) {
-          alertData["alertMessage"] = responseData.message;
-          alertData["alertType"] = "danger";
-        }
-      } else {
-        alertData["alertMessage"] = "Data is lacking";
+      const response = await fetch(
+        `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}.json?auth=${this.getters.token}`,
+        { method: "POST", body: JSON.stringify(appointmentNewData) }
+      );
+      const responseData = await response.json();
+      if (!response.ok) {
+        alertData["alertMessage"] = responseData.message;
         alertData["alertType"] = "danger";
       }
       // Adds a dateTime for this appointment in the client's data
@@ -116,7 +113,7 @@ export default {
     const responseData = await response.json();
     if (!response.ok) {
       const error = new Error(
-        responseData.message || "Erro ao enviar solicitação."
+        responseData.message || "Erro ao enviar solicitação"
       );
       throw error;
     }

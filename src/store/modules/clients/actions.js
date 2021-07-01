@@ -1,8 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import { DateTime } from "luxon";
 export default {
-  // Posts a new client to the API.
-  // * POST requests to the Firebase Rest API automatically creates an ID.
+  // Posts a new client to the API. // * "POST" requests to the Firebase Rest API automatically creates an ID.
   async createClient(context) {
     const formNewData = this.getters["clients/formNewData"];
     formNewData.creationDate = DateTime.now();
@@ -22,7 +21,7 @@ export default {
         alertData["alertType"] = "success";
       }
     } else {
-      alertData["alertMessage"] = "Data is lacking";
+      alertData["alertMessage"] = "Informe um Nome e um Telefone";
       alertData["alertType"] = "danger";
     }
     return alertData;
