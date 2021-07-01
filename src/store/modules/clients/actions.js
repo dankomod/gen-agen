@@ -5,6 +5,7 @@ export default {
   async createClient(context) {
     const formNewData = this.getters["clients/formNewData"];
     formNewData.creationDate = DateTime.now();
+    formNewData.createdBy = this.getters.userId;
     let alertData = {};
     if (formNewData.name !== undefined && formNewData.phone !== undefined) {
       const response = await fetch(
