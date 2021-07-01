@@ -11,6 +11,10 @@
         <router-link :to="{ name: 'Clients' }">
           <base-button>Clientes</base-button>
         </router-link>
+        <router-link v-if="isLoggedIn" :to="{ name: 'Auth' }">
+          <base-button>Login</base-button>
+        </router-link>
+        <base-button v-else @click="logout">Logout</base-button>
       </div>
       <router-view v-slot="slotProps">
         <transition name="route" mode="out-in">
@@ -44,7 +48,16 @@ export default {
       showAlert: false,
     };
   },
-  async created() {
+  // Computed can be used instead of the deep store watch if a return is needed
+  computed: {
+    isLoggedIn() {
+      return !this.$store.getters.isAuthenticated;
+    },
+  },
+  created() {
+    if (localStorage && localStorage.token && localStorage.userId) {
+      this.$store.dispatch("setUser", localStorage);
+    }
     // Watches the store for changes in the alertselected slots
     this.$store.watch(
       () => {
@@ -58,6 +71,11 @@ export default {
       },
       { deep: true }
     );
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch("logout");
+    },
   },
 };
 </script>

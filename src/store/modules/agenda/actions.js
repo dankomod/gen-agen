@@ -107,6 +107,7 @@ export default {
     }
     return responseData;
   },
+  // TODO: Update error method
   async monthAppointments(context, payload) {
     const response = await fetch(
       `https://gen-agen-default-rtdb.firebaseio.com/schedule/${payload.year}/${payload.month}.json`

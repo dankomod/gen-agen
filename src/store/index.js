@@ -12,7 +12,13 @@ const store = createStore({
   },
   state() {
     return {
-      alertData: { alertMessage: "", alertType: "", alertTimer: null },
+      alertData: {
+        alertMessage: "",
+        alertType: "",
+        alertTimer: null,
+        token: null,
+        userId: null,
+      },
     };
   },
   actions,

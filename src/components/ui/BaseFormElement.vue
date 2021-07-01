@@ -34,6 +34,38 @@
       :disabled="!elementEnabled"
       type="number"
     />
+    <!-- Input type="email" -->
+    <input
+      v-if="elementType === 'inputEmail'"
+      :id="uid(elementLabel)"
+      :value="elementValue"
+      class="
+        w-full
+        px-3
+        py-2
+        bg-white
+        border border-indigo-400
+        disabled:border-0
+      "
+      :disabled="!elementEnabled"
+      type="email"
+    />
+    <!-- Input type="password" -->
+    <input
+      v-if="elementType === 'inputPassword'"
+      :id="uid(elementLabel)"
+      :value="elementValue"
+      class="
+        w-full
+        px-3
+        py-2
+        bg-white
+        border border-indigo-400
+        disabled:border-0
+      "
+      :disabled="!elementEnabled"
+      type="password"
+    />
     <!-- Input type='checkbox' -->
     <!-- //! Requires a @change listener that gets the value from $event.target.checked, Has 'checked' attribute instead of 'value', Returns a truthy/falsey value -->
     <input

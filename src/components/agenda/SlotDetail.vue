@@ -161,7 +161,7 @@
           ></base-binary-buttons>
           <!-- Appointment Action Buttons -->
           <base-binary-buttons
-            v-if="!showClientForm && appointmentFormEnabled"
+            v-if="appointmentFormEnabled"
             @yes="editAppointment(appointment[0])"
             @no="toggleAppointmentFormInput(false, null)"
           ></base-binary-buttons>
