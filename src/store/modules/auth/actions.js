@@ -1,9 +1,20 @@
 export default {
+  async login(context, payload) {
+    return context.dispatch("auth", { ...payload, mode: "login" });
+  },
+  async signup(context, payload) {
+    return context.dispatch("auth", { ...payload, mode: "signup" });
+  },
   async auth(context, payload) {
+    const mode = payload.mode;
+    console.log(mode);
     let alertData = {};
-    console.log("login");
     let url =
-      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyATdxowaNxlHg4AWAUCtLt5z9qnNJbL2P8";
+      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyATdxowaNxlHg4AWAUCtLt5z9qnNJbL2P8";
+    if (mode === "signup") {
+      url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyATdxowaNxlHg4AWAUCtLt5z9qnNJbL2P8";
+    }
     const response = await fetch(url, {
       method: "POST",
       body: JSON.stringify({
@@ -13,8 +24,21 @@ export default {
       }),
     });
     const responseData = await response.json();
+    console.log(responseData);
     if (!response.ok) {
-      alertData["alertMessage"] = responseData.message;
+      // General error
+      let alert = "Erro na autenticação.";
+      // Specific errors
+      if (responseData.error.message) {
+        if (responseData.error.message === "EMAIL_EXISTS") {
+          alert = "Este email já foi cadastrado.";
+        } else if (responseData.error.message === "INVALID_PASSWORD") {
+          alert = "Senha inválida.";
+        } else if (responseData.error.message === "EMAIL_NOT_FOUND") {
+          alert = "Email não encontrado.";
+        }
+      }
+      alertData["alertMessage"] = alert;
       alertData["alertType"] = "danger";
     } else {
       localStorage.setItem("token", responseData.idToken);
@@ -30,7 +54,7 @@ export default {
   },
   logout(context) {
     console.log("logout");
-    // deletes user info from localStorage
+    // Deletes user info from localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     context.commit("setUser", {
