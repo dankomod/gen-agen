@@ -1,5 +1,6 @@
 import { createStore } from "vuex";
 import agendaModule from "./modules/agenda/index.js";
+import authModule from "./modules/auth/index.js";
 import clientsModule from "./modules/clients/index.js";
 // The root state
 import actions from "./actions.js";
@@ -8,6 +9,7 @@ import mutations from "./mutations.js";
 const store = createStore({
   modules: {
     agenda: agendaModule,
+    auth: authModule,
     clients: clientsModule,
   },
   state() {
@@ -16,8 +18,6 @@ const store = createStore({
         alertMessage: "",
         alertType: "",
         alertTimer: null,
-        token: null,
-        userId: null,
       },
     };
   },
