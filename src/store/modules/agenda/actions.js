@@ -17,10 +17,11 @@ export default {
       // TODO:better error handling
       if (appointmentNewData.price !== undefined) {
         const response = await fetch(
-          `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}.json`,
+          `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}.json?auth=${this.getters.token}`,
           { method: "POST", body: JSON.stringify(appointmentNewData) }
         );
         const responseData = await response.json();
+        console.log(responseData);
         if (!response.ok) {
           alertData["alertMessage"] = responseData.message;
           alertData["alertType"] = "danger";
@@ -49,7 +50,7 @@ export default {
     let alertData = {};
     const selectedDate = this.getters["agenda/selectedDate"];
     const response = await fetch(
-      `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}/${appointmentId}.json`,
+      `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}/${appointmentId}.json?auth=${this.getters.token}`,
       {
         method: "DELETE",
       }
@@ -68,7 +69,7 @@ export default {
     let alertData = {};
     const selectedDate = this.getters["agenda/selectedDate"];
     const response = await fetch(
-      `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}/${appointmentId}.json`,
+      `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}/${appointmentId}.json?auth=${this.getters.token}`,
       {
         method: "PATCH",
         body: JSON.stringify(this.getters["agenda/appointmentNewData"]),
@@ -88,7 +89,7 @@ export default {
     let alertData = {};
     const selectedDate = this.getters["agenda/selectedDate"];
     const response = await fetch(
-      `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}.json`
+      `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}.json?auth=${this.getters.token}`
     );
     const responseData = await response.json();
     if (!response.ok) {
@@ -110,7 +111,7 @@ export default {
   // TODO: Update error method
   async monthAppointments(context, payload) {
     const response = await fetch(
-      `https://gen-agen-default-rtdb.firebaseio.com/schedule/${payload.year}/${payload.month}.json`
+      `https://gen-agen-default-rtdb.firebaseio.com/schedule/${payload.year}/${payload.month}.json?auth=${this.getters.token}`
     );
     const responseData = await response.json();
     if (!response.ok) {

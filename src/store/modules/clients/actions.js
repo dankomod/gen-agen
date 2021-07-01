@@ -3,13 +3,13 @@ import { DateTime } from "luxon";
 export default {
   // Posts a new client to the API.
   // * POST requests to the Firebase Rest API automatically creates an ID.
-  async createClient({ dispatch }) {
+  async createClient(context) {
     const formNewData = this.getters["clients/formNewData"];
     formNewData.creationDate = DateTime.now();
     let alertData = {};
     if (formNewData.name !== undefined && formNewData.phone !== undefined) {
       const response = await fetch(
-        "https://gen-agen-default-rtdb.firebaseio.com/clients.json",
+        `https://gen-agen-default-rtdb.firebaseio.com/clients.json?auth=${this.getters.token}`,
         { method: "POST", body: JSON.stringify(formNewData) }
       );
       const responseData = await response.json();
@@ -17,7 +17,7 @@ export default {
         alertData["alertMessage"] = responseData.message;
         alertData["alertType"] = "danger";
       } else {
-        dispatch("setSelectedClient", [responseData.name, formNewData]); // [id, { data }]
+        context.dispatch("setSelectedClient", [responseData.name, formNewData]); // [id, { data }]
         alertData["alertMessage"] = "Cadastro criado";
         alertData["alertType"] = "success";
       }
@@ -31,7 +31,7 @@ export default {
   async deleteClient(getters, payload) {
     let alertData = {};
     const response = await fetch(
-      `https://gen-agen-default-rtdb.firebaseio.com/clients/${payload}.json`,
+      `https://gen-agen-default-rtdb.firebaseio.com/clients/${payload}.json?auth=${this.getters.token}`,
       { method: "DELETE" }
     );
     const responseData = await response.json();
@@ -53,7 +53,7 @@ export default {
       alertData["alertType"] = "info";
     } else {
       const response = await fetch(
-        `https://gen-agen-default-rtdb.firebaseio.com/clients/${payload}.json`,
+        `https://gen-agen-default-rtdb.firebaseio.com/clients/${payload}.json?auth=${this.getters.token}`,
         {
           method: "PATCH",
           body: JSON.stringify(newData),
@@ -75,8 +75,8 @@ export default {
   async loadClients(getters, payload) {
     let alertData = {};
     const query = payload
-      ? `https://gen-agen-default-rtdb.firebaseio.com/clients/${payload}.json`
-      : 'https://gen-agen-default-rtdb.firebaseio.com/clients.json?orderBy="$key"';
+      ? `https://gen-agen-default-rtdb.firebaseio.com/clients/${payload}.json?auth=${this.getters.token}`
+      : `https://gen-agen-default-rtdb.firebaseio.com/clients.json?orderBy="$key"&auth=${this.getters.token}`;
     const response = await fetch(query);
     const responseData = await response.json();
     if (!response.ok) {
