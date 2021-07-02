@@ -1,8 +1,11 @@
 export default {
-  getClosingHour(state) {
-    return state.ClosingHour;
+  closingHour(state) {
+    return state.closingHour;
   },
-  getOpeningHour(state) {
+  openingHour(state) {
     return state.openingHour;
+  },
+  state(state) {
+    return state;
   },
 };

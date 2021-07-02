@@ -152,9 +152,9 @@ export default {
           time
         ); // Retrieves data and sends it to be joined
         if (response && !("alertMessage" in response)) {
-          this.$store.dispatch("setAlertData", response);
+          this.joinAppointments(response); // Retrieves data and sends it to be joined
+          // this.$store.dispatch("setAlertData", response);
         }
-        this.joinAppointments(response); // Retrieves data and sends it to be joined
       }
     },
     async loadClients() {

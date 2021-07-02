@@ -5,8 +5,6 @@ export default {
   namespaced: true,
   state() {
     return {
-      openingHour: 9,
-      closingHour: 16,
       selectedDate: "",
       selectedSlots: [],
       appointmentNewData: "",

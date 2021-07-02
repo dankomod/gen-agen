@@ -48,8 +48,8 @@ export default {
   data() {
     return {
       alertMessage: "",
-      alertType: "",
       alertTimer: null,
+      alertType: "",
       showAlert: false,
     };
   },

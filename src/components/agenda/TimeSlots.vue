@@ -4,47 +4,17 @@
     <article
       v-for="timeSlot in timeSlots"
       :key="timeSlot.dateTime"
-      class="
-        relative
-        float-left
-        w-24
-        h-24
-        m-1
-        overflow-hidden
-        text-2xl
-        font-medium
-        tracking-wide
-        text-white
-        border
-      "
+      class="relative float-left w-24 h-24 m-1 overflow-hidden text-2xl font-medium tracking-wide text-white border "
       :class="takenFormat(timeSlot.appointments)"
     >
       <input
         v-model="selectedSlots"
         :value="timeSlot.dateTime"
         type="checkbox"
-        class="
-          absolute
-          top-0
-          left-0
-          w-24
-          h-24
-          bg-indigo-900
-          opacity-0
-          cursor-pointer
-        "
+        class="absolute top-0 left-0 w-24 h-24 bg-indigo-900 opacity-0 cursor-pointer "
       />
       <div
-        class="
-          flex
-          items-center
-          justify-center
-          w-full
-          h-full
-          transition
-          duration-100
-          ease-linear
-        "
+        class="flex items-center justify-center w-full h-full transition duration-100 ease-linear "
       >
         <span>{{ timeSlot.dateTime.toFormat("HH:mm") }}</span>
       </div>
@@ -74,6 +44,8 @@ export default {
     },
   },
   async created() {
+    // TODO: Error catching
+    await this.$store.dispatch("configs/getHours");
     const response = await this.$store.dispatch("agenda/loadAppointments");
     if (response && "alertMessage" in response) {
       this.$store.dispatch("setAlertData", response);
@@ -87,10 +59,10 @@ export default {
       // Retrieves the selected date by the user and the opening and closing hours from the State
       const selectedDate = this.$store.getters["agenda/selectedDate"];
       let opening = selectedDate.plus({
-        hours: this.$store.getters["agenda/openingHour"],
+        hours: this.$store.getters["configs/openingHour"],
       });
       const closing = selectedDate.plus({
-        hours: this.$store.getters["agenda/closingHour"],
+        hours: this.$store.getters["configs/closingHour"],
       });
       // Pushes the opening hour into this.timeSlots, the array that contains all the slots to be rendered
       // TODO: Put this inside the loop

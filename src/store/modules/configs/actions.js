@@ -5,7 +5,7 @@ export default {
       `https://gen-agen-default-rtdb.firebaseio.com/configs.json?auth=${this.getters.token}`,
       {
         method: "PATCH",
-        body: JSON.stringify({ [payload[0]]: payload[1] }), // [] allow a variable to be used as key
+        body: JSON.stringify({ [payload[0]]: payload[1] }), // [var] allow a variable to be used as key
       }
     );
     const responseData = await response.json();
@@ -16,10 +16,22 @@ export default {
       alertData["alertMessage"] = "Novo horário configurado";
       alertData["alertType"] = "success";
     }
-    context.commit("setClosingHour", payload);
+    context.commit("setHour", payload);
     return alertData;
   },
-  setOpeningHour(context, newOpeningHour) {
-    context.commit("setOpeningHour", newOpeningHour);
+  async getHours(context) {
+    let alertData = {};
+    for (let hour of ["openingHour", "closingHour"]) {
+      const response = await fetch(
+        `https://gen-agen-default-rtdb.firebaseio.com/configs/${hour}.json?auth=${this.getters.token}`
+      );
+      const responseData = await response.json();
+      if (!response.ok) {
+        alertData["alertMessage"] = responseData.message;
+        alertData["alertType"] = "danger";
+        return alertData;
+      }
+      context.commit("setHour", { [hour]: responseData });
+    }
   },
 };

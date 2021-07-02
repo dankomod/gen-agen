@@ -1,8 +1,5 @@
 export default {
-  setClosingHour(state, newClosingHour) {
-    state.closingHour = newClosingHour;
-  },
-  setOpeningHour(state, newOpeningHour) {
-    state.openingHour = newOpeningHour;
+  setHour(state, newHour) {
+    state[Object.keys(newHour)[0]] = Object.values(newHour)[0];
   },
 };
