@@ -151,13 +151,14 @@ export default {
           "agenda/monthAppointments",
           time
         ); // Retrieves data and sends it to be joined
-        if (response && !("alertMessage" in response)) {
+        if (response && response !== null && !("alertMessage" in response)) {
           this.joinAppointments(response); // Retrieves data and sends it to be joined
-          // this.$store.dispatch("setAlertData", response);
+          // TODO: error handling this.$store.dispatch("setAlertData", response);
         }
       }
     },
     async loadClients() {
+      // TODO: Error handling
       const response = await this.$store.dispatch("clients/loadClients");
       if (response && "alertMessage" in response) {
         this.$store.dispatch("setAlertData", response);

@@ -141,12 +141,23 @@ export default {
       `https://gen-agen-default-rtdb.firebaseio.com/schedule/${payload.year}/${payload.month}.json?auth=${this.getters.token}`
     );
     const responseData = await response.json();
+    console.log(responseData);
     if (!response.ok) {
       alertData["alertMessage"] = responseData.message;
       alertData["alertType"] = "danger";
       return alertData;
+    } else {
+      // Filters out null days and months
+      if (responseData !== null) {
+        const cleanResponse = {};
+        for (let day of Object.entries(responseData)) {
+          if (day[1] !== null) {
+            cleanResponse[day[0]] = day[1];
+          }
+        }
+        return cleanResponse;
+      }
     }
-    return responseData;
   },
   setAppointmentNewData(context, appointmentNewData) {
     context.commit("setAppointmentNewData", appointmentNewData);
