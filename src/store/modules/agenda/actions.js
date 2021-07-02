@@ -108,15 +108,15 @@ export default {
   },
   // TODO: Update error method
   async monthAppointments(context, payload) {
+    let alertData = {};
     const response = await fetch(
       `https://gen-agen-default-rtdb.firebaseio.com/schedule/${payload.year}/${payload.month}.json?auth=${this.getters.token}`
     );
     const responseData = await response.json();
     if (!response.ok) {
-      const error = new Error(
-        responseData.message || "Erro ao enviar solicitação"
-      );
-      throw error;
+      alertData["alertMessage"] = responseData.message;
+      alertData["alertType"] = "danger";
+      return alertData;
     }
     return responseData;
   },

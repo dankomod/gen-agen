@@ -2,16 +2,21 @@
   <div class="flex flex-col items-center justify-center py-10">
     <div class="flex flex-col items-center">
       <div class="pb-10 space-x-2">
-        <router-link :to="{ name: 'Dashboard' }">
-          <base-button>Início</base-button>
-        </router-link>
-        <router-link :to="{ name: 'Agenda' }">
-          <base-button>Agenda</base-button>
-        </router-link>
-        <router-link :to="{ name: 'Clients' }">
-          <base-button>Clientes</base-button>
-        </router-link>
-        <router-link v-if="isLoggedIn" :to="{ name: 'Auth' }">
+        <span v-if="isLoggedIn" class="space-x-2">
+          <router-link :to="{ name: 'Dashboard' }">
+            <base-button>Início</base-button>
+          </router-link>
+          <router-link :to="{ name: 'Agenda' }">
+            <base-button>Agenda</base-button>
+          </router-link>
+          <router-link :to="{ name: 'Clients' }">
+            <base-button>Clientes</base-button>
+          </router-link>
+          <router-link :to="{ name: 'Configs' }">
+            <base-button>Configurações</base-button>
+          </router-link>
+        </span>
+        <router-link v-if="!isLoggedIn" :to="{ name: 'Auth' }">
           <base-button>Login</base-button>
         </router-link>
         <base-button v-else @click="logout">Logout</base-button>
@@ -51,7 +56,7 @@ export default {
   // Computed can be used instead of the deep store watch if a return is needed
   computed: {
     isLoggedIn() {
-      return !this.$store.getters.isAuthenticated;
+      return this.$store.getters.isAuthenticated;
     },
   },
   created() {

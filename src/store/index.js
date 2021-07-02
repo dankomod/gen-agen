@@ -2,6 +2,7 @@ import { createStore } from "vuex";
 import agendaModule from "./modules/agenda/index.js";
 import authModule from "./modules/auth/index.js";
 import clientsModule from "./modules/clients/index.js";
+import configsModule from "./modules/configs/index.js";
 // The root state
 import actions from "./actions.js";
 import getters from "./getters.js";
@@ -11,6 +12,7 @@ const store = createStore({
     agenda: agendaModule,
     auth: authModule,
     clients: clientsModule,
+    configs: configsModule,
   },
   state() {
     return {

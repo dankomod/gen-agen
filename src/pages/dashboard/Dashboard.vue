@@ -147,9 +147,14 @@ export default {
       const past = today.minus({ months: 1 }); // Past YYYY/MM
       const future = today.plus({ months: 1 }); // Future YYYY/MM
       for (let time of [today, past, future]) {
-        this.joinAppointments(
-          await this.$store.dispatch("agenda/monthAppointments", time) // Retrieves data and sends it to be joined
-        );
+        const response = await this.$store.dispatch(
+          "agenda/monthAppointments",
+          time
+        ); // Retrieves data and sends it to be joined
+        if (response && !("alertMessage" in response)) {
+          this.$store.dispatch("setAlertData", response);
+        }
+        this.joinAppointments(response); // Retrieves data and sends it to be joined
       }
     },
     async loadClients() {
