@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-unused-vars
+import { DateTime } from "luxon";
 export default {
   async login(context, payload) {
     return context.dispatch("auth", { ...payload, mode: "login" });
@@ -7,7 +9,6 @@ export default {
   },
   async auth(context, payload) {
     const mode = payload.mode;
-    console.log(mode);
     let alertData = {};
     let url =
       "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyATdxowaNxlHg4AWAUCtLt5z9qnNJbL2P8";
@@ -24,7 +25,6 @@ export default {
       }),
     });
     const responseData = await response.json();
-    console.log(responseData);
     if (!response.ok) {
       // General error
       let alert = "Erro na autenticação.";
@@ -41,11 +41,16 @@ export default {
       alertData["alertMessage"] = alert;
       alertData["alertType"] = "danger";
     } else {
+      const expiration = DateTime.now().plus({
+        minutes: responseData.expiresIn,
+      });
+      localStorage.setItem("expiration", expiration);
       localStorage.setItem("token", responseData.idToken);
       localStorage.setItem("userId", responseData.localId);
       context.dispatch("setUser", {
         token: responseData.idToken,
         userId: responseData.localId,
+        expiration: expiration,
       });
       alertData["alertMessage"] = "Seja bem-vindo";
       alertData["alertType"] = "success";
@@ -53,13 +58,14 @@ export default {
     return alertData;
   },
   logout(context) {
-    console.log("logout");
-    // Deletes user info from localStorage
+    // Deletes user info from localStorage and sets the state to null
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
+    localStorage.removeItem("expiration");
     context.commit("setUser", {
       token: null,
       tokenId: null,
+      expiration: null,
     });
   },
   setUser(context, payload) {

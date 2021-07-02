@@ -10,4 +10,7 @@ export default {
   userId(state) {
     return state.userId;
   },
+  expiration(state) {
+    return state.expiration;
+  },
 };

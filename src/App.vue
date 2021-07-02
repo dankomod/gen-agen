@@ -60,7 +60,13 @@ export default {
     },
   },
   created() {
-    if (localStorage && localStorage.token && localStorage.userId) {
+    // If expiration is due the state won't get any Id data and the user will eventually be sent to auth
+    if (
+      localStorage &&
+      localStorage.token &&
+      localStorage.userId &&
+      localStorage.expiration > DateTime.now()
+    ) {
       this.$store.dispatch("setUser", localStorage);
     }
     // Watches the store for changes in the alertselected slots
@@ -84,6 +90,8 @@ export default {
     },
   },
 };
+// eslint-disable-next-line no-unused-vars
+import { DateTime } from "luxon";
 </script>
 
 <style>
