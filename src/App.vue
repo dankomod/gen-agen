@@ -59,6 +59,11 @@ export default {
       return this.$store.getters.isAuthenticated;
     },
   },
+  watch: {
+    $route() {
+      this.update();
+    },
+  },
   created() {
     // If expiration is due the state won't get any Id data and the user will eventually be sent to auth
     if (
@@ -89,6 +94,9 @@ export default {
     logout() {
       this.$store.dispatch("logout");
       this.$router.replace("/auth");
+    },
+    update() {
+      this.$store.dispatch("auth", { mode: "update" });
     },
   },
 };

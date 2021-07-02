@@ -13,4 +13,7 @@ export default {
   expiration(state) {
     return state.expiration;
   },
+  refreshToken(state) {
+    return state.refreshToken;
+  },
 };

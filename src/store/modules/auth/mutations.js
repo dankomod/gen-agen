@@ -3,5 +3,6 @@ export default {
     state.token = payload.token;
     state.userId = payload.userId;
     state.expiration = payload.expiration;
+    state.refreshToken = payload.refreshToken;
   },
 };

@@ -10,22 +10,38 @@ export default {
   async auth(context, payload) {
     const mode = payload.mode;
     let alertData = {};
-    let url =
-      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyATdxowaNxlHg4AWAUCtLt5z9qnNJbL2P8";
-    if (mode === "signup") {
+    let url;
+    if (mode === "login") {
+      url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyATdxowaNxlHg4AWAUCtLt5z9qnNJbL2P8";
+    } else if (mode === "signup") {
       url =
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyATdxowaNxlHg4AWAUCtLt5z9qnNJbL2P8";
+    } else if (mode === "update") {
+      url =
+        "https://securetoken.googleapis.com/v1/token?key=AIzaSyATdxowaNxlHg4AWAUCtLt5z9qnNJbL2P8";
     }
-    const response = await fetch(url, {
+    let fetchPayload = {
       method: "POST",
       body: JSON.stringify({
         email: payload.email,
         password: payload.password,
         returnSecureToken: true,
       }),
-    });
+    };
+    if (mode === "update") {
+      fetchPayload = {
+        method: "POST",
+        body: JSON.stringify({
+          grant_type: "refresh_token",
+          refresh_token: this.getters.refreshToken,
+        }),
+      };
+    }
+    const response = await fetch(url, fetchPayload);
     const responseData = await response.json();
     if (!response.ok) {
+      console.log("ERRO", response);
       // General error
       let alert = "Erro na autenticação.";
       // Specific errors
@@ -40,22 +56,31 @@ export default {
       }
       alertData["alertMessage"] = alert;
       alertData["alertType"] = "danger";
-    } else {
-      const expiration = DateTime.now().plus({
-        minutes: responseData.expiresIn,
-      });
-      localStorage.setItem("expiration", expiration);
-      localStorage.setItem("token", responseData.idToken);
-      localStorage.setItem("userId", responseData.localId);
-      context.dispatch("setUser", {
-        token: responseData.idToken,
-        userId: responseData.localId,
-        expiration: expiration,
-      });
+      return alertData;
+    }
+    // Firebase API returns diferent keys on login/signup and update
+
+    const token = responseData.idToken || responseData.id_token;
+    const userId = responseData.localId || responseData.user_id;
+    const refreshToken =
+      responseData.refreshToken || responseData.refresh_token;
+    const expiresIn = responseData.expiresIn || responseData.expires_in;
+    const expiration = DateTime.now().plus({ seconds: expiresIn });
+    localStorage.setItem("expiration", expiration);
+    localStorage.setItem("token", token);
+    localStorage.setItem("userId", userId);
+    localStorage.setItem("refreshToken", refreshToken);
+    context.dispatch("setUser", {
+      token,
+      userId,
+      expiration,
+      refreshToken,
+    });
+    if (mode !== "update") {
       alertData["alertMessage"] = "Seja bem-vindo";
       alertData["alertType"] = "success";
+      return alertData;
     }
-    return alertData;
   },
   logout(context) {
     // Deletes user info from localStorage and sets the state to null
@@ -67,6 +92,21 @@ export default {
       tokenId: null,
       expiration: null,
     });
+  },
+  async updateToken() {
+    const response = await fetch(
+      `https://securetoken.googleapis.com/v1/token?key=AIzaSyATdxowaNxlHg4AWAUCtLt5z9qnNJbL2P8`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          grant_type: "refresh_token",
+          refresh_token: this.getters.refreshToken,
+        }),
+      }
+    );
+    // this.getters.token
+    const responseData = await response.json();
+    console.log(responseData);
   },
   setUser(context, payload) {
     context.commit("setUser", payload);
