@@ -13,7 +13,7 @@ export default {
       alertData["alertMessage"] = responseData.message;
       alertData["alertType"] = "danger";
     } else {
-      alertData["alertMessage"] = "Novo horário configurado";
+      alertData["alertMessage"] = "Configurações salvas";
       alertData["alertType"] = "success";
     }
     context.commit("setHour", payload);

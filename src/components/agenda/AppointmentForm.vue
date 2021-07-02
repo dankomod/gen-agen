@@ -6,6 +6,36 @@
       :element-value="localFormData[1].name"
       @keyup="appointmentInfo.name = $event.target.value"
     ></base-form-element>
+    <div v-if="appointmentInfo.transport" class="space-y-2">
+      <base-form-element
+        :element-type="'inputText'"
+        :element-enabled="formEnabled"
+        :element-label="'Endereço'"
+        :element-value="localClientInfo[1].address"
+        @keyup="clientInfo.address = $event.target.value"
+      ></base-form-element>
+      <base-form-element
+        :element-type="'inputText'"
+        :element-enabled="formEnabled"
+        :element-label="'Número'"
+        :element-value="localClientInfo[1].number"
+        @keyup="clientInfo.number = $event.target.value"
+      ></base-form-element>
+      <base-form-element
+        :element-type="'inputText'"
+        :element-enabled="formEnabled"
+        :element-label="'Bairro'"
+        :element-value="localClientInfo[1].district"
+        @keyup="clientInfo.district = $event.target.value"
+      ></base-form-element>
+      <base-form-element
+        :element-type="'inputText'"
+        :element-enabled="formEnabled"
+        :element-label="'Cidade'"
+        :element-value="localClientInfo[1].city"
+        @keyup="clientInfo.city = $event.target.value"
+      ></base-form-element>
+    </div>
     <base-form-element
       :element-type="'inputNumber'"
       :element-enabled="formEnabled"
@@ -52,7 +82,13 @@ export default {
     formData: { type: Array, default: () => {} },
   },
   data() {
-    return { appointmentInfo: {}, localFormData: {} };
+    return {
+      appointmentInfo: {},
+      clientInfo: {},
+      localFormData: {},
+      transport: false,
+      localClientInfo: {},
+    };
   },
   watch: {
     // Watches for deep changes in (local) data()
@@ -65,6 +101,13 @@ export default {
             "agenda/setAppointmentNewData",
             this.appointmentInfo
           );
+          if (this.appointmentInfo && this.appointmentInfo.transport) {
+            this.localClientInfo =
+              this.$store.getters["clients/selectedClient"];
+          }
+          if (this.clientInfo) {
+            this.$store.dispatch("clients/setFormNewData", this.clientInfo);
+          }
         }
       },
       deep: true,

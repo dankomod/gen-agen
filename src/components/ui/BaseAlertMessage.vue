@@ -1,17 +1,6 @@
 <template>
   <div
-    class="
-      fixed
-      z-50
-      flex flex-row
-      items-center
-      justify-center
-      p-4
-      font-medium
-      border-l-8
-      right-3
-      bottom-3
-    "
+    class="fixed z-50 flex flex-row items-center justify-center p-4 font-medium border-l-8  right-3 bottom-3"
     :class="setAlertStyle"
   >
     <div class="flex flex-row items-center justify-between">

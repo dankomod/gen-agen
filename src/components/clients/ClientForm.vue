@@ -48,7 +48,7 @@
       ></base-form-element>
       <!-- //TODO: Mask -->
       <base-form-element
-        :element-type="'inputNumber'"
+        :element-type="'inputText'"
         :element-enabled="formEnabled"
         :element-label="'CPF'"
         :element-value="formData ? formData[1].cpf : ''"

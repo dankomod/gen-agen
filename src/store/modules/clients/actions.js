@@ -44,7 +44,7 @@ export default {
     }
     return alertData;
   },
-  // Edits a client based on it's ID. Retrieves the data to be changed from the state
+  // Edits a client based on ID. Retrieves the data to be changed from the state
   async editClient(getters, payload) {
     const newData = this.getters["clients/formNewData"];
     let alertData = {};

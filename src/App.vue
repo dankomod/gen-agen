@@ -65,9 +65,11 @@ export default {
       localStorage &&
       localStorage.token &&
       localStorage.userId &&
-      localStorage.expiration > DateTime.now()
+      DateTime.fromISO(localStorage.expiration) > DateTime.now()
     ) {
       this.$store.dispatch("setUser", localStorage);
+    } else if (DateTime.fromISO(localStorage.expiration) < DateTime.now()) {
+      this.logout();
     }
     // Watches the store for changes in the alertselected slots
     this.$store.watch(

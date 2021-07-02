@@ -7,32 +7,12 @@
   <!-- Dialog dox -->
   <dialog
     open
-    class="
-      fixed
-      w-5/6
-      max-w-screen-sm max-h-screen
-      overflow-auto
-      transform
-      -translate-y-1/2
-      top-1/2
-    "
+    class="fixed w-5/6 max-w-screen-sm max-h-screen overflow-auto transform -translate-y-1/2  top-1/2"
   >
     <slot></slot>
     <base-button class="mt-10" @click="close">Fechar</base-button>
     <div
-      class="
-        absolute
-        top-0
-        right-0
-        flex
-        items-center
-        justify-center
-        w-10
-        h-10
-        text-white
-        bg-red-500
-        hover:bg-red-700
-      "
+      class="absolute top-0 right-0 flex items-center justify-center w-10 h-10 text-white bg-red-500  hover:bg-red-700"
       @click="close"
     >
       <svg

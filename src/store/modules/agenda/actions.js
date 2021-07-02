@@ -1,9 +1,38 @@
 // eslint-disable-next-line no-unused-vars
 import { DateTime } from "luxon";
 export default {
-  async createAppointment({ dispatch }) {
+  async createAppointment(context) {
     let alertData = {};
     const appointmentNewData = this.getters["agenda/appointmentNewData"];
+    let selectedClient = this.getters["clients/selectedClient"];
+    const newData = this.getters["clients/formNewData"];
+    if (Object.values(newData).length !== 0) {
+      await context.dispatch("clients/editClient", selectedClient[0], {
+        root: true,
+      });
+      const updatedClient = await context.dispatch(
+        "clients/loadClients",
+        selectedClient[0],
+        { root: true }
+      );
+      await context.dispatch(
+        "clients/setSelectedClient",
+        [selectedClient[0], updatedClient],
+        { root: true }
+      );
+      selectedClient = this.getters["clients/selectedClient"];
+    }
+    if (
+      appointmentNewData.transport &&
+      (!selectedClient[1].address ||
+        !selectedClient[1].number ||
+        !selectedClient[1].district ||
+        !selectedClient[1].city)
+    ) {
+      alertData["alertMessage"] = "Complete o endereço do cliente";
+      alertData["alertType"] = "warning";
+      return alertData;
+    }
     if (!appointmentNewData.price) {
       alertData["alertMessage"] = "Informe um preço";
       alertData["alertType"] = "danger";
@@ -13,8 +42,7 @@ export default {
     const selectedSlots = this.getters["agenda/selectedSlots"];
     appointmentNewData.creationDate = DateTime.now();
     appointmentNewData.createdBy = this.getters.userId;
-    const selectedClient = this.getters["clients/selectedClient"];
-    // Having the client's name and ID on the appointment information minimizes API requests
+    // // Having the client's name and ID on the appointment information minimizes API requests
     appointmentNewData.clientId = selectedClient[0];
     appointmentNewData.name = selectedClient[1].name;
     for (let selectedSlot of selectedSlots) {
@@ -29,13 +57,13 @@ export default {
         alertData["alertType"] = "danger";
       }
       // Adds a dateTime for this appointment in the client's data
-      dispatch(
+      context.dispatch(
         "clients/setFormNewData",
         { lastAppointment: appointmentNewData.creationDate },
         { root: true }
       );
       // Sends the new appointment datetime to the API
-      dispatch("clients/editClient", selectedClient[0], { root: true }); // (action, clientID, root: true to reach a namespaced action)
+      context.dispatch("clients/editClient", selectedClient[0], { root: true }); // (action, clientID, root: true to reach a namespaced action)
     }
     alertData["alertMessage"] =
       Object.values(selectedSlots).length > 1
