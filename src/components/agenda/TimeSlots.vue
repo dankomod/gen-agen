@@ -44,8 +44,6 @@ export default {
     },
   },
   async created() {
-    // TODO: Error catching
-    await this.$store.dispatch("configs/getHours");
     const response = await this.$store.dispatch("agenda/loadAppointments");
     if (response && "alertMessage" in response) {
       this.$store.dispatch("setAlertData", response);

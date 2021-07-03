@@ -64,7 +64,7 @@ export default {
       this.update();
     },
   },
-  created() {
+  async created() {
     // If expiration is due the state won't get any Id data and the user will eventually be sent to auth
     if (
       localStorage &&
@@ -76,6 +76,8 @@ export default {
     } else if (DateTime.fromISO(localStorage.expiration) < DateTime.now()) {
       this.logout();
     }
+    // TODO: Error catching
+    await this.$store.dispatch("configs/getHours");
     // Watches the store for changes in the alertselected slots
     this.$store.watch(
       () => {

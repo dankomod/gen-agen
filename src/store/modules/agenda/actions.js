@@ -141,7 +141,6 @@ export default {
       `https://gen-agen-default-rtdb.firebaseio.com/schedule/${payload.year}/${payload.month}.json?auth=${this.getters.token}`
     );
     const responseData = await response.json();
-    console.log(responseData);
     if (!response.ok) {
       alertData["alertMessage"] = responseData.message;
       alertData["alertType"] = "danger";
