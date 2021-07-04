@@ -15,7 +15,6 @@
       @change="newConfig.closingHour = $event.target.value"
     ></base-form-element>
     <!-- // TODO: Payment methods -->
-    <!-- // TODO: Confirmation -->
     <base-button v-if="!showConfirmation" @click="showConfirmation = true"
       >Atualizar configurações</base-button
     >
@@ -46,19 +45,17 @@ export default {
       // Evaluate if this can be turned into an iteration over non-null newConfig values when more varibles get added
       if (this.newConfig.closingHour) {
         payload["closingHour"] = this.newConfig.closingHour;
-        // TODO: Error catching
-        await this.$store.dispatch("configs/getHours");
       }
       if (this.newConfig.openingHour) {
         payload["openingHour"] = this.newConfig.openingHour;
-        // TODO: Error catching
-        await this.$store.dispatch("configs/getHours");
       }
       for (let entry of Object.entries(payload)) {
         // TODO: Error catching
         const response = await this.$store.dispatch("configs/setHour", entry);
         this.$store.dispatch("setAlertData", response);
       }
+      // TODO: Error catching
+      await this.$store.dispatch("configs/getHours");
     },
   },
 };
