@@ -18,9 +18,9 @@
     <base-button v-if="!showConfirmation" @click="showConfirmation = true"
       >Atualizar configurações</base-button
     >
-    <p v-if="showConfirmation" class="text-red">
+    <base-dialog v-if="showConfirmation" :dialog-type="'danger'">
       Tem certeza de que deseja alterar as configuraçẽos do sistema?
-    </p>
+    </base-dialog>
     <base-binary-buttons
       v-if="showConfirmation"
       @yes="setHour(), (showConfirmation = false)"

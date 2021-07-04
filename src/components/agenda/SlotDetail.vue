@@ -134,9 +134,9 @@
           ></base-binary-buttons>
           <!-- Appointment deletion confirmation menu -->
           <div class="flex flex-col px-3">
-            <p v-if="showDeletionConfirmation" class="font-bold text-red-900">
+            <base-dialog v-if="showConfirmation" :dialog-type="'danger'">
               Tem certeza de que deseja remover este agendamento?
-            </p>
+            </base-dialog>
             <base-binary-buttons
               v-if="showDeletionConfirmation"
               @yes="deleteAppointment(appointment[0])"

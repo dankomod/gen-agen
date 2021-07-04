@@ -54,9 +54,9 @@
         @yes="editClient()"
         @no="(clientFormEnabled = false), (showEditMenu = false)"
       ></base-binary-buttons>
-      <p v-if="showDeletionConfirmation" class="font-bold text-red-900">
+      <base-dialog v-if="showConfirmation" :dialog-type="'danger'">
         Tem certeza de que deseja remover o cadastro do cliente?
-      </p>
+      </base-dialog>
       <base-binary-buttons
         v-if="showDeletionConfirmation"
         @yes="deleteClient"
@@ -124,13 +124,11 @@ export default {
     selection(value) {
       // newClient prop triggers a client creation
       if (value === "newClient") {
-        console.log("newClient");
         this.formData = [null, this.$store.getters["clients/clientNewData"]]; // format [id,{values}]
         this.clientFormEnabled = true;
         this.showCreationButton = true;
         this.showEditMenu = false;
       } else {
-        console.log("search");
         this.formData = this.$store.getters["clients/selectedClient"];
         this.showCreationButton = false;
         this.showEditMenu = true;
