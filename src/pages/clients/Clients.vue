@@ -124,12 +124,17 @@ export default {
     selection(value) {
       // newClient prop triggers a client creation
       if (value === "newClient") {
-        this.formData = [null, this.$store.getters["clients/clientNewData"]];
+        console.log("newClient");
+        this.formData = [null, this.$store.getters["clients/clientNewData"]]; // format [id,{values}]
+        this.clientFormEnabled = true;
+        this.showCreationButton = true;
+        this.showEditMenu = false;
       } else {
+        console.log("search");
         this.formData = this.$store.getters["clients/selectedClient"];
+        this.showCreationButton = false;
+        this.showEditMenu = true;
       }
-      this.clientFormEnabled = true;
-      this.showCreationButton = true;
       this.showClientForm = true;
     },
     toggleClientCreation(value) {

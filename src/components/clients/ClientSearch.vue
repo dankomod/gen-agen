@@ -41,7 +41,7 @@
           <a
             href="#"
             class="block px-3 py-2 font-medium bg-indigo-100"
-            @click="emitSelection()"
+            @click="newClient()"
           >
             Cadastrar Cliente
           </a>
@@ -79,14 +79,18 @@ export default {
     this.loadClients();
   },
   methods: {
-    emitSelection() {
-      this.$store.dispatch("clients/setClientNewData", {
-        name: this.searchQuery,
-      });
-      this.$emit("selection", "newClient");
+    emitSelection(value = null) {
+      // Dispatches the query as a name for a new client
+      this.$emit("selection", value);
       // Clearing this.searchQuery to hide the query and this.filteredClients to destroy the rendering
       this.searchQuery = "";
       this.filteredClients = [];
+    },
+    newClient() {
+      this.$store.dispatch("clients/setClientNewData", {
+        name: this.searchQuery,
+      });
+      this.emitSelection("newClient");
     },
     // Filters this.clientsBulk acording to the this.searchQuery string
     filteredList() {
@@ -117,7 +121,7 @@ export default {
       for (let client of this.filteredClients) {
         if (client[0] === clientId) {
           this.$store.dispatch("clients/setSelectedClient", client);
-          this.emitSelection(true);
+          this.emitSelection();
         }
       }
     },
