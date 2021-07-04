@@ -41,7 +41,7 @@
           <a
             href="#"
             class="block px-3 py-2 font-medium bg-indigo-100"
-            @click="emitSelection(false)"
+            @click="emitSelection()"
           >
             Cadastrar Cliente
           </a>
@@ -79,8 +79,11 @@ export default {
     this.loadClients();
   },
   methods: {
-    emitSelection(value) {
-      this.$emit("selection", value, this.searchQuery);
+    emitSelection() {
+      this.$store.dispatch("clients/setClientNewData", {
+        name: this.searchQuery,
+      });
+      this.$emit("selection", "newClient");
       // Clearing this.searchQuery to hide the query and this.filteredClients to destroy the rendering
       this.searchQuery = "";
       this.filteredClients = [];

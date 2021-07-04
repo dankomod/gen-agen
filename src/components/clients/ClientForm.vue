@@ -88,7 +88,7 @@ export default {
       handler() {
         // If form is enabled then dispatch every change in the form to the State
         if (this.formEnabled === true) {
-          this.$store.dispatch("clients/setFormNewData", this.clientInfo);
+          this.$store.dispatch("clients/setClientNewData", this.clientInfo);
         }
       },
       deep: true,

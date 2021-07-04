@@ -6,7 +6,7 @@ export default {
   state() {
     return {
       // Data inputted in the clients form
-      formNewData: [],
+      clientNewData: [],
       // The currently selected user
       selectedClient: [],
     };

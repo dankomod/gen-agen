@@ -5,7 +5,7 @@ export default {
     let alertData = {};
     const appointmentNewData = this.getters["agenda/appointmentNewData"];
     let selectedClient = this.getters["clients/selectedClient"];
-    const newData = this.getters["clients/formNewData"];
+    const newData = this.getters["clients/clientNewData"];
     if (Object.values(newData).length !== 0) {
       await context.dispatch("clients/editClient", selectedClient[0], {
         root: true,
@@ -58,7 +58,7 @@ export default {
       }
       // Adds a dateTime for this appointment in the client's data
       context.dispatch(
-        "clients/setFormNewData",
+        "clients/setClientNewData",
         { lastAppointment: appointmentNewData.creationDate },
         { root: true }
       );

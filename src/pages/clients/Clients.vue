@@ -121,10 +121,16 @@ export default {
       }
     },
     // Called when a client is selected in ClientSearch component
-    selection() {
-      this.formData = this.$store.getters["clients/selectedClient"];
+    selection(value) {
+      // newClient prop triggers a client creation
+      if (value === "newClient") {
+        this.formData = [null, this.$store.getters["clients/clientNewData"]];
+      } else {
+        this.formData = this.$store.getters["clients/selectedClient"];
+      }
+      this.clientFormEnabled = true;
+      this.showCreationButton = true;
       this.showClientForm = true;
-      this.showEditMenu = true;
     },
     toggleClientCreation(value) {
       this.formData = null;

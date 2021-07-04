@@ -106,7 +106,7 @@ export default {
               this.$store.getters["clients/selectedClient"];
           }
           if (this.clientInfo) {
-            this.$store.dispatch("clients/setFormNewData", this.clientInfo);
+            this.$store.dispatch("clients/setClientNewData", this.clientInfo);
           }
         }
       },
