@@ -1,32 +1,94 @@
 <template>
-  <div :key="key">
-    <base-form-element
-      :element-enabled="true"
-      :element-label="'Opening'"
-      :element-type="'inputNumber'"
-      :element-value="$store.getters['configs/openingHour']"
-      @change="newConfig.openingHour = $event.target.value"
-    ></base-form-element>
-    <base-form-element
-      :element-enabled="true"
-      :element-label="'Closing'"
-      :element-type="'inputNumber'"
-      :element-value="$store.getters['configs/closingHour']"
-      @change="newConfig.closingHour = $event.target.value"
-    ></base-form-element>
-    <base-form-element
-      :element-enabled="true"
-      :element-label="'Novo Método de Pagamento'"
-      :element-type="'inputText'"
-      @change="newConfig.newPaymentMethod = $event.target.value"
-    ></base-form-element>
-    <base-form-element
-      :element-type="'select'"
-      :element-enabled="true"
-      :element-label="'Remover Método de Pagamento'"
-      :options="$store.getters['configs/paymentMethods'].sort()"
-      @change="newConfig.removePaymentMethod = $event.target.value"
-    ></base-form-element>
+  <div :key="key" class="w-full space-y-2 max-w-screen-xs">
+    <div class="p-4 border border-indigo-200">
+      <div
+        class="flex flex-row items-center my-1"
+        @click="showHours = !showHours"
+      >
+        <div class="pr-2">
+          <div class="p-1 text-indigo-600 fill-current">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-10 h-10"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div class="text-grey-900">
+          <h2 class="text-lg">Horários de funcionamento</h2>
+          <p v-if="!showHours" class="text-grey-600">Abertura e fechamento</p>
+        </div>
+      </div>
+      <div v-if="showHours" class="pt-4 space-y-1">
+        <base-form-element
+          :element-enabled="true"
+          :element-label="'Abertura'"
+          :element-type="'inputNumber'"
+          :element-value="$store.getters['configs/openingHour']"
+          @change="newConfig.openingHour = $event.target.value"
+        ></base-form-element>
+        <base-form-element
+          :element-enabled="true"
+          :element-label="'Fechamento'"
+          :element-type="'inputNumber'"
+          :element-value="$store.getters['configs/closingHour']"
+          @change="newConfig.closingHour = $event.target.value"
+        ></base-form-element>
+      </div>
+    </div>
+    <div class="p-4 border border-indigo-200">
+      <div
+        class="flex flex-row items-center my-1"
+        @click="showPayments = !showPayments"
+      >
+        <div class="pr-2">
+          <div class="p-1 text-indigo-600 fill-current">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-10 h-10"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div class="text-grey-900">
+          <h2 class="text-lg">Formas de pagamento</h2>
+        </div>
+      </div>
+      <div v-if="showPayments" class="pt-4 space-y-1">
+        <base-form-element
+          :element-enabled="true"
+          :element-label="'Novo'"
+          :element-type="'inputText'"
+          @change="newConfig.newPaymentMethod = $event.target.value"
+        ></base-form-element>
+        <base-form-element
+          :element-type="'select'"
+          :element-enabled="true"
+          :element-label="'Remover'"
+          :options="$store.getters['configs/paymentMethods'].sort()"
+          @change="newConfig.removePaymentMethod = $event.target.value"
+        ></base-form-element>
+      </div>
+    </div>
+
     <base-button v-if="!showConfirmation" @click="showConfirmation = true"
       >Atualizar configurações</base-button
     >
@@ -47,6 +109,7 @@ export default {
   components: { BaseBinaryButtons },
   data() {
     return {
+      key: 0,
       newConfig: {
         closingHour: null,
         openingHour: null,
@@ -54,7 +117,8 @@ export default {
         removePaymentMethod: null,
       },
       showConfirmation: false,
-      key: 0,
+      showHours: false,
+      showPayments: false,
     };
   },
   methods: {
