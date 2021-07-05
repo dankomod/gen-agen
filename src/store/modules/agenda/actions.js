@@ -2,10 +2,10 @@
 import { DateTime } from "luxon";
 export default {
   async createAppointment(context) {
-    let alertData = {}; // Alert container
     const appointmentNewData = this.getters["agenda/appointmentNewData"]; // Appointment data
     let selectedClient = this.getters["clients/selectedClient"]; // Selected client
     const newData = this.getters["clients/clientNewData"]; // ! What is this?
+    const alertData = {}; // Alert container
     if (Object.values(newData).length !== 0) {
       await context.dispatch("clients/editClient", selectedClient[0], {
         root: true,
@@ -84,7 +84,6 @@ export default {
     return alertData;
   },
   async deleteAppointment(context, appointmentId) {
-    let alertData = {};
     const selectedDate = this.getters["agenda/selectedDate"];
     const response = await fetch(
       `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}/${appointmentId}.json?auth=${this.getters.token}`,
@@ -93,6 +92,7 @@ export default {
       }
     );
     const responseData = await response.json();
+    const alertData = {}; // Alert container
     if (!response.ok) {
       alertData["alertMessage"] = responseData.message;
       alertData["alertType"] = "danger";
@@ -103,7 +103,6 @@ export default {
     return alertData;
   },
   async editAppointment(context, appointmentId) {
-    let alertData = {};
     const selectedDate = this.getters["agenda/selectedDate"];
     const response = await fetch(
       `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}/${appointmentId}.json?auth=${this.getters.token}`,
@@ -113,6 +112,7 @@ export default {
       }
     );
     const responseData = await response.json();
+    const alertData = {}; // Alert container
     if (!response.ok) {
       alertData["alertMessage"] = responseData.message;
       alertData["alertType"] = "danger";
@@ -123,20 +123,19 @@ export default {
     return alertData;
   },
   async loadAppointments(context) {
-    let alertData = {};
     const selectedDate = this.getters["agenda/selectedDate"];
     const response = await fetch(
       `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}.json?auth=${this.getters.token}`
     );
-    const responseData = await response.json();
     if (!response.ok) {
+      const alertData = {}; // Alert container
       alertData["alertMessage"] = responseData.message;
       alertData["alertType"] = "danger";
       return alertData;
     }
-    // TODO: Error catching
     // If any appointment, pushes an array to the state with all the selected hours. This will be used by TimeSlots and InfoSection
-    if (await responseData) {
+    const responseData = await response.json();
+    if (responseData) {
       const takenHours = [];
       for (let appointment of Object.values(responseData)) {
         takenHours.push(appointment.dateTime);
@@ -146,12 +145,12 @@ export default {
     return responseData;
   },
   async monthAppointments(context, payload) {
-    let alertData = {};
     const response = await fetch(
       `https://gen-agen-default-rtdb.firebaseio.com/schedule/${payload.year}/${payload.month}.json?auth=${this.getters.token}`
     );
     const responseData = await response.json();
     if (!response.ok) {
+      const alertData = {}; // Alert container
       alertData["alertMessage"] = responseData.message;
       alertData["alertType"] = "danger";
       return alertData;

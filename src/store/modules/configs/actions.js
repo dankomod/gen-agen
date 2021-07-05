@@ -1,6 +1,5 @@
 export default {
   async setHour(context, payload) {
-    let alertData = {};
     const response = await fetch(
       `https://gen-agen-default-rtdb.firebaseio.com/configs.json?auth=${this.getters.token}`,
       {
@@ -9,6 +8,7 @@ export default {
       }
     );
     const responseData = await response.json();
+    const alertData = {}; // Alert container
     if (!response.ok) {
       alertData["alertMessage"] = responseData.message;
       alertData["alertType"] = "danger";
@@ -20,12 +20,12 @@ export default {
     return alertData;
   },
   async getPaymentMethods(context) {
-    let alertData = {};
     const response = await fetch(
       `https://gen-agen-default-rtdb.firebaseio.com/configs/paymentMethods.json?auth=${this.getters.token}`
     );
     const responseData = await response.json();
     if (!response.ok) {
+      const alertData = {}; // Alert container
       alertData["alertMessage"] = responseData.message;
       alertData["alertType"] = "danger";
       return alertData;
@@ -34,7 +34,6 @@ export default {
     return responseData;
   },
   async newPaymentMethod(context, payload) {
-    let alertData = {};
     const response = await fetch(
       `https://gen-agen-default-rtdb.firebaseio.com/configs.json?auth=${this.getters.token}`,
       {
@@ -43,24 +42,24 @@ export default {
       }
     );
     const responseData = await response.json();
+    const alertData = {}; // Alert container
     if (!response.ok) {
       alertData["alertMessage"] = responseData.message;
       alertData["alertType"] = "danger";
-      return alertData;
     } else {
       alertData["alertMessage"] = "Configurações salvas";
       alertData["alertType"] = "success";
-      return alertData;
     }
+    return alertData;
   },
   async getHours(context) {
-    let alertData = {};
     for (let hour of ["openingHour", "closingHour"]) {
       const response = await fetch(
         `https://gen-agen-default-rtdb.firebaseio.com/configs/${hour}.json?auth=${this.getters.token}`
       );
       const responseData = await response.json();
       if (!response.ok) {
+        const alertData = {}; // Alert container
         alertData["alertMessage"] = responseData.message;
         alertData["alertType"] = "danger";
         return alertData;

@@ -95,7 +95,7 @@ export default {
     // Removes the elementValue from the options array
     filteredOptions() {
       if (this.elementType === "select") {
-        let localOptions = this.options;
+        const localOptions = this.options;
         if (this.elementValue !== null) {
           return localOptions
             .filter((item) => item !== this.elementValue)

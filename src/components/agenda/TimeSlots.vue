@@ -39,7 +39,7 @@ export default {
       // Updates the API with the currently selected slots
       this.$store.dispatch("agenda/setSelectedSlots", newValue);
       // emits slotSelected with a value that will be used by Clients components to determine the visibility of InfoSection
-      let value = newValue.length > 0 ? true : false;
+      const value = newValue.length > 0 ? true : false;
       this.$emit("slotSelected", value);
     },
   },

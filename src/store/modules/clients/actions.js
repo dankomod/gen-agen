@@ -6,7 +6,7 @@ export default {
     const clientNewData = this.getters["clients/clientNewData"];
     clientNewData.creationDate = DateTime.now();
     clientNewData.createdBy = this.getters.userId;
-    let alertData = {};
+    const alertData = {}; // Alert container
     if (clientNewData.name !== undefined && clientNewData.phone !== undefined) {
       const response = await fetch(
         `https://gen-agen-default-rtdb.firebaseio.com/clients.json?auth=${this.getters.token}`,
@@ -32,12 +32,12 @@ export default {
   },
   // Deletes a client based on it's ID
   async deleteClient(getters, payload) {
-    let alertData = {};
     const response = await fetch(
       `https://gen-agen-default-rtdb.firebaseio.com/clients/${payload}.json?auth=${this.getters.token}`,
       { method: "DELETE" }
     );
     const responseData = await response.json();
+    const alertData = {}; // Alert container
     if (!response.ok) {
       alertData["alertMessage"] = responseData.message;
       alertData["alertType"] = "danger";
@@ -50,7 +50,7 @@ export default {
   // Edits a client based on ID. Retrieves the data to be changed from the state
   async editClient(getters, payload) {
     const newData = this.getters["clients/clientNewData"];
-    let alertData = {};
+    const alertData = {}; // Alert container
     if (Object.values(newData).length === 0) {
       alertData["alertMessage"] = "Nenhum dado foi inserido";
       alertData["alertType"] = "info";
@@ -76,13 +76,13 @@ export default {
   },
   // Load all clients from the API
   async loadClients(getters, payload) {
-    let alertData = {};
     const query = payload
       ? `https://gen-agen-default-rtdb.firebaseio.com/clients/${payload}.json?auth=${this.getters.token}`
       : `https://gen-agen-default-rtdb.firebaseio.com/clients.json?orderBy="$key"&auth=${this.getters.token}`;
     const response = await fetch(query);
     const responseData = await response.json();
     if (!response.ok) {
+      const alertData = {}; // Alert container
       alertData["alertMessage"] = responseData.message;
       alertData["alertType"] = "danger";
       return alertData;

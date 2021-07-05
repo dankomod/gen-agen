@@ -9,7 +9,7 @@ export default {
   },
   async auth(context, payload) {
     const mode = payload.mode;
-    let alertData = {};
+
     let url;
     if (mode === "login") {
       url =
@@ -53,12 +53,12 @@ export default {
           alert = "Email não encontrado.";
         }
       }
+      const alertData = {}; // Alert container
       alertData["alertMessage"] = alert;
       alertData["alertType"] = "danger";
       return alertData;
     }
     // Firebase API returns diferent keys on login/signup and update
-
     const token = responseData.idToken || responseData.id_token;
     const userId = responseData.localId || responseData.user_id;
     const refreshToken =
@@ -76,6 +76,7 @@ export default {
       refreshToken,
     });
     if (mode !== "update") {
+      const alertData = {}; // Alert container
       alertData["alertMessage"] = "Seja bem-vindo";
       alertData["alertType"] = "success";
       return alertData;
@@ -91,21 +92,6 @@ export default {
       tokenId: null,
       expiration: null,
     });
-  },
-  async updateToken() {
-    const response = await fetch(
-      `https://securetoken.googleapis.com/v1/token?key=AIzaSyATdxowaNxlHg4AWAUCtLt5z9qnNJbL2P8`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          grant_type: "refresh_token",
-          refresh_token: this.getters.refreshToken,
-        }),
-      }
-    );
-    // TODO: Error catching
-    const responseData = await response.json();
-    responseData;
   },
   setUser(context, payload) {
     context.commit("setUser", payload);

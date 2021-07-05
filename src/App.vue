@@ -53,13 +53,14 @@ export default {
       showAlert: false,
     };
   },
-  // Computed can be used instead of the deep store watch if a return is needed
+  // * Computed can be used instead of the deep store watch if a return is needed
   computed: {
     isLoggedIn() {
       return this.$store.getters.isAuthenticated;
     },
   },
   watch: {
+    // Calls for a token update on every route change
     $route() {
       this.update();
     },
@@ -77,7 +78,9 @@ export default {
       this.logout();
     }
     // TODO: Error catching
-    await this.$store.dispatch("configs/getHours");
+
+    const response = await this.$store.dispatch("configs/getHours");
+    this.$store.dispatch("setAlertData", response);
     // TODO: Error catching
     await this.$store.dispatch("configs/getPaymentMethods");
     // Watches the store for changes in the alertselected slots
@@ -99,6 +102,7 @@ export default {
       this.$store.dispatch("logout");
       this.$router.replace("/auth");
     },
+    // Updates the user token
     update() {
       this.$store.dispatch("auth", { mode: "update" });
     },

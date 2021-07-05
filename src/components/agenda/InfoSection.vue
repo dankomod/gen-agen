@@ -144,7 +144,7 @@ export default {
         this.selectedSlots &&
         this.selectedSlots.length === 1
       ) {
-        let slotAppointments = [];
+        const slotAppointments = [];
         const responseAppointments = await this.$store.dispatch(
           "agenda/loadAppointments"
         );
