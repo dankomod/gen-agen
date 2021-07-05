@@ -95,10 +95,13 @@ export default {
     // Removes the elementValue from the options array
     filteredOptions() {
       if (this.elementType === "select") {
+        let localOptions = this.options;
         if (this.elementValue !== null) {
-          return this.options.filter((item) => item !== this.elementValue);
+          return localOptions
+            .filter((item) => item !== this.elementValue)
+            .sort();
         }
-        return this.options;
+        return localOptions.sort();
       }
       return null;
     },
