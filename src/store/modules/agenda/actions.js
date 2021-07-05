@@ -2,10 +2,10 @@
 import { DateTime } from "luxon";
 export default {
   async createAppointment(context) {
-    let alertData = {};
-    const appointmentNewData = this.getters["agenda/appointmentNewData"];
-    let selectedClient = this.getters["clients/selectedClient"];
-    const newData = this.getters["clients/clientNewData"];
+    let alertData = {}; // Alert container
+    const appointmentNewData = this.getters["agenda/appointmentNewData"]; // Appointment data
+    let selectedClient = this.getters["clients/selectedClient"]; // Selected client
+    const newData = this.getters["clients/clientNewData"]; // ! What is this?
     if (Object.values(newData).length !== 0) {
       await context.dispatch("clients/editClient", selectedClient[0], {
         root: true,
@@ -22,6 +22,8 @@ export default {
       );
       selectedClient = this.getters["clients/selectedClient"];
     }
+    // Data validation
+    // Address check
     if (
       appointmentNewData.transport &&
       (!selectedClient[1].address ||
@@ -32,21 +34,29 @@ export default {
       alertData["alertMessage"] = "Complete o endereço do cliente";
       alertData["alertType"] = "warning";
       return alertData;
-    }
-    if (!appointmentNewData.price) {
+      // Price check
+    } else if (!appointmentNewData.price) {
       alertData["alertMessage"] = "Informe um preço";
       alertData["alertType"] = "danger";
       return alertData;
+      // Payment method check
+    } else if (!appointmentNewData.paymentMethod) {
+      alertData["alertMessage"] = "Informe uma forma de pagamento";
+      alertData["alertType"] = "danger";
+      return alertData;
     }
+    // Date and slot of the appointment(s)
     const selectedDate = this.getters["agenda/selectedDate"];
     const selectedSlots = this.getters["agenda/selectedSlots"];
     appointmentNewData.creationDate = DateTime.now();
+    // Who is creating the appointment
     appointmentNewData.createdBy = this.getters.userId;
-    // // Having the client's name and ID on the appointment information minimizes API requests
+    // Having the client's name and ID on the appointment information minimizes API requests
     appointmentNewData.clientId = selectedClient[0];
     appointmentNewData.name = selectedClient[1].name;
+    // Iterates over (possible) multiple slot selections
     for (let selectedSlot of selectedSlots) {
-      appointmentNewData.dateTime = selectedSlot;
+      appointmentNewData.dateTime = selectedSlot; // The time of the slot in DateTime format
       const response = await fetch(
         `https://gen-agen-default-rtdb.firebaseio.com/schedule/${selectedDate.year}/${selectedDate.month}/${selectedDate.day}.json?auth=${this.getters.token}`,
         { method: "POST", body: JSON.stringify(appointmentNewData) }
@@ -63,8 +73,9 @@ export default {
         { root: true }
       );
       // Sends the new appointment datetime to the API
-      context.dispatch("clients/editClient", selectedClient[0], { root: true }); // (action, clientID, root: true to reach a namespaced action)
+      context.dispatch("clients/editClient", selectedClient[0], { root: true }); // format: (action, clientID, root: true to reach a namespaced action)
     }
+    // Success alert
     alertData["alertMessage"] =
       Object.values(selectedSlots).length > 1
         ? "Agendamentos criados"
@@ -123,8 +134,8 @@ export default {
       alertData["alertType"] = "danger";
       return alertData;
     }
+    // TODO: Error catching
     // If any appointment, pushes an array to the state with all the selected hours. This will be used by TimeSlots and InfoSection
-    // * Having the array in the State allows fast data access
     if (await responseData) {
       const takenHours = [];
       for (let appointment of Object.values(responseData)) {
@@ -134,7 +145,6 @@ export default {
     }
     return responseData;
   },
-  // TODO: Update error method
   async monthAppointments(context, payload) {
     let alertData = {};
     const response = await fetch(
@@ -158,6 +168,7 @@ export default {
       }
     }
   },
+  // Sets the data of a new appointment
   setAppointmentNewData(context, appointmentNewData) {
     context.commit("setAppointmentNewData", appointmentNewData);
   },
@@ -165,9 +176,11 @@ export default {
   setSelectedDate(context, selectedDate) {
     context.commit("setSelectedDate", selectedDate);
   },
+  // Sets the slot(s) selected by the user
   setSelectedSlots(context, selectedSlots) {
     context.commit("setSelectedSlots", selectedSlots);
   },
+  // Sets the appointments of the currently selected slot
   setSlotAppointments(context, slotAppointments) {
     context.commit("setSlotAppointments", slotAppointments);
   },

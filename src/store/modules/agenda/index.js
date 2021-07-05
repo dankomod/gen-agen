@@ -5,11 +5,11 @@ export default {
   namespaced: true,
   state() {
     return {
-      selectedDate: "",
-      selectedSlots: [],
-      appointmentNewData: "",
-      takenHours: [],
-      slotAppointments: [], //The appointments of the currently selected hour slot
+      selectedDate: "", // Currently selected date
+      selectedSlots: [], // Currently selected slots
+      appointmentNewData: "", // Data of a new appointment
+      takenHours: [], // Array of all the taken slots on the currently selected date
+      slotAppointments: [], // Appointments of the currently selected hour slot
     };
   },
   actions,

@@ -9,6 +9,19 @@
       </base-button>
     </div>
     <client-search v-if="showSearch" @selection="selection"></client-search>
+    <!-- // !! fix form conditional -->
+    <!-- // !! fix form conditional -->
+    <!-- // !! fix form conditional -->
+    <!-- // !! fix form conditional -->
+    <!-- // !! fix form conditional -->
+    <!-- // !! fix form conditional -->
+    <!-- // !! fix form conditional -->
+    <!-- // !! fix form conditional -->
+    <!-- // !! fix form conditional -->
+    <!-- // !! fix form conditional -->
+    <!-- // !! fix form conditional -->
+    <!-- // !! fix form conditional -->
+    <!-- // !! fix form conditional -->
     <client-form
       v-if="showConfirmationlientForm"
       :form-data="clientFormData"

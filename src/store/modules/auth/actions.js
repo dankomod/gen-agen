@@ -105,7 +105,7 @@ export default {
     );
     // TODO: Error catching
     const responseData = await response.json();
-    console.log(responseData);
+    responseData;
   },
   setUser(context, payload) {
     context.commit("setUser", payload);

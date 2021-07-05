@@ -39,7 +39,7 @@
       type="password"
     />
     <!-- Input type='checkbox' -->
-    <!-- //! Requires a @change listener that gets the value from $event.target.checked, Has 'checked' attribute instead of 'value', Returns a truthy/falsey value -->
+    <!-- Requires a @change listener that gets the value from $event.target.checked, Has 'checked' attribute instead of 'value', Returns a truthy/falsey value -->
     <input
       v-if="elementType === 'checkbox'"
       :id="uid(elementLabel)"
@@ -56,15 +56,24 @@
       class="w-full px-3 py-2 bg-white border border-indigo-400  disabled:border-0"
       :disabled="!elementEnabled"
     ></textarea>
-    <!-- Select that takes and options array as prop -->
+    <!-- Select that takes options as a prop array -->
+    <!-- A null elementValue shows a default empty option, useful for a new data input -->
     <select
       v-if="elementType === 'select'"
       :id="uid(elementLabel)"
-      :value="elementValue"
       class="w-full px-3 py-2 bg-white border border-indigo-400  disabled:border-0"
       :disabled="!elementEnabled"
     >
-      <option v-for="option of options" :key="option" :value="option">
+      <!-- Renders when a null value is given -->
+      <option v-if="elementValue === null" disabled selected value>
+        Selecione uma opção
+      </option>
+      <!-- Renders when a value is given -->
+      <option v-if="elementValue" :value="elementValue">
+        {{ elementValue }}
+      </option>
+      <!-- Renders options given by props -->
+      <option v-for="option of filteredOptions" :key="option" :value="option">
         {{ option }}
       </option>
     </select>
@@ -77,13 +86,26 @@ export default {
   props: {
     elementEnabled: Boolean,
     elementLabel: { type: String, default: "" },
-    // elementMask: { type: String, default: "" },
+    // TODO: elementMask: { type: String, default: "" },
     elementType: { type: String, default: "" },
     elementValue: { type: String, default: "" },
     options: { type: Array, default: () => [] },
   },
+  data() {},
+  computed: {
+    // Removes the elementValue from the options array
+    filteredOptions() {
+      if (this.elementType === "select") {
+        if (this.elementValue !== null) {
+          return this.options.filter((item) => item !== this.elementValue);
+        }
+        return this.options;
+      }
+      return null;
+    },
+  },
   methods: {
-    // Very simpe Unique ID generator
+    // Very simple Unique ID generator
     uid(elementLabel) {
       return `${elementLabel}${Math.random()}`;
     },

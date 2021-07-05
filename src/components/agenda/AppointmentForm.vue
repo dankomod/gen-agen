@@ -47,9 +47,9 @@
       :element-type="'select'"
       :element-enabled="formEnabled"
       :element-label="'Forma de Pagamento'"
-      :element-value="localFormData[1].paymentMethod"
+      :element-value="localFormData[1].paymentMethod || null"
       :options="paymentMethods"
-      @keyup="appointmentInfo.paymentMethod = $event.target.value"
+      @change="appointmentInfo.paymentMethod = $event.target.value"
     ></base-form-element>
     <!-- * This only works if a string is sent when true and null when false -->
     <base-form-element
@@ -86,21 +86,21 @@
 export default {
   components: { BaseFormElement },
   props: {
-    formEnabled: { type: Boolean, default: false },
     formData: { type: Array, default: () => {} },
+    formEnabled: { type: Boolean, default: false },
   },
   data() {
     return {
       appointmentInfo: {},
       clientInfo: {},
-      localFormData: {},
-      transport: false,
       localClientInfo: {},
+      localFormData: {},
       paymentMethods: [],
+      transport: false,
     };
   },
   watch: {
-    // Watches for deep changes in (local) data()
+    // Watches for deep changes in data()
     $data: {
       handler() {
         // ? Maybe this If can be removed
@@ -129,11 +129,6 @@ export default {
     } else {
       this.localFormData = this.formData;
     }
-    // TODO: Error catching
-    // TODO: Hold this information on the state
-    this.paymentMethods = await this.$store.dispatch(
-      "configs/getPaymentMethods"
-    );
   },
 };
 import BaseFormElement from "./../ui/BaseFormElement.vue";

@@ -20,7 +20,6 @@
       :element-type="'inputText'"
       @change="newConfig.newPaymentMethod = $event.target.value"
     ></base-form-element>
-
     <base-form-element
       :element-type="'select'"
       :element-enabled="true"
@@ -28,7 +27,6 @@
       :options="$store.getters['configs/paymentMethods']"
       @change="newConfig.removePaymentMethod = $event.target.value"
     ></base-form-element>
-
     <base-button v-if="!showConfirmation" @click="showConfirmation = true"
       >Atualizar configurações</base-button
     >
