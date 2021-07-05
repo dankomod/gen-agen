@@ -24,7 +24,7 @@
       :element-type="'select'"
       :element-enabled="true"
       :element-label="'Remover Método de Pagamento'"
-      :options="$store.getters['configs/paymentMethods']"
+      :options="$store.getters['configs/paymentMethods'].sort()"
       @change="newConfig.removePaymentMethod = $event.target.value"
     ></base-form-element>
     <base-button v-if="!showConfirmation" @click="showConfirmation = true"

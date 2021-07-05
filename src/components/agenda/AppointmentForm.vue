@@ -48,7 +48,7 @@
       :element-enabled="formEnabled"
       :element-label="'Forma de Pagamento'"
       :element-value="localFormData[1].paymentMethod || null"
-      :options="paymentMethods"
+      :options="$store.getters['configs/paymentMethods'].sort()"
       @change="appointmentInfo.paymentMethod = $event.target.value"
     ></base-form-element>
     <!-- * This only works if a string is sent when true and null when false -->
@@ -95,7 +95,6 @@ export default {
       clientInfo: {},
       localClientInfo: {},
       localFormData: {},
-      paymentMethods: [],
       transport: false,
     };
   },

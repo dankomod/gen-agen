@@ -91,7 +91,6 @@ export default {
     elementValue: { type: String, default: "" },
     options: { type: Array, default: () => [] },
   },
-  data() {},
   computed: {
     // Removes the elementValue from the options array
     filteredOptions() {
