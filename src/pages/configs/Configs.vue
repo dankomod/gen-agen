@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :key="key">
     <base-form-element
       :element-enabled="true"
       :element-label="'Opening'"
@@ -14,7 +14,21 @@
       :element-value="$store.getters['configs/closingHour']"
       @change="newConfig.closingHour = $event.target.value"
     ></base-form-element>
-    <!-- // TODO: Payment methods -->
+    <base-form-element
+      :element-enabled="true"
+      :element-label="'Novo Método de Pagamento'"
+      :element-type="'inputText'"
+      @change="newConfig.newPaymentMethod = $event.target.value"
+    ></base-form-element>
+
+    <base-form-element
+      :element-type="'select'"
+      :element-enabled="true"
+      :element-label="'Remover Método de Pagamento'"
+      :options="$store.getters['configs/paymentMethods']"
+      @change="newConfig.removePaymentMethod = $event.target.value"
+    ></base-form-element>
+
     <base-button v-if="!showConfirmation" @click="showConfirmation = true"
       >Atualizar configurações</base-button
     >
@@ -23,7 +37,7 @@
     </base-dialog>
     <base-binary-buttons
       v-if="showConfirmation"
-      @yes="setHour(), (showConfirmation = false)"
+      @yes="setConfigs(), (showConfirmation = false)"
       @no="showConfirmation = false"
     ></base-binary-buttons>
   </div>
@@ -35,14 +49,19 @@ export default {
   components: { BaseBinaryButtons },
   data() {
     return {
-      newConfig: { closingHour: null, openingHour: null },
+      newConfig: {
+        closingHour: null,
+        openingHour: null,
+        newPaymentMethod: null,
+        removePaymentMethod: null,
+      },
       showConfirmation: false,
+      key: 0,
     };
   },
   methods: {
-    async setHour() {
+    async setConfigs() {
       const payload = {};
-      // Evaluate if this can be turned into an iteration over non-null newConfig values when more varibles get added
       if (this.newConfig.closingHour) {
         payload["closingHour"] = this.newConfig.closingHour;
       }
@@ -50,12 +69,42 @@ export default {
         payload["openingHour"] = this.newConfig.openingHour;
       }
       for (let entry of Object.entries(payload)) {
-        // TODO: Error catching
         const response = await this.$store.dispatch("configs/setHour", entry);
         this.$store.dispatch("setAlertData", response);
       }
-      // TODO: Error catching
+      const response = await this.$store.dispatch("configs/getHours");
+      if (response) {
+        this.$store.dispatch("setAlertData", response);
+      }
+      if (this.newConfig.newPaymentMethod) {
+        const paymentMethods = this.$store.getters["configs/paymentMethods"];
+        const payload = [];
+        if (paymentMethods !== null) {
+          for (let method of paymentMethods) {
+            payload.push(method);
+          }
+        }
+        payload.push(this.newConfig.newPaymentMethod);
+        const responseSet = await this.$store.dispatch(
+          "configs/newPaymentMethod",
+          payload
+        );
+        this.$store.dispatch("setAlertData", responseSet);
+      }
+      if (this.newConfig.removePaymentMethod) {
+        const filterItem = this.newConfig.removePaymentMethod;
+        const paymentMethods = this.$store.getters["configs/paymentMethods"];
+        const payload = paymentMethods.filter((item) => item !== filterItem);
+        const responseSet = await this.$store.dispatch(
+          "configs/newPaymentMethod",
+          payload
+        );
+        this.$store.dispatch("setAlertData", responseSet);
+      }
       await this.$store.dispatch("configs/getHours");
+      // TODO: Error catching
+      await this.$store.dispatch("configs/getPaymentMethods");
+      this.key++;
     },
   },
 };

@@ -43,7 +43,15 @@
       :element-value="localFormData[1].price"
       @keyup="appointmentInfo.price = $event.target.value"
     ></base-form-element>
-    <!-- //TODO: fix: this only works if a string is sent when true and null when false -->
+    <base-form-element
+      :element-type="'select'"
+      :element-enabled="formEnabled"
+      :element-label="'Forma de Pagamento'"
+      :element-value="localFormData[1].paymentMethod"
+      :options="paymentMethods"
+      @keyup="appointmentInfo.paymentMethod = $event.target.value"
+    ></base-form-element>
+    <!-- * This only works if a string is sent when true and null when false -->
     <base-form-element
       :element-type="'checkbox'"
       :element-enabled="formEnabled"
@@ -88,6 +96,7 @@ export default {
       localFormData: {},
       transport: false,
       localClientInfo: {},
+      paymentMethods: [],
     };
   },
   watch: {
@@ -113,13 +122,18 @@ export default {
       deep: true,
     },
   },
-  created() {
+  async created() {
     // If no form data given then data is retrieved from the state. Localformdata holds both sources
     if (!this.formData) {
       this.localFormData = this.$store.getters["clients/selectedClient"];
     } else {
       this.localFormData = this.formData;
     }
+    // TODO: Error catching
+    // TODO: Hold this information on the state
+    this.paymentMethods = await this.$store.dispatch(
+      "configs/getPaymentMethods"
+    );
   },
 };
 import BaseFormElement from "./../ui/BaseFormElement.vue";

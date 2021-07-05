@@ -5,7 +5,7 @@ export default {
   openingHour(state) {
     return state.openingHour;
   },
-  state(state) {
-    return state;
+  paymentMethods(state) {
+    return state.paymentMethods;
   },
 };

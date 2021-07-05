@@ -109,7 +109,7 @@
                 class="block px-4 py-2 text-red-700 cursor-pointer  hover:bg-blue-100"
                 role="menuitem"
                 tabindex="-1"
-                @click="showDeletionConfirmation = true"
+                @click="showConfirmation = true"
                 >Excluir Agendamento
               </a>
             </div>
@@ -138,9 +138,9 @@
               Tem certeza de que deseja remover este agendamento?
             </base-dialog>
             <base-binary-buttons
-              v-if="showDeletionConfirmation"
+              v-if="showConfirmation"
               @yes="deleteAppointment(appointment[0])"
-              @no="showDeletionConfirmation = false"
+              @no="showConfirmation = false"
             ></base-binary-buttons>
           </div>
         </div>
@@ -162,7 +162,7 @@ export default {
       selectedClient: [],
       showAppointmentItem: null,
       showClientForm: null,
-      showDeletionConfirmation: false,
+      showConfirmation: false,
       showDropMenu: null,
       slotAppointments: [],
     };

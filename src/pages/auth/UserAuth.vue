@@ -37,7 +37,7 @@
           <div id="one-panel" class="hidden panel">
             <p>Digite seu email e senha.</p>
           </div>
-          <div id="two-panel" class="panel">
+          <div id="two-panel" class="hidden panel">
             <p>
               Para cadastrar-se, informe um email válido e uma senha de mais de
               seis dígitos.

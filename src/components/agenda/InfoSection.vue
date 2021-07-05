@@ -10,7 +10,7 @@
     </div>
     <client-search v-if="showSearch" @selection="selection"></client-search>
     <client-form
-      v-if="showClientForm"
+      v-if="showConfirmationlientForm"
       :form-data="clientFormData"
       :form-enabled="true"
     ></client-form>

@@ -78,6 +78,8 @@ export default {
     }
     // TODO: Error catching
     await this.$store.dispatch("configs/getHours");
+    // TODO: Error catching
+    await this.$store.dispatch("configs/getPaymentMethods");
     // Watches the store for changes in the alertselected slots
     this.$store.watch(
       () => {

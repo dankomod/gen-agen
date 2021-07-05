@@ -41,7 +41,6 @@ export default {
     const response = await fetch(url, fetchPayload);
     const responseData = await response.json();
     if (!response.ok) {
-      console.log("ERRO", response);
       // General error
       let alert = "Erro na autenticação.";
       // Specific errors
@@ -104,7 +103,7 @@ export default {
         }),
       }
     );
-    // this.getters.token
+    // TODO: Error catching
     const responseData = await response.json();
     console.log(responseData);
   },

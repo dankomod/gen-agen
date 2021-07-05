@@ -121,7 +121,7 @@ export default {
       for (let client of this.filteredClients) {
         if (client[0] === clientId) {
           this.$store.dispatch("clients/setSelectedClient", client);
-          this.emitSelection();
+          this.emitSelection("search");
         }
       }
     },

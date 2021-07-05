@@ -19,6 +19,40 @@ export default {
     context.commit("setHour", payload);
     return alertData;
   },
+  async getPaymentMethods(context) {
+    let alertData = {};
+    const response = await fetch(
+      `https://gen-agen-default-rtdb.firebaseio.com/configs/paymentMethods.json?auth=${this.getters.token}`
+    );
+    const responseData = await response.json();
+    if (!response.ok) {
+      alertData["alertMessage"] = responseData.message;
+      alertData["alertType"] = "danger";
+      return alertData;
+    }
+    context.commit("setPaymentMethods", responseData);
+    return responseData;
+  },
+  async newPaymentMethod(context, payload) {
+    let alertData = {};
+    const response = await fetch(
+      `https://gen-agen-default-rtdb.firebaseio.com/configs.json?auth=${this.getters.token}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({ paymentMethods: payload }),
+      }
+    );
+    const responseData = await response.json();
+    if (!response.ok) {
+      alertData["alertMessage"] = responseData.message;
+      alertData["alertType"] = "danger";
+      return alertData;
+    } else {
+      alertData["alertMessage"] = "Configurações salvas";
+      alertData["alertType"] = "success";
+      return alertData;
+    }
+  },
   async getHours(context) {
     let alertData = {};
     for (let hour of ["openingHour", "closingHour"]) {

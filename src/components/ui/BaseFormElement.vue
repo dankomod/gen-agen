@@ -64,7 +64,7 @@
       class="w-full px-3 py-2 bg-white border border-indigo-400  disabled:border-0"
       :disabled="!elementEnabled"
     >
-      <option v-for="option of optionValueArray" :key="option" :value="option">
+      <option v-for="option of options" :key="option" :value="option">
         {{ option }}
       </option>
     </select>
@@ -80,7 +80,7 @@ export default {
     // elementMask: { type: String, default: "" },
     elementType: { type: String, default: "" },
     elementValue: { type: String, default: "" },
-    optionValueArray: { type: Array, default: () => [] },
+    options: { type: Array, default: () => [] },
   },
   methods: {
     // Very simpe Unique ID generator
