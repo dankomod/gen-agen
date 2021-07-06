@@ -77,12 +77,12 @@ export default {
     } else if (DateTime.fromISO(localStorage.expiration) < DateTime.now()) {
       this.logout();
     }
-    // TODO: Error catching
-
-    const response = await this.$store.dispatch("configs/getHours");
-    this.$store.dispatch("setAlertData", response);
-    // TODO: Error catching
-    await this.$store.dispatch("configs/getPaymentMethods");
+    const responseHours = await this.$store.dispatch("configs/getHours");
+    this.$store.dispatch("setAlertData", responseHours);
+    const responsePayment = await this.$store.dispatch(
+      "configs/getPaymentMethods"
+    );
+    this.$store.dispatch("setAlertData", responsePayment);
     // Watches the store for changes in the alertselected slots
     this.$store.watch(
       () => {

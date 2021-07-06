@@ -1,32 +1,37 @@
-// eslint-disable-next-line no-unused-vars
 import { DateTime } from "luxon";
 export default {
-  // Posts a new client to the API. // * "POST" requests to the Firebase Rest API automatically creates an ID.
+  // Posts a new client to the API. // * "POST" requests to the Firebase Rest API automatically creates IDs.
   async createClient(context) {
     const clientNewData = this.getters["clients/clientNewData"];
+    const alertData = {}; // Alert container
+    if (!clientNewData.name || clientNewData.name === "") {
+      alertData["alertMessage"] = "Informe o nome do cliente";
+      alertData["alertType"] = "danger";
+      return alertData;
+    } else if (!clientNewData.name.includes(" ")) {
+      alertData["alertMessage"] = "Informe o sobrenome do cliente";
+      alertData["alertType"] = "danger";
+      return alertData;
+    } else if (!clientNewData.phone || clientNewData.phone === "") {
+      alertData["alertMessage"] = "Informe o telefone do cliente";
+      alertData["alertType"] = "danger";
+    }
+    // TODO: Check for phone length
+    // TODO: Trim
     clientNewData.creationDate = DateTime.now();
     clientNewData.createdBy = this.getters.userId;
-    const alertData = {}; // Alert container
-    if (clientNewData.name !== undefined && clientNewData.phone !== undefined) {
-      const response = await fetch(
-        `https://gen-agen-default-rtdb.firebaseio.com/clients.json?auth=${this.getters.token}`,
-        { method: "POST", body: JSON.stringify(clientNewData) }
-      );
-      const responseData = await response.json();
-      if (!response.ok) {
-        alertData["alertMessage"] = responseData.message;
-        alertData["alertType"] = "danger";
-      } else {
-        context.dispatch("setSelectedClient", [
-          responseData.name,
-          clientNewData,
-        ]); // [id, { data }]
-        alertData["alertMessage"] = "Cadastro criado";
-        alertData["alertType"] = "success";
-      }
-    } else {
-      alertData["alertMessage"] = "Informe um Nome e um Telefone";
+    const response = await fetch(
+      `https://gen-agen-default-rtdb.firebaseio.com/clients.json?auth=${this.getters.token}`,
+      { method: "POST", body: JSON.stringify(clientNewData) }
+    );
+    const responseData = await response.json();
+    if (!response.ok) {
+      alertData["alertMessage"] = responseData.message;
       alertData["alertType"] = "danger";
+    } else {
+      context.dispatch("setSelectedClient", [responseData.name, clientNewData]); // [id, { data }]
+      alertData["alertMessage"] = "Cadastro criado";
+      alertData["alertType"] = "success";
     }
     return alertData;
   },

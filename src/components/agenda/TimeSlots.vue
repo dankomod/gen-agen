@@ -63,7 +63,6 @@ export default {
         hours: this.$store.getters["configs/closingHour"],
       });
       // Pushes the opening hour into this.timeSlots, the array that contains all the slots to be rendered
-      // TODO: Put this inside the loop
       this.timeSlots.push({
         dateTime: opening,
         // calculates how many times a slot has been taken

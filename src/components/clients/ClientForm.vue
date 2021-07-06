@@ -100,6 +100,7 @@ export default {
       // Spreads the formData prop [id,{values}]
       this.clientInfo = { ...this.formData[1] };
     }
+    console.log(this.formData);
   },
 };
 import BaseFormElement from "./../ui/BaseFormElement.vue";

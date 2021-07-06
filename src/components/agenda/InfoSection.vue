@@ -9,21 +9,8 @@
       </base-button>
     </div>
     <client-search v-if="showSearch" @selection="selection"></client-search>
-    <!-- // !! fix form conditional -->
-    <!-- // !! fix form conditional -->
-    <!-- // !! fix form conditional -->
-    <!-- // !! fix form conditional -->
-    <!-- // !! fix form conditional -->
-    <!-- // !! fix form conditional -->
-    <!-- // !! fix form conditional -->
-    <!-- // !! fix form conditional -->
-    <!-- // !! fix form conditional -->
-    <!-- // !! fix form conditional -->
-    <!-- // !! fix form conditional -->
-    <!-- // !! fix form conditional -->
-    <!-- // !! fix form conditional -->
     <client-form
-      v-if="showConfirmationlientForm"
+      v-if="showClientForm"
       :form-data="clientFormData"
       :form-enabled="true"
     ></client-form>
@@ -109,7 +96,6 @@ export default {
     },
     // Creates a new client and resets the rendering
     async createClient() {
-      // TODO: Better form validation
       const response = await this.$store.dispatch("clients/createClient");
       this.$store.dispatch("setAlertData", response);
       if (response.alertType === "success") {
@@ -123,16 +109,24 @@ export default {
       this.showClientForm = false;
     },
     // Called when a client is selected in the search
-    selection(value, data) {
-      this.clientFormData = [null, { name: data }]; // The same format of a Object.entries output
-      if (!value) {
-        this.showAppointmentForm = false;
-        this.showClientForm = true;
-      } else {
+    selection(value) {
+      if (value === "newClient") {
+        this.clientFormData = [
+          null,
+          this.$store.getters["clients/clientNewData"],
+        ]; // format [id,{values}]
+        console.log(this.clientFormData);
+        console.log("a");
         this.showClientForm = false;
         // Assures that the appointment form will hold actual client data by forced re-rendering
         this.appointmentFormKey++;
         this.showAppointmentForm = true;
+      } else {
+        this.clientFormData = this.$store.getters["clients/selectedClient"];
+        console.log(this.clientFormData);
+        console.log("b");
+        this.showAppointmentForm = false;
+        this.showClientForm = true;
       }
       this.showSearch = false;
     },

@@ -153,12 +153,10 @@ export default {
         ); // Retrieves data and sends it to be joined
         if (response && response !== null && !("alertMessage" in response)) {
           this.joinAppointments(response); // Retrieves data and sends it to be joined
-          // TODO: error handling this.$store.dispatch("setAlertData", response);
         }
       }
     },
     async loadClients() {
-      // TODO: Error handling
       const response = await this.$store.dispatch("clients/loadClients");
       if (response && "alertMessage" in response) {
         this.$store.dispatch("setAlertData", response);

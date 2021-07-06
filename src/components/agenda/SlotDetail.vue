@@ -18,7 +18,6 @@
         :form-data="selectedClient"
         :form-enabled="clientFormEnabled"
       ></client-form>
-      <!-- // TODO: Turn the dropdown into a component -->
       <div class="flex flex-row justify-between">
         <div class="relative inline-block text-left">
           <div>

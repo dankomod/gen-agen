@@ -83,7 +83,6 @@ export default {
   },
   methods: {
     async createClient() {
-      // TODO: Better form validation
       const response = await this.$store.dispatch("clients/createClient");
       this.$store.dispatch("setAlertData", response);
       if (response.alertType === "success") {

@@ -61,6 +61,4 @@ import DateSelector from "./../../components/agenda/DateSelector.vue";
 import InfoSection from "./../../components/agenda/InfoSection.vue";
 import SlotDetail from "./../../components/agenda/SlotDetail.vue";
 import TimeSlots from "./../../components/agenda/TimeSlots.vue";
-// TODO: Incorporate the style tag's CSS onto Tailwind
-// ? Specific opening and closing hours (weekends and holydays)
 </script>

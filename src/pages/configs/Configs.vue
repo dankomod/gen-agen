@@ -2,30 +2,64 @@
   <div :key="key" class="w-full space-y-2 max-w-screen-xs">
     <div class="p-4 border border-indigo-200">
       <div
-        class="flex flex-row items-center my-1"
+        class="flex flex-row items-center justify-between my-1"
         @click="showHours = !showHours"
       >
-        <div class="pr-2">
-          <div class="p-1 text-indigo-600 fill-current">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-10 h-10"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+        <div class="flex flex-row items-center">
+          <div class="pr-2">
+            <div class="p-1 text-indigo-600 fill-current">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-10 h-10"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div class="text-grey-900">
+            <h2 class="text-lg">Horários de funcionamento</h2>
+            <p v-if="!showHours" class="text-grey-600">Abertura e fechamento</p>
           </div>
         </div>
-        <div class="text-grey-900">
-          <h2 class="text-lg">Horários de funcionamento</h2>
-          <p v-if="!showHours" class="text-grey-600">Abertura e fechamento</p>
+        <div class="text-indigo-600 fill-current">
+          <svg
+            v-if="!showHours"
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-6 h-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+          <svg
+            v-else
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-6 h-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 15l7-7 7 7"
+            />
+          </svg>
         </div>
       </div>
       <div v-if="showHours" class="pt-4 space-y-1">
@@ -47,29 +81,63 @@
     </div>
     <div class="p-4 border border-indigo-200">
       <div
-        class="flex flex-row items-center my-1"
+        class="flex flex-row items-center justify-between my-1"
         @click="showPayments = !showPayments"
       >
-        <div class="pr-2">
-          <div class="p-1 text-indigo-600 fill-current">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-10 h-10"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+        <div class="flex flex-row items-center">
+          <div class="pr-2">
+            <div class="p-1 text-indigo-600 fill-current">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-10 h-10"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div class="text-grey-900">
+            <h2 class="text-lg">Formas de pagamento</h2>
           </div>
         </div>
-        <div class="text-grey-900">
-          <h2 class="text-lg">Formas de pagamento</h2>
+        <div class="text-indigo-600 fill-current">
+          <svg
+            v-if="!showPayments"
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-6 h-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+          <svg
+            v-else
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-6 h-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 15l7-7 7 7"
+            />
+          </svg>
         </div>
       </div>
       <div v-if="showPayments" class="pt-4 space-y-1">
@@ -163,9 +231,12 @@ export default {
         );
         this.$store.dispatch("setAlertData", responseSet);
       }
-      await this.$store.dispatch("configs/getHours");
-      // TODO: Error catching
-      await this.$store.dispatch("configs/getPaymentMethods");
+      const responseHours = await this.$store.dispatch("configs/getHours");
+      this.$store.dispatch("setAlertData", responseHours);
+      const responsePayment = await this.$store.dispatch(
+        "configs/getPaymentMethods"
+      );
+      this.$store.dispatch("setAlertData", responsePayment);
       this.key++;
     },
   },
