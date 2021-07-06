@@ -70,7 +70,7 @@ export default {
       let paidAppointments = [];
       const queries = [
         ["today", "null", "today"],
-        ["past", 1, "yesterday"], // TODO: Fix: This = 'yesterday' + 'today', must show 'yesterday' only
+        ["past", 1, "yesterday"],
         ["past", 7, "last7"],
         ["past", 15, "last15"],
         ["past", 30, "last30"],
@@ -82,12 +82,14 @@ export default {
             paidAppointments.push(parseInt(appointment.price));
           }
         }
+        // Sums all values of the current query
         this.paid[query[2]] = paidAppointments.reduce((a, b) => {
           return a + b;
         }, 0);
+        paidAppointments = [];
       }
     },
-    // Returns filtered appointments based on time and number of days. Takes the 'today', 'past' and 'future' time filters.
+    // Returns filtered appointments based on time and number of days. Takes the 'today', 'past' and 'future' time filters
     filter(type, when = "today", value = null) {
       let arrayToFilter = [];
       let filterKey = "";
