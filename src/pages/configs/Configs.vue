@@ -151,7 +151,7 @@
           :element-type="'select'"
           :element-enabled="true"
           :element-label="'Remover'"
-          :options="$store.getters['configs/paymentMethods'].sort()"
+          :options="$store.getters['configs/paymentMethods']"
           @change="newConfig.removePaymentMethod = $event.target.value"
         ></base-form-element>
       </div>

@@ -53,53 +53,67 @@ export default {
       showAlert: false,
     };
   },
-  // * Computed can be used instead of the deep store watch if a return is needed
+  // * Computed can be used instead of a deep store watch if a return is needed
   computed: {
     isLoggedIn() {
       return this.$store.getters.isAuthenticated;
     },
   },
   watch: {
-    // Calls for a token update on every route change
+    // Redirects to auth if no or expired auth token
     $route() {
-      this.update();
+      if (
+        !localStorage.expiration ||
+        DateTime.fromISO(localStorage.expiration) < DateTime.now()
+      ) {
+        if (this.$route.name !== "Auth") {
+          this.$router.replace("/auth");
+        }
+      } else {
+        // Calls for a token update on every route change
+        this.update();
+      }
     },
   },
   async created() {
-    // If expiration is due the state won't get any Id data and the user will eventually be sent to auth
+    // If expiration is due the state won't request any data
     if (
       localStorage &&
-      localStorage.token &&
-      localStorage.userId &&
-      DateTime.fromISO(localStorage.expiration) > DateTime.now()
+      (localStorage.expiration ||
+        DateTime.fromISO(localStorage.expiration) <= DateTime.now())
     ) {
-      this.$store.dispatch("setUser", localStorage);
-    } else if (DateTime.fromISO(localStorage.expiration) < DateTime.now()) {
-      this.logout();
+      if (localStorage.token && localStorage.userId) {
+        this.$store.dispatch("setUser", localStorage);
+      }
+      const responseHours = await this.$store.dispatch("configs/getHours");
+      this.$store.dispatch("setAlertData", responseHours);
+      const responsePayment = await this.$store.dispatch(
+        "configs/getPaymentMethods"
+      );
+      this.$store.dispatch("setAlertData", responsePayment);
+      // Watches the store for changes in the alertselected slots
+      this.$store.watch(
+        () => {
+          return this.$store.state.alertData;
+        },
+        (newValue) => {
+          this.alertMessage = newValue.alertMessage;
+          this.alertType = newValue.alertType;
+          this.alertTimer = newValue.alertTimer;
+          this.showAlert = true;
+        },
+        { deep: true }
+      );
     }
-    const responseHours = await this.$store.dispatch("configs/getHours");
-    this.$store.dispatch("setAlertData", responseHours);
-    const responsePayment = await this.$store.dispatch(
-      "configs/getPaymentMethods"
-    );
-    this.$store.dispatch("setAlertData", responsePayment);
-    // Watches the store for changes in the alertselected slots
-    this.$store.watch(
-      () => {
-        return this.$store.state.alertData;
-      },
-      (newValue) => {
-        this.alertMessage = newValue.alertMessage;
-        this.alertType = newValue.alertType;
-        this.alertTimer = newValue.alertTimer;
-        this.showAlert = true;
-      },
-      { deep: true }
-    );
   },
   methods: {
     logout() {
-      this.$store.dispatch("logout");
+      if (
+        localStorage.expiration &&
+        DateTime.fromISO(localStorage.expiration) >= DateTime.now()
+      ) {
+        this.$store.dispatch("logout");
+      }
       this.$router.replace("/auth");
     },
     // Updates the user token

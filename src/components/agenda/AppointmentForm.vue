@@ -51,7 +51,7 @@
       :options="$store.getters['configs/paymentMethods']"
       @change="appointmentInfo.paymentMethod = $event.target.value"
     ></base-form-element>
-    <!-- * This only works if a string is sent when true and null when false -->
+    <!-- //* This only works if a string is sent when true and null when false -->
     <base-form-element
       :element-type="'checkbox'"
       :element-enabled="formEnabled"

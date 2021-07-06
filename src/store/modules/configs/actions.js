@@ -31,7 +31,7 @@ export default {
       return alertData;
     }
     context.commit("setPaymentMethods", responseData);
-    return responseData;
+    return responseData.sort();
   },
   async newPaymentMethod(context, payload) {
     const response = await fetch(

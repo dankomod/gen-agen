@@ -9,7 +9,6 @@ export default {
   },
   async auth(context, payload) {
     const mode = payload.mode;
-
     let url;
     if (mode === "login") {
       url =
