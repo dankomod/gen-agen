@@ -52,9 +52,9 @@
       <base-binary-buttons
         v-if="showEditConfirmation"
         @yes="editClient()"
-        @no="(clientFormEnabled = false), (showEditMenu = false)"
+        @no="(clientFormEnabled = false), (showEditConfirmation = false)"
       ></base-binary-buttons>
-      <base-dialog v-if="showConfirmation" :dialog-type="'danger'">
+      <base-dialog v-if="showDeletionConfirmation" :dialog-type="'danger'">
         Tem certeza de que deseja remover o cadastro do cliente?
       </base-dialog>
       <base-binary-buttons

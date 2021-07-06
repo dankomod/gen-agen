@@ -16,10 +16,7 @@
             <base-button>Configurações</base-button>
           </router-link>
         </span>
-        <router-link v-if="!isLoggedIn" :to="{ name: 'Auth' }">
-          <base-button>Login</base-button>
-        </router-link>
-        <base-button v-else @click="logout">Logout</base-button>
+        <base-button v-if="isLoggedIn" @click="logout">Logout</base-button>
       </div>
       <router-view v-slot="slotProps">
         <transition name="route" mode="out-in">

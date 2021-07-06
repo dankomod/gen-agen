@@ -114,6 +114,12 @@ export default {
       this.$store.dispatch("setAlertData", response);
       if (response.alertType === "success") {
         this.$router.replace("/");
+        const responseHours = await this.$store.dispatch("configs/getHours");
+        this.$store.dispatch("setAlertData", responseHours);
+        const responsePayment = await this.$store.dispatch(
+          "configs/getPaymentMethods"
+        );
+        this.$store.dispatch("setAlertData", responsePayment);
       }
     },
   },

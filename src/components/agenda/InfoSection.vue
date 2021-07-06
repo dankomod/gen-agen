@@ -78,7 +78,12 @@ export default {
       // Sets the local record of selected slots and may toggle the info button when there is a change in the selectedSlots agenda store
       (newValue) => {
         this.selectedSlots = this.$store.getters["agenda/selectedSlots"];
-        this.showInfoButton = newValue && newValue.length === 1 ? true : false;
+        this.showInfoButton =
+          newValue &&
+          newValue.length === 1 &&
+          takenHours.includes(this.selectedSlots[0].toString())
+            ? true
+            : false;
       },
       { deep: true }
     );
@@ -99,7 +104,8 @@ export default {
       const response = await this.$store.dispatch("clients/createClient");
       this.$store.dispatch("setAlertData", response);
       if (response.alertType === "success") {
-        this.toggleCreation(false);
+        this.showAppointmentForm = true;
+        this.showClientForm = false;
       }
     },
     // Called on creation to assure t reset all data when this component is re-rendered
@@ -115,18 +121,14 @@ export default {
           null,
           this.$store.getters["clients/clientNewData"],
         ]; // format [id,{values}]
-        console.log(this.clientFormData);
-        console.log("a");
-        this.showClientForm = false;
+        this.showClientForm = true;
         // Assures that the appointment form will hold actual client data by forced re-rendering
         this.appointmentFormKey++;
-        this.showAppointmentForm = true;
+        this.showAppointmentForm = false;
       } else {
         this.clientFormData = this.$store.getters["clients/selectedClient"];
-        console.log(this.clientFormData);
-        console.log("b");
-        this.showAppointmentForm = false;
-        this.showClientForm = true;
+        this.showAppointmentForm = true;
+        this.showClientForm = false;
       }
       this.showSearch = false;
     },
