@@ -15,8 +15,8 @@
           <router-link :to="{ name: 'Configs' }">
             <base-button>Configurações</base-button>
           </router-link>
+          <base-button @click="logout">Logout</base-button>
         </span>
-        <base-button v-if="isLoggedIn" @click="logout">Logout</base-button>
       </div>
       <router-view v-slot="slotProps">
         <transition name="route" mode="out-in">
@@ -59,17 +59,10 @@ export default {
   watch: {
     // Redirects to auth if no or expired auth token
     $route() {
-      if (
-        !localStorage.expiration ||
-        DateTime.fromISO(localStorage.expiration) < DateTime.now()
-      ) {
-        if (this.$route.name !== "Auth") {
-          this.$router.replace("/auth");
-        }
-      } else {
-        // Calls for a token update on every route change
-        this.update();
-      }
+      !localStorage.expiration ||
+      DateTime.fromISO(localStorage.expiration) < DateTime.now()
+        ? this.logout()
+        : this.update();
     },
   },
   async created() {
@@ -105,12 +98,7 @@ export default {
   },
   methods: {
     logout() {
-      if (
-        localStorage.expiration &&
-        DateTime.fromISO(localStorage.expiration) >= DateTime.now()
-      ) {
-        this.$store.dispatch("logout");
-      }
+      this.$store.dispatch("logout");
       this.$router.replace("/auth");
     },
     // Updates the user token
