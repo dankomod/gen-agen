@@ -219,7 +219,9 @@ export default {
           "configs/newPaymentMethod",
           payload
         );
-        this.$store.dispatch("setAlertData", responseSet);
+        if (responseSet) {
+          this.$store.dispatch("setAlertData", responseSet);
+        }
       }
       if (this.newConfig.removePaymentMethod) {
         const filterItem = this.newConfig.removePaymentMethod;
@@ -232,11 +234,15 @@ export default {
         this.$store.dispatch("setAlertData", responseSet);
       }
       const responseHours = await this.$store.dispatch("configs/getHours");
-      this.$store.dispatch("setAlertData", responseHours);
+      if (responseHours) {
+        this.$store.dispatch("setAlertData", responseHours);
+      }
       const responsePayment = await this.$store.dispatch(
         "configs/getPaymentMethods"
       );
-      this.$store.dispatch("setAlertData", responsePayment);
+      if (responseHours) {
+        this.$store.dispatch("setAlertData", responsePayment);
+      }
       this.key++;
     },
   },
